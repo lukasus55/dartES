@@ -7,9 +7,7 @@ score: number;
 export default function CheckoutGuide({ score }: CheckoutGuideProps) {
 const guide = getCheckoutGuide(score);
 
-console.log(`test1`)
 if (!guide) return null;
-console.log(`test2`)
 
 return (
     <div className="flex flex-col items-center mt-2 w-full">

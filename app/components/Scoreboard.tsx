@@ -48,6 +48,7 @@ const handleLegWin = (winner: Player, winningThrowScore: number) => {
   const totalSets = enabledPlayers.reduce((sum, p) => sum + p.sets, 0);
   const totalLegsCurrentSet = enabledPlayers.reduce((sum, p) => sum + p.legs, 0);
 
+  console.log(winner.legs + 1 >= LEGS_TO_WIN_SET);
   const isSetWin = winner.legs + 1 >= LEGS_TO_WIN_SET;
 
   let nextStarterRelativeIndex = 0;
@@ -70,12 +71,21 @@ const handleLegWin = (winner: Player, winningThrowScore: number) => {
   setPlayers((prevPlayers) =>
     prevPlayers.map((p) => {
       if (p.id === winner.id) {
-          return { 
+          if (isSetWin)
+            return { 
               ...p, 
-              legs: p.legs + 1, 
+              legs: 0,
+              sets: p.sets + 1, 
               throws: [],
               matchHistory: [...p.matchHistory, winningThrowScore],
               checkoutHistory: [...p.checkoutHistory, winningThrowScore] 
+            }; 
+          return { 
+            ...p, 
+            legs: p.legs + 1, 
+            throws: [],
+            matchHistory: [...p.matchHistory, winningThrowScore],
+            checkoutHistory: [...p.checkoutHistory, winningThrowScore] 
           };
       }
       if (isSetWin) return { ...p, legs: 0, throws: [] };
@@ -92,13 +102,13 @@ const handleLegWin = (winner: Player, winningThrowScore: number) => {
     const newTotal = currentTotal + score;
 
     // WIN
-    if (newTotal === 501) {
+    if (newTotal === STARTING_SCORE) {
       handleLegWin(currentPlayer, score);
       return;
     }
 
     // BUST
-    if (newTotal > 501) {
+    if (newTotal > STARTING_SCORE) {
       // Switch turns immediately without adding the score
       setActivePlayerIndex(activePlayerIndex === 0 ? 1 : 0);
       return;
@@ -130,11 +140,6 @@ const handleLegWin = (winner: Player, winningThrowScore: number) => {
     // TODO
     console.log("Undo logic placeholder");
   };
-
-  const activePlayer = players[activePlayerIndex];
-  const activePlayerCurrentScore = STARTING_SCORE - sum(activePlayer.throws);
-
-  console.log(activePlayerCurrentScore)
 
   return (
     <div className="flex items-center w-full">
