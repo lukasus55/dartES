@@ -12,6 +12,8 @@ interface Player {
   legs: number;
   isEnabled: boolean;
   country?: string;
+  matchHistory: number[];
+  checkoutHistory: number[];
 }
 
 // Helper to sum up an array
@@ -21,33 +23,95 @@ export default function Scoreboard() {
   const STARTING_SCORE = 501;
 
   const [players, setPlayers] = useState<Player[]>([
-    { id: 1, name: "THE POWER", throws: [], sets: 0, legs: 0, isEnabled: true },
-    {
-      id: 2,
-      name: "MIGHTY MIKE",
-      throws: [],
-      sets: 0,
-      legs: 0,
-      isEnabled: true,
-    },
-    { id: 3, name: "SNAKEBITE", throws: [], sets: 0, legs: 0, isEnabled: true },
-    {
-      id: 4,
-      name: "SNAKEBITE",
-      throws: [],
-      sets: 0,
-      legs: 0,
-      isEnabled: false,
-    },
+    { id: 1, name: "THE POWER", throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, isEnabled: true },
+    { id: 2, name: "MIGHTY MIKE", throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, isEnabled: true },
+    { id: 3, name: "SNAKEBITE", throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, isEnabled: true },
+    { id: 4, name: "FOURTG", throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, isEnabled: false  },
   ]);
 
   const [activePlayerIndex, setActivePlayerIndex] = useState(0);
 
+  const resetThrows = () => {
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((p) => {
+        return { ...p, throws: [] };
+      })
+    );
+  };
+
+const handleLegWin = (winner: Player, winningThrowScore: number) => {
+  const LEGS_TO_WIN_SET = 3;
+  
+  const enabledPlayers = players.filter(p => p.isEnabled);
+  const activeCount = enabledPlayers.length;
+  const totalSets = enabledPlayers.reduce((sum, p) => sum + p.sets, 0);
+  const totalLegsCurrentSet = enabledPlayers.reduce((sum, p) => sum + p.legs, 0);
+
+  const isSetWin = winner.legs + 1 >= LEGS_TO_WIN_SET;
+
+  let nextStarterRelativeIndex = 0;
+
+  if (isSetWin) {
+    // Start of Set
+    nextStarterRelativeIndex = (totalSets + 1) % activeCount;
+  } else {
+    // Start of Leg
+    const setStarterRelativeIndex = totalSets % activeCount;
+    const legsPlayedIncludingThisOne = totalLegsCurrentSet + 1;
+    nextStarterRelativeIndex = (setStarterRelativeIndex + legsPlayedIncludingThisOne) % activeCount;
+  }
+
+  // Convert "2nd active player" -> "Real Index in main array"
+  const nextStarterPlayer = enabledPlayers[nextStarterRelativeIndex];
+  const nextStarterRealIndex = players.findIndex(p => p.id === nextStarterPlayer.id);
+
+  // Update State
+  setPlayers((prevPlayers) =>
+    prevPlayers.map((p) => {
+      if (p.id === winner.id) {
+          return { 
+              ...p, 
+              legs: p.legs + 1, 
+              throws: [],
+              matchHistory: [...p.matchHistory, winningThrowScore],
+              checkoutHistory: [...p.checkoutHistory, winningThrowScore] 
+          };
+      }
+      if (isSetWin) return { ...p, legs: 0, throws: [] };
+      return { ...p, throws: [] };
+    })
+  );
+
+  setActivePlayerIndex(nextStarterRealIndex);
+};
+
   const handleScoreSubmit = (score: number) => {
+    const currentPlayer = players[activePlayerIndex];
+    const currentTotal = sum(currentPlayer.throws);
+    const newTotal = currentTotal + score;
+
+    // WIN
+    if (newTotal === 501) {
+      handleLegWin(currentPlayer, score);
+      return;
+    }
+
+    // BUST
+    if (newTotal > 501) {
+      // Switch turns immediately without adding the score
+      setActivePlayerIndex(activePlayerIndex === 0 ? 1 : 0);
+      return;
+    }
+
+    // Normal Throw
     setPlayers((prevPlayers) => {
       return prevPlayers.map((player, index) => {
         if (index === activePlayerIndex) {
-          return { ...player, throws: [...player.throws, score] };
+          return {
+            ...player,
+            throws: [...player.throws, score], // For calculating 501
+            matchHistory: [...player.matchHistory, score] // For Stats (Never deleted)
+          };
         }
         return player;
       });
@@ -62,8 +126,7 @@ export default function Scoreboard() {
   };
 
   const handleUndo = () => {
-    // Advanced: To undo, we usually need to go back to the PREVIOUS player
-    // and pop their last throw. (We can implement this if you need it)
+    // TODO
     console.log("Undo logic placeholder");
   };
 
@@ -88,7 +151,10 @@ export default function Scoreboard() {
 
               {/* deatiled stats below the card */}
               <div className="flex gap-20 text-gray-500 font-mono text-sm mb-5">
-                <PlayerStats throws={player.throws} />
+                <PlayerStats 
+                  history={player.matchHistory} 
+                  checkouts={player.checkoutHistory} 
+                />
               </div>
             </div>
           );
