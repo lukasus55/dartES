@@ -3,6 +3,7 @@ import { useState } from "react";
 import PlayerScore from "./PlayerScore";
 import ScoreInput from "./ScoreInput";
 import PlayerStats from "./PlayerStats";
+import CheckoutGuide from "./CheckoutGuide";
 
 interface Player {
   id: number;
@@ -130,6 +131,11 @@ const handleLegWin = (winner: Player, winningThrowScore: number) => {
     console.log("Undo logic placeholder");
   };
 
+  const activePlayer = players[activePlayerIndex];
+  const activePlayerCurrentScore = STARTING_SCORE - sum(activePlayer.throws);
+
+  console.log(activePlayerCurrentScore)
+
   return (
     <div className="flex flex-col items-center w-full p-5">
       {/* PLAYERS GRID */}
@@ -147,7 +153,13 @@ const handleLegWin = (winner: Player, winningThrowScore: number) => {
                 sets={player.sets}
                 legs={player.legs}
                 isActive={index === activePlayerIndex}
-              />
+              />    
+
+              <div className="flex h-15 mb-5 w-full justify-center">
+                {currentScore <= 170 && (
+                  <CheckoutGuide score={currentScore} />
+                )} 
+              </div>
 
               {/* deatiled stats below the card */}
               <div className="flex gap-20 text-gray-500 font-mono text-sm mb-5">

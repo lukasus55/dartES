@@ -9,7 +9,7 @@ export default function Home() {
 
       <Topbar />
 
-      <main className="flex min-h-screen w-full flex-col items-center justify-between py-40 px-16 bg-background sm:items-start">
+      <main className="flex min-h-screen w-full flex-col items-center justify-between py-30 px-16 bg-background sm:items-start">
 
       <Scoreboard />
 
