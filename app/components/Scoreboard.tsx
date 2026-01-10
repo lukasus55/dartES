@@ -137,16 +137,16 @@ const handleLegWin = (winner: Player, winningThrowScore: number) => {
   console.log(activePlayerCurrentScore)
 
   return (
-    <div className="flex flex-col items-center w-full p-5">
+    <div className="flex items-center w-full">
       {/* PLAYERS GRID */}
-      <div className="flex flex-wrap justify-center gap-6 mb-10 w-full">
+      <div className="flex flex-wrap justify-center gap-4 mb-10 w-full">
         {players.map((player, index) => {
           if (!player.isEnabled) return null;
 
           const currentScore = STARTING_SCORE - sum(player.throws);
 
           return (
-            <div key={player.id} className="flex flex-col items-center">
+            <div key={player.id} className="flex flex-col items-center w-80">
               <PlayerScore
                 name={player.name}
                 score={currentScore}
@@ -174,7 +174,7 @@ const handleLegWin = (winner: Player, winningThrowScore: number) => {
       </div>
 
       {/* input section */}
-      <div className="fixed bottom-10 w-full flex justify-center pt-10 pb-5">
+      <div className="fixed bottom-0 w-full flex flex-col items-center justify-center pb-8 pt-14 max-lg:scale-75 max-lg:pb-2">
         <ScoreInput
           currentPlayerName={players[activePlayerIndex].name}
           onSubmit={handleScoreSubmit}

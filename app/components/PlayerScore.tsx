@@ -18,7 +18,7 @@ export default function PlayerScore({
   return (
     <div
       className={`
-        flex min-w-80 mx-5 p-6 rounded-2xl flex-wrap flex-col
+        flex w-full rounded-2xl flex-wrap flex-col py-6
         transition-all duration-300 border-2
         ${
           isActive
@@ -30,7 +30,7 @@ export default function PlayerScore({
       <div className="flex w-full justify-center text-3xl font-bold text-accent">
         {name}
         {isActive && (
-          <span className="ml-2 text-accent animate-pulse pt-2.5">
+          <span className="ml-2 text-accent pt-2.5">
             {" "}
             <Circle fill="var(--accent)" size={16} />{" "}
           </span>

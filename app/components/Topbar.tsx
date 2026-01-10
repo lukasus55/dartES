@@ -4,7 +4,7 @@ import { Pencil, RotateCcw, TvMinimal } from "lucide-react";
 
 export default function Topbar() {
   return (
-    <div className="flex fixed top-0 left-0 w-screen p-5 min-h-30 items-center">
+    <div className="max-lg:absolute flex fixed top-0 left-0 w-screen p-5 min-h-30 items-center z-100">
 
       <div className="flex w-full justify-center gap-10">
         <IconButton

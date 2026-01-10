@@ -31,7 +31,7 @@ export default function ScoreInput({
       onSubmit={handleSubmit}
       className="flex flex-col items-center gap-4 mt-8"
     >
-      <div className="text-gray-400 text-sm font-mono">
+      <div className="text-gray-400 text-sm font-mono max-lg:hidden">
         ENTER SCORE FOR{" "}
         <span className="text-accent font-bold">{currentPlayerName}</span>
       </div>
