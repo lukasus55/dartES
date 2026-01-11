@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { X, RotateCcw } from "lucide-react";
 import ColorPickerPopup from "./ColorPickerPopup";
 
@@ -14,30 +14,54 @@ const DEFAULT_THEME = {
   accent: "#72B01D",
 };
 
+const STORAGE_KEY = "darts_app_theme_config";
+
 export default function CustomizationPopup({ onClose }: CustomizationPopupProps) {
-  const getCssVar = (name: string) => {
-    if (typeof window !== "undefined") {
-      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-    }
-    return "";
-  };
-
-  const [primaryColor, setPrimaryColor] = useState("");
-  const [secondaryColor, setSecondaryColor] = useState("");
-  const [accentColor, setAccentColor] = useState("");
-
-  // This state tracks WHICH picker is open: 'primary', 'secondary', 'accent', or null
+  const [primaryColor, setPrimaryColor] = useState(DEFAULT_THEME.primary);
+  const [secondaryColor, setSecondaryColor] = useState(DEFAULT_THEME.secondary);
+  const [accentColor, setAccentColor] = useState(DEFAULT_THEME.accent);
   const [activePicker, setActivePicker] = useState<string | null>(null);
 
   useEffect(() => {
-    setPrimaryColor(getCssVar("--customizablePrimary") || DEFAULT_THEME.primary);
-    setSecondaryColor(getCssVar("--customizableSecondary") || DEFAULT_THEME.secondary);
-    setAccentColor(getCssVar("--customizableAccent") || DEFAULT_THEME.accent);
+    const savedConfig = localStorage.getItem(STORAGE_KEY);
+    
+    if (savedConfig) {
+      const parsed = JSON.parse(savedConfig);
+      setPrimaryColor(parsed.primary || DEFAULT_THEME.primary);
+      setSecondaryColor(parsed.secondary || DEFAULT_THEME.secondary);
+      setAccentColor(parsed.accent || DEFAULT_THEME.accent);
+      
+      document.documentElement.style.setProperty("--customizablePrimary", parsed.primary);
+      document.documentElement.style.setProperty("--customizableSecondary", parsed.secondary);
+      document.documentElement.style.setProperty("--customizableAccent", parsed.accent);
+    } else {
+      const getCssVar = (name: string) => {
+        if (typeof window !== "undefined") {
+          return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+        return "";
+      };
+      setPrimaryColor(getCssVar("--customizablePrimary") || DEFAULT_THEME.primary);
+      setSecondaryColor(getCssVar("--customizableSecondary") || DEFAULT_THEME.secondary);
+      setAccentColor(getCssVar("--customizableAccent") || DEFAULT_THEME.accent);
+    }
   }, []);
+
+  const saveToStorage = (p: string, s: string, a: string) => {
+    const config = { primary: p, secondary: s, accent: a };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+  };
 
   const handleColorChange = (varName: string, value: string, setter: (v: string) => void) => {
     setter(value);
     document.documentElement.style.setProperty(varName, value);
+
+    // Determine current values to save everything together
+    const newPrimary = varName === "--customizablePrimary" ? value : primaryColor;
+    const newSecondary = varName === "--customizableSecondary" ? value : secondaryColor;
+    const newAccent = varName === "--customizableAccent" ? value : accentColor;
+
+    saveToStorage(newPrimary, newSecondary, newAccent);
   };
 
   const handleResetSingle = (varName: string, defaultValue: string, setter: (v: string) => void) => {
@@ -64,7 +88,6 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
         </h3>
 
         {/* --- PRIMARY --- */}
-        {/* We add 'relative' here so the absolute picker positions itself relative to this row */}
         <div className="flex items-center gap-3 relative">
           <button 
             className="w-8 h-8 rounded-full border border-neutral-700 shadow-inner transition-colors duration-200 cursor-pointer"
@@ -72,7 +95,6 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
             onClick={() => setActivePicker("primary")}
           />
           
-          {/* THE PICKER POPUP */}
           {activePicker === "primary" && (
             <div className="absolute top-10 left-0 z-50">
               <ColorPickerPopup 
