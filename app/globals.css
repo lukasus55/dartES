@@ -4,7 +4,8 @@
   --background: #0e0e0e;
   --primary: #F3EFF5;
   --customizablePrimary: #F3EFF5;
-  --customizableSecondary: #0F131B;
+  --customizableSecondary: #6A7282;
+  --customizableHighlit: #0F131B;
   --customizableAccent: #72B01D;
 }
 
@@ -13,6 +14,7 @@
   --color-primary: var(--primary);
   --color-customizablePrimary: var(--customizablePrimary);
   --color-customizableSecondary: var(--customizableSecondary);
+  --color-customizableHighlit: var(--customizableHighlit);
   --color-customizableAccent: var(--customizableAccent);
 }
 

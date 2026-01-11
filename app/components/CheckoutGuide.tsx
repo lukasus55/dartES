@@ -18,7 +18,7 @@ return (
             {guide.map((dart, i) => (
             <div 
                 key={i} 
-                className={`flex items-center justify-center px-3 py-1 rounded-md font-bold text-sm shadow-lg bg-customizableSecondary border-2 border-customizableAccent w-1/3`}
+                className={`flex items-center justify-center px-3 py-1 rounded-md font-bold text-sm shadow-lg bg-customizableHighlit border-2 border-customizableAccent w-1/3`}
             >
                 {dart}
             </div>

@@ -13,8 +13,8 @@ export default function PlayerStats({ history = [], checkouts = [] }: PlayerStat
   // Helper function to conditionally apply the highlight class
   const getStyle = (condition: boolean) => {
     return condition 
-      ? "text-accent font-bold scale-110 transition-all duration-300 inline-block" // Active Style
-      : "text-gray-300"; // Default Style
+      ? "text-customizableAccent font-bold scale-110 transition-all duration-300 inline-block" // Active Style
+      : "text-customizablePrimary"; // Default Style
   };
 
   const sum = history.reduce((a, b) => a + b, 0);
@@ -37,15 +37,15 @@ export default function PlayerStats({ history = [], checkouts = [] }: PlayerStat
   const s40Plus = history.filter(s => s >= 40 && s < 60).length;
 
   return (
-    <div className="flex flex-col gap-2 min-w-80 mx-5 p-4 text-xs font-mono text-gray-500">
+    <div className="flex flex-col gap-2 min-w-80 mx-5 p-4 text-xs font-mono text-customizableSecondary">
       
-      <div className="flex justify-between border-b border-gray-700 pb-2 mb-2">
-        <div>Last: <span className="text-primary text-sm">{lastThrow}</span></div>
-        <div>AVG: <span className="text-primary text-sm">{avg}</span></div>
-        <div>Darts: <span className="text-primary text-sm">{dartsThrown}</span></div>
+      <div className="flex justify-between border-b pb-2 mb-2">
+        <div>Last: <span className="text-customizablePrimary text-sm">{lastThrow}</span></div>
+        <div>AVG: <span className="text-customizablePrimary text-sm">{avg}</span></div>
+        <div>Darts: <span className="text-customizablePrimary text-sm">{dartsThrown}</span></div>
       </div>
 
-      <div className="grid grid-cols-3 gap-x-6 gap-y-1 border-b border-gray-700 pb-4 mb-2">
+      <div className="grid grid-cols-3 gap-x-6 gap-y-1 border-b pb-4 mb-2">
         
         <div className="flex justify-between">
           <span>40+</span> 
@@ -98,7 +98,7 @@ export default function PlayerStats({ history = [], checkouts = [] }: PlayerStat
         <div>  </div>
         <div>
           Hi-Fin:{" "}
-          <span className={isNewHighFinish ? "text-accent font-bold" : "text-gray-300"}>
+          <span className={isNewHighFinish ? "text-customizableAccent font-bold" : "text-customizablePrimary"}>
             {highestFinish > 0 ? highestFinish : "-"}
           </span>
         </div>

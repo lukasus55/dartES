@@ -10,8 +10,9 @@ interface CustomizationPopupProps {
 
 const DEFAULT_THEME = {
   primary: "#F3EFF5",
-  secondary: "#0F131B",
+  secondary: "#6A7282",
   accent: "#72B01D",
+  highlight: "#0F131B",
 };
 
 const DEFAULT_SETTINGS = {
@@ -34,6 +35,8 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
   const [primaryColor, setPrimaryColor] = useState(DEFAULT_THEME.primary);
   const [secondaryColor, setSecondaryColor] = useState(DEFAULT_THEME.secondary);
   const [accentColor, setAccentColor] = useState(DEFAULT_THEME.accent);
+  const [highlightColor, setHighlightColor] = useState(DEFAULT_THEME.highlight); // Added Highlight State
+  
   const [startingScore, setStartingScore] = useState(DEFAULT_SETTINGS.startingScore);
   const [legsToWinSet, setLegsToWinSet] = useState(DEFAULT_SETTINGS.legsToWinSet);
   
@@ -58,6 +61,8 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
       setPrimaryColor(parsed.primary || DEFAULT_THEME.primary);
       setSecondaryColor(parsed.secondary || DEFAULT_THEME.secondary);
       setAccentColor(parsed.accent || DEFAULT_THEME.accent);
+      setHighlightColor(parsed.highlight || DEFAULT_THEME.highlight);
+      
       setStartingScore(parsed.startingScore || DEFAULT_SETTINGS.startingScore);
       setLegsToWinSet(parsed.legsToWinSet || DEFAULT_SETTINGS.legsToWinSet);
       setPlayersConfig(parsed.players || DEFAULT_PLAYERS);
@@ -65,10 +70,12 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
       if (parsed.primary) document.documentElement.style.setProperty("--customizablePrimary", parsed.primary);
       if (parsed.secondary) document.documentElement.style.setProperty("--customizableSecondary", parsed.secondary);
       if (parsed.accent) document.documentElement.style.setProperty("--customizableAccent", parsed.accent);
+      if (parsed.highlight) document.documentElement.style.setProperty("--customizableHighlit", parsed.highlight);
     } else {
       setPrimaryColor(getCssVar("--customizablePrimary") || DEFAULT_THEME.primary);
       setSecondaryColor(getCssVar("--customizableSecondary") || DEFAULT_THEME.secondary);
       setAccentColor(getCssVar("--customizableAccent") || DEFAULT_THEME.accent);
+      setHighlightColor(getCssVar("--customizableHighlit") || DEFAULT_THEME.highlight);
     }
   }, []);
 
@@ -78,6 +85,7 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
       primary: updates.primary ?? primaryColor,
       secondary: updates.secondary ?? secondaryColor,
       accent: updates.accent ?? accentColor,
+      highlight: updates.highlight ?? highlightColor,
       startingScore: updates.startingScore ?? startingScore,
       legsToWinSet: updates.legsToWinSet ?? legsToWinSet,
       players: updates.players ?? playersConfig,
@@ -90,7 +98,8 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
     document.documentElement.style.setProperty(varName, value);
     const key = varName === "--customizablePrimary" ? "primary" 
               : varName === "--customizableSecondary" ? "secondary" 
-              : "accent";
+              : varName === "--customizableAccent" ? "accent"
+              : "highlight"; // Handle key mapping
     saveToStorage({ [key]: value });
   };
 
@@ -192,6 +201,38 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
                 className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-1.5 text-sm text-gray-200 font-mono outline-none focus:border-neutral-600"
               />
               <button onClick={() => handleResetSingle("--customizableSecondary", DEFAULT_THEME.secondary, setSecondaryColor)} className="p-2 text-neutral-600 hover:text-white rounded-lg">
+                <RotateCcw size={14} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* HIGHLIGHT */}
+        <div className="flex items-center gap-3 relative">
+          <button 
+            className="w-8 h-8 rounded-full border border-neutral-700 shadow-inner transition-colors duration-200 cursor-pointer"
+            style={{ backgroundColor: highlightColor }}
+            onClick={() => setActivePicker("highlight")}
+          />
+          {activePicker === "highlight" && (
+            <div className="absolute top-10 left-0 z-50">
+              <ColorPickerPopup 
+                color={highlightColor} 
+                onChange={(c) => handleColorChange("--customizableHighlit", c, setHighlightColor)}
+                onClose={() => setActivePicker(null)}
+              />
+            </div>
+          )}
+          <div className="flex-1 flex flex-col">
+            <label className="text-xs text-neutral-500 font-mono mb-1">HIGHLIGHT</label>
+            <div className="flex items-center gap-2">
+              <input 
+                type="text" 
+                value={highlightColor.toUpperCase()}
+                onChange={(e) => handleColorChange("--customizableHighlit", e.target.value, setHighlightColor)}
+                className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-1.5 text-sm text-gray-200 font-mono outline-none focus:border-neutral-600"
+              />
+              <button onClick={() => handleResetSingle("--customizableHighlit", DEFAULT_THEME.highlight, setHighlightColor)} className="p-2 text-neutral-600 hover:text-white rounded-lg">
                 <RotateCcw size={14} />
               </button>
             </div>
