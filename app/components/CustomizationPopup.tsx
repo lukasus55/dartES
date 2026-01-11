@@ -127,7 +127,7 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
       absolute top-24 left-1/2 -translate-x-1/2 flex flex-col gap-6 p-6 min-w-75
       bg-neutral-950 border-2 border-neutral-800 rounded-2xl shadow-2xl shadow-neutral-900/50
       backdrop-blur-sm animate-in fade-in zoom-in-95 duration-200 z-50
-      max-h-[80vh] overflow-y-auto
+      max-h-[80vh] overflow-y-auto no-scrollbar
     ">
       
       <button 
@@ -272,6 +272,37 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
         </div>
       </div>
 
+      {/* --- GAME SETTINGS SECTION --- */}
+      <div className="flex flex-col gap-4 pt-4 border-t border-neutral-800">
+        <h3 className="text-sm font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-2">
+          <Settings size={14} /> Game Settings
+        </h3>
+        
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-neutral-500 font-mono">START SCORE</label>
+            <input 
+              type="number" 
+              value={startingScore}
+              onChange={(e) => handleSettingChange("startingScore", parseInt(e.target.value) || 0, setStartingScore)}
+              className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-neutral-600 outline-none
+              [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-neutral-500 font-mono">LEGS TO SET</label>
+            <input 
+              type="number" 
+              value={legsToWinSet}
+              onChange={(e) => handleSettingChange("legsToWinSet", parseInt(e.target.value) || 0, setLegsToWinSet)}
+              className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-neutral-600 outline-none
+              [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            />
+          </div>
+        </div>
+      </div>
+
       {/* --- PLAYERS SECTION --- */}
       <div className="flex flex-col gap-4 pt-4 border-t border-neutral-800">
         <h3 className="text-sm font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-2">
@@ -307,37 +338,6 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
               </button>
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* --- GAME SETTINGS SECTION --- */}
-      <div className="flex flex-col gap-4 pt-4 border-t border-neutral-800">
-        <h3 className="text-sm font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-2">
-          <Settings size={14} /> Game Settings
-        </h3>
-        
-        <div className="grid grid-cols-2 gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-xs text-neutral-500 font-mono">START SCORE</label>
-            <input 
-              type="number" 
-              value={startingScore}
-              onChange={(e) => handleSettingChange("startingScore", parseInt(e.target.value) || 0, setStartingScore)}
-              className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-neutral-600 outline-none
-              [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <label className="text-xs text-neutral-500 font-mono">LEGS TO SET</label>
-            <input 
-              type="number" 
-              value={legsToWinSet}
-              onChange={(e) => handleSettingChange("legsToWinSet", parseInt(e.target.value) || 0, setLegsToWinSet)}
-              className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-neutral-600 outline-none
-              [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            />
-          </div>
         </div>
       </div>
 
