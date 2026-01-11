@@ -141,12 +141,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
 
     // BUST
     if (newTotal > STARTING_SCORE) {
-      let nextIndex = (activePlayerIndex + 1) % players.length;
-      while (!players[nextIndex].isEnabled) {
-        nextIndex = (nextIndex + 1) % players.length;
-      }
-      setActivePlayerIndex(nextIndex);
-      return;
+      score = 0;
     }
 
     setPlayers((prevPlayers) => {
