@@ -192,7 +192,7 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
             </div>
           )}
           <div className="flex-1 flex flex-col">
-            <label className="text-xs text-neutral-500 font-mono mb-1">SECONDARY (BG)</label>
+            <label className="text-xs text-neutral-500 font-mono mb-1">SECONDARY</label>
             <div className="flex items-center gap-2">
               <input 
                 type="text" 
@@ -224,7 +224,7 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
             </div>
           )}
           <div className="flex-1 flex flex-col">
-            <label className="text-xs text-neutral-500 font-mono mb-1">HIGHLIGHT</label>
+            <label className="text-xs text-neutral-500 font-mono mb-1">HIGHLIGHT (BG)</label>
             <div className="flex items-center gap-2">
               <input 
                 type="text" 
