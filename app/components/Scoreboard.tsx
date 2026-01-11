@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
+import { Undo2 } from "lucide-react";
 import PlayerScore from "./PlayerScore";
 import ScoreInput from "./ScoreInput";
 import PlayerStats from "./PlayerStats";
 import CheckoutGuide from "./CheckoutGuide";
+import IconButton from "./IconButton";
 
 interface Player {
   id: number;
@@ -17,86 +19,95 @@ interface Player {
   checkoutHistory: number[];
 }
 
-// Helper to sum up an array
+interface GameStateSnapshot {
+  players: Player[];
+  activePlayerIndex: number;
+}
+
 const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 
 export default function Scoreboard() {
   const STARTING_SCORE = 501;
 
   const [players, setPlayers] = useState<Player[]>([
-    { id: 1, name: "THE POWER", throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, isEnabled: true },
-    { id: 2, name: "MIGHTY MIKE", throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, isEnabled: true },
-    { id: 3, name: "SNAKEBITE", throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, isEnabled: true },
-    { id: 4, name: "FOURTG", throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, isEnabled: false  },
+    { id: 1, name: "PLAYER 1", throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, isEnabled: true },
+    { id: 2, name: "PLAYER 2", throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, isEnabled: true },
+    { id: 3, name: "PLAYER 3", throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, isEnabled: true },
+    { id: 4, name: "PLAYER 4", throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, isEnabled: false  },
   ]);
 
   const [activePlayerIndex, setActivePlayerIndex] = useState(0);
+  
+  const [historyStack, setHistoryStack] = useState<GameStateSnapshot[]>([]);
 
-  const resetThrows = () => {
-    setPlayers((prevPlayers) =>
-      prevPlayers.map((p) => {
-        return { ...p, throws: [] };
-      })
-    );
+  // UNDO LOGIC
+  const saveHistory = () => {
+    // Create a deep copy of the current state
+    const snapshot: GameStateSnapshot = {
+      players: JSON.parse(JSON.stringify(players)), 
+      activePlayerIndex: activePlayerIndex,
+    };
+    setHistoryStack((prev) => [...prev, snapshot]);
   };
 
-const handleLegWin = (winner: Player, winningThrowScore: number) => {
-  const LEGS_TO_WIN_SET = 3;
-  
-  const enabledPlayers = players.filter(p => p.isEnabled);
-  const activeCount = enabledPlayers.length;
-  const totalSets = enabledPlayers.reduce((sum, p) => sum + p.sets, 0);
-  const totalLegsCurrentSet = enabledPlayers.reduce((sum, p) => sum + p.legs, 0);
+  const handleUndo = () => {
+    if (historyStack.length === 0) return;
 
-  console.log(winner.legs + 1 >= LEGS_TO_WIN_SET);
-  const isSetWin = winner.legs + 1 >= LEGS_TO_WIN_SET;
+    const lastState = historyStack[historyStack.length - 1];
+    
+    // Restore state
+    setPlayers(lastState.players);
+    setActivePlayerIndex(lastState.activePlayerIndex);
+    
+    setHistoryStack((prev) => prev.slice(0, -1));
+  };
 
-  let nextStarterRelativeIndex = 0;
+  const handleLegWin = (winner: Player, winningThrowScore: number) => {
+    const LEGS_TO_WIN_SET = 3;
+    const enabledPlayers = players.filter(p => p.isEnabled);
+    const activeCount = enabledPlayers.length;
+    const totalSets = enabledPlayers.reduce((sum, p) => sum + p.sets, 0);
+    const totalLegsCurrentSet = enabledPlayers.reduce((sum, p) => sum + p.legs, 0);
+    const isSetWin = winner.legs + 1 >= LEGS_TO_WIN_SET;
 
-  if (isSetWin) {
-    // Start of Set
-    nextStarterRelativeIndex = (totalSets + 1) % activeCount;
-  } else {
-    // Start of Leg
-    const setStarterRelativeIndex = totalSets % activeCount;
-    const legsPlayedIncludingThisOne = totalLegsCurrentSet + 1;
-    nextStarterRelativeIndex = (setStarterRelativeIndex + legsPlayedIncludingThisOne) % activeCount;
-  }
+    let nextStarterRelativeIndex = 0;
+    if (isSetWin) {
+      nextStarterRelativeIndex = (totalSets + 1) % activeCount;
+    } else {
+      const setStarterRelativeIndex = totalSets % activeCount;
+      const legsPlayedIncludingThisOne = totalLegsCurrentSet + 1;
+      nextStarterRelativeIndex = (setStarterRelativeIndex + legsPlayedIncludingThisOne) % activeCount;
+    }
 
-  // Convert "2nd active player" -> "Real Index in main array"
-  const nextStarterPlayer = enabledPlayers[nextStarterRelativeIndex];
-  const nextStarterRealIndex = players.findIndex(p => p.id === nextStarterPlayer.id);
+    const nextStarterPlayer = enabledPlayers[nextStarterRelativeIndex];
+    const nextStarterRealIndex = players.findIndex(p => p.id === nextStarterPlayer.id);
 
-  // Update State
-  setPlayers((prevPlayers) =>
-    prevPlayers.map((p) => {
-      if (p.id === winner.id) {
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((p) => {
+        if (p.id === winner.id) {
           if (isSetWin)
             return { 
-              ...p, 
-              legs: 0,
-              sets: p.sets + 1, 
-              throws: [],
+              ...p, legs: 0, sets: p.sets + 1, throws: [],
               matchHistory: [...p.matchHistory, winningThrowScore],
               checkoutHistory: [...p.checkoutHistory, winningThrowScore] 
             }; 
           return { 
-            ...p, 
-            legs: p.legs + 1, 
-            throws: [],
+            ...p, legs: p.legs + 1, throws: [],
             matchHistory: [...p.matchHistory, winningThrowScore],
             checkoutHistory: [...p.checkoutHistory, winningThrowScore] 
           };
-      }
-      if (isSetWin) return { ...p, legs: 0, throws: [] };
-      return { ...p, throws: [] };
-    })
-  );
+        }
+        if (isSetWin) return { ...p, legs: 0, throws: [] };
+        return { ...p, throws: [] };
+      })
+    );
 
-  setActivePlayerIndex(nextStarterRealIndex);
-};
+    setActivePlayerIndex(nextStarterRealIndex);
+  };
 
   const handleScoreSubmit = (score: number) => {
+    saveHistory();
+
     const currentPlayer = players[activePlayerIndex];
     const currentTotal = sum(currentPlayer.throws);
     const newTotal = currentTotal + score;
@@ -109,26 +120,27 @@ const handleLegWin = (winner: Player, winningThrowScore: number) => {
 
     // BUST
     if (newTotal > STARTING_SCORE) {
-      // Switch turns immediately without adding the score
-      setActivePlayerIndex(activePlayerIndex === 0 ? 1 : 0);
+      let nextIndex = (activePlayerIndex + 1) % players.length;
+      while (!players[nextIndex].isEnabled) {
+        nextIndex = (nextIndex + 1) % players.length;
+      }
+      setActivePlayerIndex(nextIndex);
       return;
     }
 
-    // Normal Throw
     setPlayers((prevPlayers) => {
       return prevPlayers.map((player, index) => {
         if (index === activePlayerIndex) {
           return {
             ...player,
-            throws: [...player.throws, score], // For calculating 501
-            matchHistory: [...player.matchHistory, score] // For Stats (Never deleted)
+            throws: [...player.throws, score],
+            matchHistory: [...player.matchHistory, score]
           };
         }
         return player;
       });
     });
 
-    //skip players who have isEnabled: false
     let nextIndex = (activePlayerIndex + 1) % players.length;
     while (!players[nextIndex].isEnabled) {
       nextIndex = (nextIndex + 1) % players.length;
@@ -136,18 +148,12 @@ const handleLegWin = (winner: Player, winningThrowScore: number) => {
     setActivePlayerIndex(nextIndex);
   };
 
-  const handleUndo = () => {
-    // TODO
-    console.log("Undo logic placeholder");
-  };
-
   return (
     <div className="flex items-center w-full">
-      {/* PLAYERS GRID */}
+      
       <div className="flex flex-wrap justify-center gap-4 mb-10 w-full">
         {players.map((player, index) => {
           if (!player.isEnabled) return null;
-
           const currentScore = STARTING_SCORE - sum(player.throws);
 
           return (
@@ -166,7 +172,6 @@ const handleLegWin = (winner: Player, winningThrowScore: number) => {
                 )} 
               </div>
 
-              {/* deatiled stats below the card */}
               <div className="flex gap-20 text-gray-500 font-mono text-sm mb-5">
                 <PlayerStats 
                   history={player.matchHistory} 
@@ -178,12 +183,22 @@ const handleLegWin = (winner: Player, winningThrowScore: number) => {
         })}
       </div>
 
-      {/* input section */}
-      <div className="fixed bottom-0 w-full flex flex-col items-center justify-center pb-8 pt-14 max-lg:scale-75 max-lg:pb-2">
-        <ScoreInput
-          currentPlayerName={players[activePlayerIndex].name}
-          onSubmit={handleScoreSubmit}
-        />
+      {/* INPUT SECTION */}
+      <div className="fixed bottom-0 w-full flex flex-col items-center justify-center pb-8 pt-14 max-lg:scale-75 max-lg:pb-2 z-50">
+        
+        <div className="relative flex items-end justify-center gap-4">
+          
+          {/* UNDO BUTTON */}
+
+          <div className="mb-3">
+            <IconButton icon={Undo2} label="Undo" onClick={handleUndo}/>
+          </div>
+          
+          <ScoreInput
+            currentPlayerName={players[activePlayerIndex].name}
+            onSubmit={handleScoreSubmit}
+          />
+        </div>
       </div>
     </div>
   );

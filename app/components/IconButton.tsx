@@ -24,7 +24,7 @@ export default function IconButton({ icon: Icon, label, onClick }: IconButtonPro
       {/* tooltip */}
       <span 
         className="
-          absolute -top-10 left-1/2 z-10 
+          absolute -top-8 left-1/2 z-10 
           -translate-x-1/2 scale-0 rounded-md bg-neutral-950 w-20
           px-2 py-1 text-xs font-medium text-white shadow-lg 
           transition-all duration-200 ease-out 
