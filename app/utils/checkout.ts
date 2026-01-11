@@ -116,18 +116,17 @@ if (score > 170 || score < 2 || bogeys.includes(score)) return null;
 
 if (checkoutTable[score]) return checkoutTable[score];
 
-// Fallback for Numbers < 60
-// Simple algorithm for single/double finishes
+// Numbers < 60
 if (score <= 40 && score % 2 === 0) return [`D${score / 2}`];
 if (score === 50) return ["BULL"];
 
-// Odd numbers < 40 (e.g. 39 -> 7, D16)
+// Odd numbers < 40
 if (score < 40 && score % 2 !== 0) {
     const remainder = score - 32; // Try to leave D16
     if (remainder > 0) return [`${remainder}`, "D16"];
 }
 
-// 41-59 Logic (Simple setup)
+// 41-59
 if (score > 40 && score < 60) {
      const remainder = score - 40; // Try to leave D20
     return [`${remainder}`, "D20"];

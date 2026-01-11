@@ -1,11 +1,15 @@
 "use client";
-import { useState } from "react";
+import { useState, forwardRef, useImperativeHandle } from "react";
 import { Undo2 } from "lucide-react";
 import PlayerScore from "./PlayerScore";
 import ScoreInput from "./ScoreInput";
 import PlayerStats from "./PlayerStats";
 import CheckoutGuide from "./CheckoutGuide";
 import IconButton from "./IconButton";
+
+export interface ScoreboardHandle {
+  resetMatch: () => void;
+}
 
 interface Player {
   id: number;
@@ -26,7 +30,7 @@ interface GameStateSnapshot {
 
 const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 
-export default function Scoreboard() {
+const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   const STARTING_SCORE = 501;
 
   const [players, setPlayers] = useState<Player[]>([
@@ -39,6 +43,23 @@ export default function Scoreboard() {
   const [activePlayerIndex, setActivePlayerIndex] = useState(0);
   
   const [historyStack, setHistoryStack] = useState<GameStateSnapshot[]>([]);
+
+  const handleReset = () => {
+    if (typeof window !== "undefined" && window.confirm("Are you sure you want to reset the entire match?")) {
+      setPlayers((prev) =>
+        prev.map((p) => ({
+          ...p,
+          throws: [],
+          matchHistory: [],
+          checkoutHistory: [],
+          sets: 0,
+          legs: 0,
+        }))
+      );
+      setActivePlayerIndex(0);
+      setHistoryStack([]); // Clear undo history
+    }
+  };
 
   // UNDO LOGIC
   const saveHistory = () => {
@@ -148,6 +169,10 @@ export default function Scoreboard() {
     setActivePlayerIndex(nextIndex);
   };
 
+  useImperativeHandle(ref, () => ({
+    resetMatch: handleReset
+  }));
+
   return (
     <div className="flex items-center w-full">
       
@@ -202,4 +227,9 @@ export default function Scoreboard() {
       </div>
     </div>
   );
-}
+
+})
+
+Scoreboard.displayName = "Scoreboard";
+
+export default Scoreboard;
