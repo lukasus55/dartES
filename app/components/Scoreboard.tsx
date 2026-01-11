@@ -6,6 +6,7 @@ import ScoreInput from "./ScoreInput";
 import PlayerStats from "./PlayerStats";
 import CheckoutGuide from "./CheckoutGuide";
 import IconButton from "./IconButton";
+import ConfirmationPopup from "./ConfirmationPopup";
 
 export interface ScoreboardHandle {
   resetMatch: () => void;
@@ -30,7 +31,6 @@ interface GameStateSnapshot {
 
 const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 
-// Default config
 const DEFAULT_PLAYERS_CONFIG = [
   { id: 1, name: "PLAYER 1", isEnabled: true },
   { id: 2, name: "PLAYER 2", isEnabled: true },
@@ -42,79 +42,76 @@ const DEFAULT_PLAYERS_CONFIG = [
 const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   const [gameSettings, setGameSettings] = useState({
     startingScore: 501,
-    legsToWinSet: 3,
+    legsToWinSet: 3
   });
 
   const [players, setPlayers] = useState<Player[]>(
-    DEFAULT_PLAYERS_CONFIG.map((p) => ({
-      ...p,
-      throws: [],
-      matchHistory: [],
-      checkoutHistory: [],
-      sets: 0,
-      legs: 0,
+    DEFAULT_PLAYERS_CONFIG.map(p => ({
+        ...p,
+        throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0
     }))
   );
 
   const [activePlayerIndex, setActivePlayerIndex] = useState(0);
   const [historyStack, setHistoryStack] = useState<GameStateSnapshot[]>([]);
+  
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
+  // --- LOADING LOGIC ---
   useEffect(() => {
     const loadConfig = () => {
       const savedConfig = localStorage.getItem("darts_app_theme_config");
       if (savedConfig) {
         const parsed = JSON.parse(savedConfig);
-
-        // Update Game Rules
+        
         setGameSettings({
           startingScore: parsed.startingScore || 501,
-          legsToWinSet: parsed.legsToWinSet || 3,
+          legsToWinSet: parsed.legsToWinSet || 3
         });
 
-        // Update Players
         if (parsed.players && Array.isArray(parsed.players)) {
-          setPlayers((prevPlayers) => {
-            // Map over the EXISTING state and only update name/enabled status
-            return prevPlayers.map((p) => {
-              const savedP = parsed.players.find((sp: any) => sp.id === p.id);
-              if (savedP) {
-                return { ...p, name: savedP.name, isEnabled: savedP.isEnabled };
-              }
-              return p;
+            setPlayers(prevPlayers => {
+                return prevPlayers.map(p => {
+                    const savedP = parsed.players.find((sp: any) => sp.id === p.id);
+                    if (savedP) {
+                        return { ...p, name: savedP.name, isEnabled: savedP.isEnabled };
+                    }
+                    return p;
+                });
             });
-          });
         }
       }
     };
 
-    loadConfig(); // Initial Load
-    window.addEventListener("storage", loadConfig); // Listen for popup changes
+    loadConfig(); 
+    window.addEventListener("storage", loadConfig); 
     return () => window.removeEventListener("storage", loadConfig);
   }, []);
 
-  const handleReset = () => {
-    if (
-      typeof window !== "undefined" &&
-      window.confirm("Are you sure you want to reset the entire match?")
-    ) {
-      setPlayers((prev) =>
-        prev.map((p) => ({
-          ...p,
-          throws: [],
-          matchHistory: [],
-          checkoutHistory: [],
-          sets: 0,
-          legs: 0,
-        }))
-      );
-      setActivePlayerIndex(0);
-      setHistoryStack([]);
-    }
+  // opens confirmation popup
+  const handleResetRequest = () => {
+    setShowResetConfirm(true);
+  };
+
+  const executeReset = () => {
+    setPlayers((prev) =>
+      prev.map((p) => ({
+        ...p,
+        throws: [],
+        matchHistory: [],
+        checkoutHistory: [],
+        sets: 0,
+        legs: 0,
+      }))
+    );
+    setActivePlayerIndex(0);
+    setHistoryStack([]); 
+    setShowResetConfirm(false);
   };
 
   const saveHistory = () => {
     const snapshot: GameStateSnapshot = {
-      players: JSON.parse(JSON.stringify(players)),
+      players: JSON.parse(JSON.stringify(players)), 
       activePlayerIndex: activePlayerIndex,
     };
     setHistoryStack((prev) => [...prev, snapshot]);
@@ -129,14 +126,11 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   };
 
   const handleLegWin = (winner: Player, winningThrowScore: number) => {
-    const enabledPlayers = players.filter((p) => p.isEnabled);
+    const enabledPlayers = players.filter(p => p.isEnabled);
     const activeCount = enabledPlayers.length;
     const totalSets = enabledPlayers.reduce((sum, p) => sum + p.sets, 0);
-    const totalLegsCurrentSet = enabledPlayers.reduce(
-      (sum, p) => sum + p.legs,
-      0
-    );
-
+    const totalLegsCurrentSet = enabledPlayers.reduce((sum, p) => sum + p.legs, 0);
+    
     const isSetWin = winner.legs + 1 >= gameSettings.legsToWinSet;
 
     let nextStarterRelativeIndex = 0;
@@ -145,33 +139,25 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
     } else {
       const setStarterRelativeIndex = totalSets % activeCount;
       const legsPlayedIncludingThisOne = totalLegsCurrentSet + 1;
-      nextStarterRelativeIndex =
-        (setStarterRelativeIndex + legsPlayedIncludingThisOne) % activeCount;
+      nextStarterRelativeIndex = (setStarterRelativeIndex + legsPlayedIncludingThisOne) % activeCount;
     }
 
     const nextStarterPlayer = enabledPlayers[nextStarterRelativeIndex];
-    const nextStarterRealIndex = players.findIndex(
-      (p) => p.id === nextStarterPlayer.id
-    );
+    const nextStarterRealIndex = players.findIndex(p => p.id === nextStarterPlayer.id);
 
     setPlayers((prevPlayers) =>
       prevPlayers.map((p) => {
         if (p.id === winner.id) {
           if (isSetWin)
-            return {
-              ...p,
-              legs: 0,
-              sets: p.sets + 1,
-              throws: [],
+            return { 
+              ...p, legs: 0, sets: p.sets + 1, throws: [],
               matchHistory: [...p.matchHistory, winningThrowScore],
-              checkoutHistory: [...p.checkoutHistory, winningThrowScore],
-            };
-          return {
-            ...p,
-            legs: p.legs + 1,
-            throws: [],
+              checkoutHistory: [...p.checkoutHistory, winningThrowScore] 
+            }; 
+          return { 
+            ...p, legs: p.legs + 1, throws: [],
             matchHistory: [...p.matchHistory, winningThrowScore],
-            checkoutHistory: [...p.checkoutHistory, winningThrowScore],
+            checkoutHistory: [...p.checkoutHistory, winningThrowScore] 
           };
         }
         if (isSetWin) return { ...p, legs: 0, throws: [] };
@@ -189,30 +175,27 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
     const currentTotal = sum(currentPlayer.throws);
     const newTotal = currentTotal + inputScore;
 
-    // WIN
     if (newTotal === gameSettings.startingScore) {
       handleLegWin(currentPlayer, inputScore);
       return;
     }
 
-    let score = inputScore;
-
-    // BUST
+    let scoreToRecord = inputScore;
     if (newTotal > gameSettings.startingScore) {
-      score = 0;
-    }
+       scoreToRecord = 0; // Bust
+    } 
 
     setPlayers((prevPlayers) => {
-      return prevPlayers.map((player, index) => {
-        if (index === activePlayerIndex) {
-          return {
-            ...player,
-            throws: [...player.throws, score],
-            matchHistory: [...player.matchHistory, score],
-          };
-        }
-        return player;
-      });
+        return prevPlayers.map((player, index) => {
+            if (index === activePlayerIndex) {
+                return {
+                    ...player,
+                    throws: [...player.throws, scoreToRecord],
+                    matchHistory: [...player.matchHistory, scoreToRecord]
+                };
+            }
+            return player;
+        });
     });
 
     let nextIndex = (activePlayerIndex + 1) % players.length;
@@ -223,15 +206,24 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   };
 
   useImperativeHandle(ref, () => ({
-    resetMatch: handleReset,
+    resetMatch: handleResetRequest // Connect Ref to the Popup opener
   }));
 
   return (
     <div className="flex items-center w-full">
+      
+      <ConfirmationPopup 
+        isOpen={showResetConfirm}
+        title="Reset Match?"
+        message="This will clear all scores, stats, and history. This will NOT clear custom colors, game settings and player names. This action cannot be undone."
+        onConfirm={executeReset}
+        onCancel={() => setShowResetConfirm(false)}
+      />
+
       <div className="flex flex-wrap justify-center gap-4 mb-10 w-full">
         {players.map((player, index) => {
           if (!player.isEnabled) return null;
-
+          
           const currentScore = gameSettings.startingScore - sum(player.throws);
 
           return (
@@ -242,16 +234,18 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
                 sets={player.sets}
                 legs={player.legs}
                 isActive={index === activePlayerIndex}
-              />
+              />    
 
               <div className="flex h-15 mb-5 w-full justify-center">
-                {currentScore <= 170 && <CheckoutGuide score={currentScore} />}
+                {currentScore <= 170 && (
+                  <CheckoutGuide score={currentScore} />
+                )} 
               </div>
 
               <div className="flex gap-20 text-gray-500 font-mono text-sm mb-5">
-                <PlayerStats
-                  history={player.matchHistory}
-                  checkouts={player.checkoutHistory}
+                <PlayerStats 
+                  history={player.matchHistory} 
+                  checkouts={player.checkoutHistory} 
                 />
               </div>
             </div>
@@ -262,7 +256,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
       <div className="fixed bottom-0 w-full flex flex-col items-center justify-center pb-8 pt-14 max-lg:scale-75 max-lg:pb-2 z-50">
         <div className="relative flex items-end justify-center gap-4">
           <div className="mb">
-            <IconButton icon={Undo2} label="Undo" onClick={handleUndo} />
+            <IconButton icon={Undo2} label="Undo" onClick={handleUndo}/>
           </div>
           <ScoreInput
             currentPlayerName={players[activePlayerIndex].name}

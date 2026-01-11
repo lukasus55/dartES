@@ -44,7 +44,7 @@ export default function ScoreInput({
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="0"
             className="
-              w-48 h-12 
+              w-48 h-10 
               bg-neutral-950 
               border-2 border-neutral-800 
               rounded-full 
