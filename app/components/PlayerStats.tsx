@@ -32,6 +32,9 @@ export default function PlayerStats({ history = [], checkouts = [] }: PlayerStat
   const s140Plus = history.filter(s => s >= 140 && s < 160).length;
   const s120Plus = history.filter(s => s >= 120 && s < 140).length;
   const s100Plus = history.filter(s => s >= 100 && s < 120).length;
+  const s80Plus = history.filter(s => s >= 80 && s < 100).length;
+  const s60Plus = history.filter(s => s >= 60 && s < 80).length;
+  const s40Plus = history.filter(s => s >= 40 && s < 60).length;
 
   return (
     <div className="flex flex-col gap-2 min-w-80 mx-5 p-4 text-xs font-mono text-gray-500">
@@ -45,13 +48,28 @@ export default function PlayerStats({ history = [], checkouts = [] }: PlayerStat
       <div className="grid grid-cols-3 gap-x-6 gap-y-1 border-b border-gray-700 pb-4 mb-2">
         
         <div className="flex justify-between">
+          <span>40+</span> 
+          <span className={getStyle(lastThrow >= 40 && lastThrow < 60)}>{s40Plus}</span>
+        </div>
+
+        <div className="flex justify-between">
           <span>100+</span> 
           <span className={getStyle(lastThrow >= 100 && lastThrow < 120)}>{s100Plus}</span>
         </div>
 
         <div className="flex justify-between">
-          <span>140+</span> 
-          <span className={getStyle(lastThrow >= 140 && lastThrow < 160)}>{s140Plus}</span>
+          <span>160+</span> 
+          <span className={getStyle(lastThrow >= 160 && lastThrow < 170)}>{s160Plus}</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span>60+</span> 
+          <span className={getStyle(lastThrow >= 60 && lastThrow < 80)}>{s60Plus}</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span>120+</span> 
+          <span className={getStyle(lastThrow >= 120 && lastThrow < 140)}>{s120Plus}</span>
         </div>
 
         <div className="flex justify-between">
@@ -60,13 +78,13 @@ export default function PlayerStats({ history = [], checkouts = [] }: PlayerStat
         </div>
         
         <div className="flex justify-between">
-          <span>120+</span> 
-          <span className={getStyle(lastThrow >= 120 && lastThrow < 140)}>{s120Plus}</span>
+          <span>80+</span> 
+          <span className={getStyle(lastThrow >= 80 && lastThrow < 100)}>{s80Plus}</span>
         </div>
 
         <div className="flex justify-between">
-          <span>160+</span> 
-          <span className={getStyle(lastThrow >= 160 && lastThrow < 170)}>{s160Plus}</span>
+          <span>140+</span> 
+          <span className={getStyle(lastThrow >= 140 && lastThrow < 160)}>{s140Plus}</span>
         </div>
 
         <div className="flex justify-between">
