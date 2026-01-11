@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { X, RotateCcw } from "lucide-react";
+import ColorPickerPopup from "./ColorPickerPopup";
 
 interface CustomizationPopupProps {
   onClose: () => void;
@@ -24,6 +25,9 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
   const [primaryColor, setPrimaryColor] = useState("");
   const [secondaryColor, setSecondaryColor] = useState("");
   const [accentColor, setAccentColor] = useState("");
+
+  // This state tracks WHICH picker is open: 'primary', 'secondary', 'accent', or null
+  const [activePicker, setActivePicker] = useState<string | null>(null);
 
   useEffect(() => {
     setPrimaryColor(getCssVar("--customizablePrimary") || DEFAULT_THEME.primary);
@@ -59,12 +63,26 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
           Theme Colors
         </h3>
 
-        {/* PRIMARY- */}
-        <div className="flex items-center gap-3">
-          <div 
-            className="w-8 h-8 rounded-full border border-neutral-700 shadow-inner transition-colors duration-200"
+        {/* --- PRIMARY --- */}
+        {/* We add 'relative' here so the absolute picker positions itself relative to this row */}
+        <div className="flex items-center gap-3 relative">
+          <button 
+            className="w-8 h-8 rounded-full border border-neutral-700 shadow-inner transition-colors duration-200 cursor-pointer"
             style={{ backgroundColor: primaryColor }}
+            onClick={() => setActivePicker("primary")}
           />
+          
+          {/* THE PICKER POPUP */}
+          {activePicker === "primary" && (
+            <div className="absolute top-10 left-0 z-50">
+              <ColorPickerPopup 
+                color={primaryColor} 
+                onChange={(c) => handleColorChange("--customizablePrimary", c, setPrimaryColor)}
+                onClose={() => setActivePicker(null)}
+              />
+            </div>
+          )}
+
           <div className="flex-1 flex flex-col">
             <label className="text-xs text-neutral-500 font-mono mb-1">PRIMARY (TEXT)</label>
             <div className="flex items-center gap-2">
@@ -90,12 +108,24 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
           </div>
         </div>
 
-        {/* SECONDARY */}
-        <div className="flex items-center gap-3">
-          <div 
-            className="w-8 h-8 rounded-full border border-neutral-700 shadow-inner transition-colors duration-200"
+        {/* --- SECONDARY --- */}
+        <div className="flex items-center gap-3 relative">
+          <button 
+            className="w-8 h-8 rounded-full border border-neutral-700 shadow-inner transition-colors duration-200 cursor-pointer"
             style={{ backgroundColor: secondaryColor }}
+            onClick={() => setActivePicker("secondary")}
           />
+
+          {activePicker === "secondary" && (
+            <div className="absolute top-10 left-0 z-50">
+              <ColorPickerPopup 
+                color={secondaryColor} 
+                onChange={(c) => handleColorChange("--customizableSecondary", c, setSecondaryColor)}
+                onClose={() => setActivePicker(null)}
+              />
+            </div>
+          )}
+
           <div className="flex-1 flex flex-col">
             <label className="text-xs text-neutral-500 font-mono mb-1">SECONDARY (BG)</label>
             <div className="flex items-center gap-2">
@@ -121,12 +151,24 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
           </div>
         </div>
 
-        {/* ACCENT*/}
-        <div className="flex items-center gap-3">
-          <div 
-            className="w-8 h-8 rounded-full border border-neutral-700 shadow-inner transition-colors duration-200"
+        {/* --- ACCENT --- */}
+        <div className="flex items-center gap-3 relative">
+          <button 
+            className="w-8 h-8 rounded-full border border-neutral-700 shadow-inner transition-colors duration-200 cursor-pointer"
             style={{ backgroundColor: accentColor }}
+            onClick={() => setActivePicker("accent")}
           />
+
+          {activePicker === "accent" && (
+            <div className="absolute top-10 left-0 z-50">
+              <ColorPickerPopup 
+                color={accentColor} 
+                onChange={(c) => handleColorChange("--customizableAccent", c, setAccentColor)}
+                onClose={() => setActivePicker(null)}
+              />
+            </div>
+          )}
+
           <div className="flex-1 flex flex-col">
             <label className="text-xs text-neutral-500 font-mono mb-1">ACCENT</label>
             <div className="flex items-center gap-2">
