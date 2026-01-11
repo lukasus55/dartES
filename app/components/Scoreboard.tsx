@@ -210,7 +210,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
           
           {/* UNDO BUTTON */}
 
-          <div className="mb-3">
+          <div className="mb">
             <IconButton icon={Undo2} label="Undo" onClick={handleUndo}/>
           </div>
           

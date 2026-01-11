@@ -22,39 +22,39 @@ export default function PlayerScore({
         transition-all duration-300 border-2
         ${
           isActive
-            ? "border-accent bg-secondary"
+            ? "border-customizableAccent bg-customizableSecondary"
             : "border-transparent bg-transparent"
         }
       `}
     >
-      <div className="flex w-full justify-center text-3xl font-bold text-accent">
+      <div className="flex w-full justify-center text-3xl font-bold text-customizableAccent">
         {name}
         {isActive && (
-          <span className="ml-2 text-accent pt-2.5">
+          <span className="ml-2 text-customizableAccent pt-2.5">
             {" "}
-            <Circle fill="var(--accent)" size={16} />{" "}
+            <Circle fill="var(--customizableAccent)" size={16} />{" "}
           </span>
         )}
       </div>
 
-      <div className="flex w-full justify-center text-8xl font-black text-primary">
+      <div className="flex w-full justify-center text-8xl font-black text-customizablePrimary">
         {score}
       </div>
 
       {/* stats section */}
       <div className="flex w-full mt-10">
-        <div className="flex w-1/2 justify-end text-2xl font-bold text-accent">
+        <div className="flex w-1/2 justify-end text-2xl font-bold text-customizableAccent">
           SETS
         </div>
-        <div className="flex w-1/2 justify-start px-5 text-2xl font-bold text-primary">
+        <div className="flex w-1/2 justify-start px-5 text-2xl font-bold text-customizablePrimary">
           {sets}
         </div>
       </div>
       <div className="flex w-full">
-        <div className="flex w-1/2 justify-end text-2xl font-bold text-accent">
+        <div className="flex w-1/2 justify-end text-2xl font-bold text-customizableAccent">
           LEGS
         </div>
-        <div className="flex w-1/2 justify-start px-5 text-2xl font-bold text-primary">
+        <div className="flex w-1/2 justify-start px-5 text-2xl font-bold text-customizablePrimary">
           {legs}
         </div>
       </div>

@@ -3,15 +3,17 @@
 :root {
   --background: #0e0e0e;
   --primary: #F3EFF5;
-  --secondary: #0F131B;
-  --accent: #72B01D;
+  --customizablePrimary: #F3EFF5;
+  --customizableSecondary: #0F131B;
+  --customizableAccent: #72B01D;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-primary: var(--primary);
-  --color-secondary: var(--secondary);
-  --color-accent: var(--accent);
+  --color-customizablePrimary: var(--customizablePrimary);
+  --color-customizableSecondary: var(--customizableSecondary);
+  --color-customizableAccent: var(--customizableAccent);
 }
 
 /* @media (prefers-color-scheme: dark) {

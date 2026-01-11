@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CornerDownLeft } from "lucide-react"; // Enter icon
+import { CornerDownLeft } from "lucide-react";
 
 interface ScoreInputProps {
   onSubmit: (score: number) => void;
@@ -29,48 +29,57 @@ export default function ScoreInput({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col items-center gap-4 mt-8"
+      className="flex items-end gap-3"
     >
-      <div className="text-gray-400 text-sm font-mono max-lg:hidden">
-        ENTER SCORE FOR{" "}
-        <span className="text-accent font-bold">{currentPlayerName}</span>
-      </div>
+      <div className="flex flex-col gap-1.5">
+        <div className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider pl-1 max-lg:hidden">
+          Score for <span className="text-primary">{currentPlayerName}</span>
+        </div>
 
-      <div className="relative group">
-        <input
-          type="number"
-          autoFocus
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="0"
-          className="
-            w-48 h-16 bg-secondary border-2 border-gray-700 rounded-xl
-            text-center text-4xl font-bold text-white outline-none
-            transition-all duration-200
-            focus:border-accent focus:shadow-[0_0_20px_rgba(var(--accent-rgb),0.2)]
-            placeholder:text-gray-700
-            
-            /* --- HIDE SPINNERS --- */
-            [appearance:textfield] 
-            [&::-webkit-outer-spin-button]:appearance-none 
-            [&::-webkit-inner-spin-button]:appearance-none
-          "
-        />
+        <div className="relative group">
+          <input
+            type="number"
+            autoFocus
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder="0"
+            className="
+              w-48 h-12 
+              bg-neutral-950 
+              border-2 border-neutral-800 
+              rounded-full 
+              text-center text-xl font-bold text-primary
+              placeholder:text-neutral-700
+              outline-none
+              transition-all duration-200
+              
+              hover:border-neutral-700
+              focus:border-primary/50 focus:bg-neutral-900
+              
+              /* --- HIDE SPINNERS --- */
+              [appearance:textfield] 
+              [&::-webkit-outer-spin-button]:appearance-none 
+              [&::-webkit-inner-spin-button]:appearance-none
+            "
+          />
 
-        {/* Enter Button */}
-        <button
-          type="submit"
-          disabled={!inputValue || isProcessing}
-          className="
-            absolute right-2 top-2 bottom-2 w-12 
-            flex items-center justify-center
-            bg-gray-800 rounded-lg text-gray-400
-            hover:bg-accent hover:text-black transition-colors
-            disabled:opacity-50 disabled:cursor-not-allowed
-        "
-        >
-          <CornerDownLeft size={20} />
-        </button>
+          {/* Enter Button (Integrated inside right) */}
+          <button
+            type="submit"
+            disabled={!inputValue || isProcessing}
+            className="
+              absolute right-1 top-1 bottom-1 w-10
+              flex items-center justify-center
+              rounded-full
+              text-neutral-500
+              hover:bg-neutral-800 hover:text-primary
+              disabled:opacity-0 disabled:cursor-default
+              transition-all duration-200
+            "
+          >
+            <CornerDownLeft size={16} strokeWidth={2.5} />
+          </button>
+        </div>
       </div>
     </form>
   );
