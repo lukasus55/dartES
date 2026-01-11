@@ -2,6 +2,7 @@
 import { useRef, useEffect } from "react";
 import Scoreboard, { ScoreboardHandle } from "./components/Scoreboard"; // Import the type too
 import Topbar from "./components/Topbar";
+import Footer from "./components/Footer";
 
 export default function Home() {
 
@@ -18,7 +19,7 @@ export default function Home() {
   const scoreboardRef = useRef<ScoreboardHandle>(null);
 
   return (
-    <div className="flex min-h-screen items-center text-primary justify-center font-sans bg-background">
+    <div className="flex min-h-screen items-center text-primary justify-center font-sans bg-background flex-wrap">
 
       <Topbar onReset={() => scoreboardRef.current?.resetMatch()} />
 
@@ -27,6 +28,8 @@ export default function Home() {
       <Scoreboard ref={scoreboardRef} />
 
       </main>
+
+      <Footer />
 
     </div>
   );

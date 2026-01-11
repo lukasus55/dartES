@@ -54,8 +54,28 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
 
   const [activePlayerIndex, setActivePlayerIndex] = useState(0);
   const [historyStack, setHistoryStack] = useState<GameStateSnapshot[]>([]);
-  
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  
+  // State to hide input on scroll 
+  const [hideInput, setHideInput] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolledTo = window.scrollY + window.innerHeight;
+      const totalHeight = document.documentElement.scrollHeight;
+      const distanceToBottom = totalHeight - scrolledTo;
+
+      // If we are within 100px of the bottom (approx footer size), hide input
+      if (distanceToBottom < 100) {
+        setHideInput(true);
+      } else {
+        setHideInput(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // --- LOADING LOGIC ---
   useEffect(() => {
@@ -88,7 +108,6 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
     return () => window.removeEventListener("storage", loadConfig);
   }, []);
 
-  // opens confirmation popup
   const handleResetRequest = () => {
     setShowResetConfirm(true);
   };
@@ -106,7 +125,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
     );
     setActivePlayerIndex(0);
     setHistoryStack([]); 
-    setShowResetConfirm(false);
+    setShowResetConfirm(false); 
   };
 
   const saveHistory = () => {
@@ -206,7 +225,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   };
 
   useImperativeHandle(ref, () => ({
-    resetMatch: handleResetRequest // Connect Ref to the Popup opener
+    resetMatch: handleResetRequest 
   }));
 
   return (
@@ -215,12 +234,12 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
       <ConfirmationPopup 
         isOpen={showResetConfirm}
         title="Reset Match?"
-        message="This will clear all scores, stats, and history. This will NOT clear custom colors, game settings and player names. This action cannot be undone."
+        message="This will clear all scores, stats, and history. This action cannot be undone."
         onConfirm={executeReset}
         onCancel={() => setShowResetConfirm(false)}
       />
 
-      <div className="flex flex-wrap justify-center gap-4 mb-10 w-full">
+      <div className="flex flex-wrap justify-center gap-4 mb-32 w-full"> {/* Increased margin bottom to ensure content isn't hidden behind input initially */}
         {players.map((player, index) => {
           if (!player.isEnabled) return null;
           
@@ -253,7 +272,15 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
         })}
       </div>
 
-      <div className="fixed bottom-0 w-full flex flex-col items-center justify-center pb-8 pt-14 max-lg:scale-75 max-lg:pb-2 z-50">
+      {/* --- INPUT CONTAINER --- */}
+      <div 
+        className={`
+          fixed bottom-0 w-full flex flex-col items-center justify-center pb-8 pt-14 
+          max-lg:scale-75 max-lg:pb-2 z-50 
+          transition-all duration-500 ease-in-out
+          ${hideInput ? 'translate-y-[120%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}
+        `}
+      >
         <div className="relative flex items-end justify-center gap-4">
           <div className="mb">
             <IconButton icon={Undo2} label="Undo" onClick={handleUndo}/>
