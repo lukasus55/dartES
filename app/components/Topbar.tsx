@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
 import IconButton from "./IconButton";
-import { Pencil, RotateCcw, TvMinimal } from "lucide-react";
+import { Pencil, RotateCcw, TvMinimal, FileSpreadsheet } from "lucide-react";
 import CustomizationPopup from "./CustomizationPopup";
+import { exportMatchToExcel } from "../utils/exportMatchToExcel";
 
 interface TopbarProps {
   onReset: () => void;
@@ -23,6 +24,11 @@ export default function Topbar({ onReset }: TopbarProps) {
           icon={Pencil} 
           label="Edit" 
           onClick={() => setShowCustomization((prev) => !prev)}
+        />
+        <IconButton 
+          icon={FileSpreadsheet} 
+          label="Export" 
+          onClick={exportMatchToExcel}
         />
         <IconButton 
           icon={TvMinimal} 
