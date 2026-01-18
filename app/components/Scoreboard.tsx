@@ -79,7 +79,6 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
 
       if (matchStr) {
         const savedMatch = JSON.parse(matchStr);
-        console.log(savedMatch)
         let restoredPlayers: Player[] = savedMatch.players;
 
         // live update of Names/Enabled status from Settings
@@ -118,7 +117,6 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
         activePlayerIndex,
         timestamp: Date.now()
       };
-          console.log(snapshot)
       localStorage.setItem(MATCH_STORAGE_KEY, JSON.stringify(snapshot));
     }
   }, [players, activePlayerIndex]);
