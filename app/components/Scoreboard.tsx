@@ -31,6 +31,9 @@ interface GameStateSnapshot {
 
 const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 
+const MATCH_STORAGE_KEY = "darts_match_snapshot";
+const THEME_STORAGE_KEY = "darts_app_theme_config";
+
 const DEFAULT_PLAYERS_CONFIG = [
   { id: 1, name: "PLAYER 1", isEnabled: true },
   { id: 2, name: "PLAYER 2", isEnabled: true },
@@ -55,57 +58,85 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   const [activePlayerIndex, setActivePlayerIndex] = useState(0);
   const [historyStack, setHistoryStack] = useState<GameStateSnapshot[]>([]);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
-  
-  // State to hide input on scroll 
   const [hideInput, setHideInput] = useState(false);
 
+  // LOAD CONFIG & RESTORE GAME
+  useEffect(() => {
+    const loadData = () => {
+      const themeStr = localStorage.getItem(THEME_STORAGE_KEY);
+      let themeConfig: any = null;
+      
+      if (themeStr) {
+        themeConfig = JSON.parse(themeStr);
+        setGameSettings({
+          startingScore: themeConfig.startingScore || 501,
+          legsToWinSet: themeConfig.legsToWinSet || 3
+        });
+      }
+
+      // Get saved match
+      const matchStr = localStorage.getItem(MATCH_STORAGE_KEY);
+
+      if (matchStr) {
+        const savedMatch = JSON.parse(matchStr);
+        console.log(savedMatch)
+        let restoredPlayers: Player[] = savedMatch.players;
+
+        // live update of Names/Enabled status from Settings
+        // if you rename "Player 1" to "Mike", it updates the live game.
+        if (themeConfig && Array.isArray(themeConfig.players)) {
+          restoredPlayers = restoredPlayers.map(p => {
+              const configP = themeConfig.players.find((cp: any) => cp.id === p.id);
+              return configP ? { ...p, name: configP.name, isEnabled: configP.isEnabled } : p;
+          });
+        }
+
+        setPlayers(restoredPlayers);
+        setActivePlayerIndex(savedMatch.activePlayerIndex || 0);
+      } 
+      else {
+        // --- NEW GAME (From Config) ---
+        if (themeConfig && Array.isArray(themeConfig.players)) {
+            setPlayers(prev => prev.map(p => {
+              const configP = themeConfig.players.find((cp: any) => cp.id === p.id);
+              return configP ? { ...p, name: configP.name, isEnabled: configP.isEnabled } : p;
+            }));
+        }
+      }
+    };
+
+    loadData();
+    window.addEventListener("storage", loadData); // Listen for changes from other tabs/popups
+    return () => window.removeEventListener("storage", loadData);
+  }, []);
+
+  // Saves game state every time players or active turn changes
+  useEffect(() => {
+    if (players.length > 0) {
+      const snapshot = {
+        players,
+        activePlayerIndex,
+        timestamp: Date.now()
+      };
+          console.log(snapshot)
+      localStorage.setItem(MATCH_STORAGE_KEY, JSON.stringify(snapshot));
+    }
+  }, [players, activePlayerIndex]);
+
+  // hide input on scroll
   useEffect(() => {
     const handleScroll = () => {
       const scrolledTo = window.scrollY + window.innerHeight;
       const totalHeight = document.documentElement.scrollHeight;
       const distanceToBottom = totalHeight - scrolledTo;
-
-      // If we are within 100px of the bottom (approx footer size), hide input
       if (distanceToBottom < 100) {
         setHideInput(true);
       } else {
         setHideInput(false);
       }
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // --- LOADING LOGIC ---
-  useEffect(() => {
-    const loadConfig = () => {
-      const savedConfig = localStorage.getItem("darts_app_theme_config");
-      if (savedConfig) {
-        const parsed = JSON.parse(savedConfig);
-        
-        setGameSettings({
-          startingScore: parsed.startingScore || 501,
-          legsToWinSet: parsed.legsToWinSet || 3
-        });
-
-        if (parsed.players && Array.isArray(parsed.players)) {
-            setPlayers(prevPlayers => {
-                return prevPlayers.map(p => {
-                    const savedP = parsed.players.find((sp: any) => sp.id === p.id);
-                    if (savedP) {
-                        return { ...p, name: savedP.name, isEnabled: savedP.isEnabled };
-                    }
-                    return p;
-                });
-            });
-        }
-      }
-    };
-
-    loadConfig(); 
-    window.addEventListener("storage", loadConfig); 
-    return () => window.removeEventListener("storage", loadConfig);
   }, []);
 
   const handleResetRequest = () => {
@@ -113,6 +144,8 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   };
 
   const executeReset = () => {
+    localStorage.removeItem(MATCH_STORAGE_KEY);
+
     setPlayers((prev) =>
       prev.map((p) => ({
         ...p,
