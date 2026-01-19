@@ -1,8 +1,8 @@
 "use client";
 
 import ScoreInputDesktop from "./ScoreInputDesktop";
-import { isMobile } from "../utils/helpers";
 import ScoreInputMobile from "./ScoreInputMobile";
+import { useIsMobile } from "../utils/useIsMobile";
 
 interface ScoreInputProps {
   onSubmit: (score: number) => void;
@@ -15,13 +15,23 @@ export default function ScoreInput({
   onUndo,
   currentPlayerName,
 }: ScoreInputProps) {
+  
+  const isMobile = useIsMobile();
 
   return (
     <>
-      { 
-        isMobile() ? 
-        <ScoreInputMobile onSubmit={onSubmit} onUndo={onUndo} currentPlayerName={currentPlayerName}/> : <ScoreInputDesktop onSubmit={onSubmit} currentPlayerName={currentPlayerName}/>
-      }
+      {isMobile ? (
+        <ScoreInputMobile 
+          onSubmit={onSubmit} 
+          onUndo={onUndo} 
+          currentPlayerName={currentPlayerName}
+        />
+      ) : (
+        <ScoreInputDesktop 
+          onSubmit={onSubmit} 
+          currentPlayerName={currentPlayerName}
+        />
+      )}
     </>
   );
 }

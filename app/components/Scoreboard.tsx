@@ -7,7 +7,7 @@ import PlayerStats from "./PlayerStats";
 import CheckoutGuide from "./CheckoutGuide";
 import IconButton from "./IconButton";
 import ConfirmationPopup from "./ConfirmationPopup";
-import { isMobile } from "../utils/helpers";
+import { useIsMobile } from "../utils/useIsMobile";
 
 export interface ScoreboardHandle {
   resetMatch: () => void;
@@ -60,6 +60,8 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   const [historyStack, setHistoryStack] = useState<GameStateSnapshot[]>([]);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [hideInput, setHideInput] = useState(false);
+  
+  const isMobile = useIsMobile();
 
   // LOAD CONFIG & RESTORE GAME
   useEffect(() => {
@@ -83,7 +85,6 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
         let restoredPlayers: Player[] = savedMatch.players;
 
         // live update of Names/Enabled status from Settings
-        // if you rename "Player 1" to "Mike", it updates the live game.
         if (themeConfig && Array.isArray(themeConfig.players)) {
           restoredPlayers = restoredPlayers.map(p => {
               const configP = themeConfig.players.find((cp: any) => cp.id === p.id);
@@ -106,11 +107,11 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
     };
 
     loadData();
-    window.addEventListener("storage", loadData); // Listen for changes from other tabs/popups
+    window.addEventListener("storage", loadData); 
     return () => window.removeEventListener("storage", loadData);
   }, []);
 
-  // Saves game state every time players or active turn changes
+  // Saves game state
   useEffect(() => {
     if (players.length > 0) {
       const snapshot = {
@@ -260,6 +261,15 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
     resetMatch: handleResetRequest 
   }));
 
+  // DISPLAY ORDER
+  let displayPlayers = players;
+
+  if (isMobile) {
+    const activePlayer = players[activePlayerIndex];
+    const otherPlayers = players.filter((_, index) => index !== activePlayerIndex);
+    displayPlayers = [activePlayer, ...otherPlayers];
+  }
+
   return (
     <div className="flex items-center w-full">
       
@@ -271,9 +281,12 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
         onCancel={() => setShowResetConfirm(false)}
       />
 
-      <div className="flex flex-wrap justify-center gap-4 mb-32 w-full"> {/* Increased margin bottom to ensure content isn't hidden behind input initially */}
-        {players.map((player, index) => {
+      <div className="flex flex-wrap justify-center gap-4 mb-32 w-full">
+        {displayPlayers.map((player) => {
           if (!player.isEnabled) return null;
+          
+          const originalIndex = players.findIndex(p => p.id === player.id);
+          const isActive = originalIndex === activePlayerIndex;
           
           const currentScore = gameSettings.startingScore - sum(player.throws);
 
@@ -284,7 +297,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
                 score={currentScore}
                 sets={player.sets}
                 legs={player.legs}
-                isActive={index === activePlayerIndex}
+                isActive={isActive}
               />    
 
               <div className="flex h-15 mb-5 w-full justify-center">
@@ -304,7 +317,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
         })}
       </div>
 
-      {/* --- INPUT CONTAINER --- */}
+      {/* INPUT CONTAINER */}
       <div 
         className={`
           fixed bottom-0 left-0 w-full flex flex-col items-center justify-center pb-8 pt-14
@@ -314,7 +327,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
       >
         <div className="relative flex items-end justify-center">
           {
-          !isMobile() && <div className="mr-4"><IconButton icon={Undo2} label="Undo" onClick={handleUndo}/></div>
+          !isMobile && <div className="mr-4"><IconButton icon={Undo2} label="Undo" onClick={handleUndo}/></div>
           }
           <ScoreInput
             currentPlayerName={players[activePlayerIndex].name}
