@@ -7,6 +7,7 @@ import PlayerStats from "./PlayerStats";
 import CheckoutGuide from "./CheckoutGuide";
 import IconButton from "./IconButton";
 import ConfirmationPopup from "./ConfirmationPopup";
+import { isMobile } from "../utils/helpers";
 
 export interface ScoreboardHandle {
   resetMatch: () => void;
@@ -306,19 +307,19 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
       {/* --- INPUT CONTAINER --- */}
       <div 
         className={`
-          fixed bottom-0 w-full flex flex-col items-center justify-center pb-8 pt-14 
-          max-lg:scale-75 max-lg:pb-2 z-50 
+          fixed bottom-0 left-0 w-full flex flex-col items-center justify-center pb-8 pt-14
           transition-all duration-500 ease-in-out
           ${hideInput ? 'translate-y-[120%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}
         `}
       >
-        <div className="relative flex items-end justify-center gap-4">
-          <div className="mb">
-            <IconButton icon={Undo2} label="Undo" onClick={handleUndo}/>
-          </div>
+        <div className="relative flex items-end justify-center">
+          {
+          !isMobile() && <div className="mr-4"><IconButton icon={Undo2} label="Undo" onClick={handleUndo}/></div>
+          }
           <ScoreInput
             currentPlayerName={players[activePlayerIndex].name}
             onSubmit={handleScoreSubmit}
+            onUndo={handleUndo}
           />
         </div>
       </div>
