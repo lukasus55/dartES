@@ -33,7 +33,7 @@ export default function Topbar({ onReset }: TopbarProps) {
         <IconButton 
           icon={TvMinimal} 
           label="TV Mode" 
-          onClick={() => (window.alert(`Coming soon`))}
+          onClick={() => (window.open("/broadcast"))}
         />
       </div>
 
