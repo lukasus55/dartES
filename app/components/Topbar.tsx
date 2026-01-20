@@ -30,7 +30,7 @@ export default function Topbar({ onReset }: TopbarProps) {
           label="Export" 
           onClick={exportMatchToExcel}
         />
-        <a href="/setup"><IconButton 
+        <a href="./setup"><IconButton 
           icon={TvMinimal} 
           label="Broadcast" 
           onClick={() => (``)}

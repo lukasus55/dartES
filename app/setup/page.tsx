@@ -16,7 +16,7 @@ export default function SetupPage() {
 
   const handleLaunch = () => {
     window.open(
-      "/broadcast",
+      "./broadcast",
       "_blank",
       "width=1280,height=720,menubar=no,toolbar=no",
     );
@@ -103,7 +103,7 @@ export default function SetupPage() {
                     </p>
 
                     <div className="w-full aspect-video flex flex-col items-center justify-center text-center">
-                        <img src={"./setup_Method1_Step1.webp"} className="rounded-md"/>
+                        <img src={"./Setup_Method1_Step1.webp"} className="rounded-md"/>
                     </div>
 
                     <div className="bg-black/30 p-3 rounded border border-neutral-800 flex justify-between items-center text-sm">
@@ -136,7 +136,7 @@ export default function SetupPage() {
                     </p>
 
                     <div className="w-full aspect-video flex flex-col items-center justify-center text-center">
-                        <img src={"./setup_Method1_Step2.webp"} className="rounded-md"/>
+                        <img src={"./Setup_Method1_Step2.webp"} className="rounded-md"/>
                     </div>
 
                     <div className="bg-black/30 p-3 rounded border border-neutral-800 flex justify-between items-center text-sm">
