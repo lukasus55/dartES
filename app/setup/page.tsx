@@ -7,12 +7,6 @@ import IconButton from "../components/IconButton"; // Assuming you have this fro
 import Footer from "../components/Footer";
 
 export default function SetupPage() {
-  const [appUrl, setAppUrl] = useState("");
-
-  // Get the current URL dynamically so it works on localhost AND deployment
-  useEffect(() => {
-    setAppUrl(window.location.origin);
-  }, []);
 
   const handleLaunch = () => {
     window.open(
@@ -113,9 +107,9 @@ export default function SetupPage() {
                     <div className="bg-black/30 p-3 rounded border border-neutral-800 flex justify-between items-center text-sm">
                     <span className="text-neutral-400">URL:</span>
                     <div className="flex items-center gap-2">
-                        <code className="text-primary">{appUrl}</code>
+                        <code className="text-primary">https://lukasus55.github.io/dartES/</code>
                         <button
-                        onClick={() => copyToClipboard(appUrl)}
+                        onClick={() => copyToClipboard(`https://lukasus55.github.io/dartES/`)}
                         className="hover:text-white hover:scale-95 active:scale-95 active:text-lime-600"
                         >
                         <Copy size={14} />
@@ -142,9 +136,9 @@ export default function SetupPage() {
                     <div className="bg-black/30 p-3 rounded border border-neutral-800 flex justify-between items-center text-sm">
                     <span className="text-neutral-400">URL:</span>
                     <div className="flex items-center gap-2">
-                        <code className="text-primary">{appUrl}/broadcast</code>
+                        <code className="text-primary">https://lukasus55.github.io/dartES/broadcast</code>
                         <button
-                        onClick={() => copyToClipboard(`${appUrl}/broadcast`)}
+                        onClick={() => copyToClipboard(`https://lukasus55.github.io/dartES/broadcast`)}
                         className="hover:text-white hover:scale-95 active:scale-95 active:text-lime-600"
                         >
                         <Copy size={14} />
