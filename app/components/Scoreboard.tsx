@@ -8,6 +8,7 @@ import CheckoutGuide from "./CheckoutGuide";
 import IconButton from "./IconButton";
 import ConfirmationPopup from "./ConfirmationPopup";
 import { useIsMobile } from "../utils/useIsMobile";
+import ScoreboardDesktop from "./ScoreboardDesktop";
 
 export interface ScoreboardHandle {
   resetMatch: () => void;
@@ -291,27 +292,12 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
           const currentScore = gameSettings.startingScore - sum(player.throws);
 
           return (
-            <div key={player.id} className="flex flex-col items-center w-80">
-              <PlayerScore
-                name={player.name}
-                score={currentScore}
-                sets={player.sets}
-                legs={player.legs}
-                isActive={isActive}
-              />    
-
-              <div className="flex h-15 mb-5 w-full justify-center">
-                {currentScore <= 170 && (
-                  <CheckoutGuide score={currentScore} />
-                )} 
-              </div>
-
-              <div className="flex gap-20 text-gray-500 font-mono text-sm mb-5">
-                <PlayerStats 
-                  history={player.matchHistory} 
-                  checkouts={player.checkoutHistory} 
-                />
-              </div>
+            <div key={'ScoreboardDesktop ' + player.id}>
+              <ScoreboardDesktop 
+                player={player}
+                currentScore={currentScore}
+                isActive={isActive} 
+              />
             </div>
           );
         })}
