@@ -30,11 +30,11 @@ export default function Topbar({ onReset }: TopbarProps) {
           label="Export" 
           onClick={exportMatchToExcel}
         />
-        <IconButton 
+        <a href="/setup"><IconButton 
           icon={TvMinimal} 
-          label="TV Mode" 
-          onClick={() => (window.open("/broadcast"))}
-        />
+          label="Broadcast" 
+          onClick={() => (``)}
+        /></a>
       </div>
 
       {showCustomization && (

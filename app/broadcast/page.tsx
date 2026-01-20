@@ -17,12 +17,12 @@ export default function BroadcastPage() {
             const config = JSON.parse(storedTheme);
             const root = document.documentElement;
 
-            console.log(config)
-
             if (config.primary) root.style.setProperty("--customizablePrimary", config.primary);
             if (config.secondary) root.style.setProperty("--customizableSecondary", config.secondary);
             if (config.accent) root.style.setProperty("--customizableAccent", config.accent);
-            if (config.highlight) root.style.setProperty("--customizableHighlight", config.highlight);
+            if (config.highlight) root.style.setProperty("--customizableHighlit", config.highlight);
+
+            console.log(config.highlight)
         }
         } catch (e) {
         console.error("Failed to apply theme live update", e);
