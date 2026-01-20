@@ -1,9 +1,45 @@
 "use client";
 
 import { useLiveMatch } from "../utils/useLiveMatch";
+import { useEffect } from "react";
 
 export default function BroadcastPage() {
+
     const matchData = useLiveMatch();
+
+    const THEME_STORAGE_KEY = "darts_app_theme_config";
+
+    useEffect(() => {
+    const applyTheme = () => {
+        try {
+        const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+        if (storedTheme) {
+            const config = JSON.parse(storedTheme);
+            const root = document.documentElement;
+
+            console.log(config)
+
+            if (config.primary) root.style.setProperty("--customizablePrimary", config.primary);
+            if (config.secondary) root.style.setProperty("--customizableSecondary", config.secondary);
+            if (config.accent) root.style.setProperty("--customizableAccent", config.accent);
+            if (config.highlight) root.style.setProperty("--customizableHighlight", config.highlight);
+        }
+        } catch (e) {
+        console.error("Failed to apply theme live update", e);
+        }
+    };
+
+    applyTheme();
+
+    const handleStorageChange = (event: StorageEvent) => {
+        if (event.key === THEME_STORAGE_KEY) {
+        applyTheme();
+        }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+    }, []);
 
     if (!matchData) return null;
 
