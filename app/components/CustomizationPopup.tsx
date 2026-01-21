@@ -13,6 +13,7 @@ const DEFAULT_THEME = {
   secondary: "#6A7282",
   accent: "#72B01D",
   highlight: "#0F131B",
+  greenScreen: "#0F0",
 };
 
 const DEFAULT_SETTINGS = {
@@ -35,7 +36,8 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
   const [primaryColor, setPrimaryColor] = useState(DEFAULT_THEME.primary);
   const [secondaryColor, setSecondaryColor] = useState(DEFAULT_THEME.secondary);
   const [accentColor, setAccentColor] = useState(DEFAULT_THEME.accent);
-  const [highlightColor, setHighlightColor] = useState(DEFAULT_THEME.highlight); // Added Highlight State
+  const [highlightColor, setHighlightColor] = useState(DEFAULT_THEME.highlight);
+  const [greenScreenColor, setGreenScreenColor] = useState(DEFAULT_THEME.greenScreen);
   
   const [startingScore, setStartingScore] = useState(DEFAULT_SETTINGS.startingScore);
   const [legsToWinSet, setLegsToWinSet] = useState(DEFAULT_SETTINGS.legsToWinSet);
@@ -62,6 +64,7 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
       setSecondaryColor(parsed.secondary || DEFAULT_THEME.secondary);
       setAccentColor(parsed.accent || DEFAULT_THEME.accent);
       setHighlightColor(parsed.highlight || DEFAULT_THEME.highlight);
+      setGreenScreenColor(parsed.greenScreen || DEFAULT_THEME.greenScreen);
       
       setStartingScore(parsed.startingScore || DEFAULT_SETTINGS.startingScore);
       setLegsToWinSet(parsed.legsToWinSet || DEFAULT_SETTINGS.legsToWinSet);
@@ -71,11 +74,13 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
       if (parsed.secondary) document.documentElement.style.setProperty("--customizableSecondary", parsed.secondary);
       if (parsed.accent) document.documentElement.style.setProperty("--customizableAccent", parsed.accent);
       if (parsed.highlight) document.documentElement.style.setProperty("--customizableHighlit", parsed.highlight);
+      if (parsed.greenScreen) document.documentElement.style.setProperty("--customizableGreenScreen", parsed.greenScreen);
     } else {
       setPrimaryColor(getCssVar("--customizablePrimary") || DEFAULT_THEME.primary);
       setSecondaryColor(getCssVar("--customizableSecondary") || DEFAULT_THEME.secondary);
       setAccentColor(getCssVar("--customizableAccent") || DEFAULT_THEME.accent);
       setHighlightColor(getCssVar("--customizableHighlit") || DEFAULT_THEME.highlight);
+      setGreenScreenColor(getCssVar("--customizableGreenScreen") || DEFAULT_THEME.greenScreen);
     }
   }, []);
 
@@ -86,6 +91,7 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
       secondary: updates.secondary ?? secondaryColor,
       accent: updates.accent ?? accentColor,
       highlight: updates.highlight ?? highlightColor,
+      greenScreen: updates.greenScreen ?? greenScreenColor, // Save Green
       startingScore: updates.startingScore ?? startingScore,
       legsToWinSet: updates.legsToWinSet ?? legsToWinSet,
       players: updates.players ?? playersConfig,
@@ -96,10 +102,14 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
   const handleColorChange = (varName: string, value: string, setter: (v: string) => void) => {
     setter(value);
     document.documentElement.style.setProperty(varName, value);
-    const key = varName === "--customizablePrimary" ? "primary" 
-              : varName === "--customizableSecondary" ? "secondary" 
-              : varName === "--customizableAccent" ? "accent"
-              : "highlight"; // Handle key mapping
+    
+    // Updated Key Logic
+    let key = "primary";
+    if (varName === "--customizableSecondary") key = "secondary";
+    else if (varName === "--customizableAccent") key = "accent";
+    else if (varName === "--customizableHighlit") key = "highlight";
+    else if (varName === "--customizableGreenScreen") key = "greenScreen";
+
     saveToStorage({ [key]: value });
   };
 
@@ -270,6 +280,39 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
             </div>
           </div>
         </div>
+
+        {/* BROADCAST GREEN SCREEN */}
+        <div className="flex items-center gap-3 relative">
+          <button 
+            className="w-8 h-8 rounded-full border border-neutral-700 shadow-inner transition-colors duration-200 cursor-pointer"
+            style={{ backgroundColor: greenScreenColor }}
+            onClick={() => setActivePicker("greenScreen")}
+          />
+          {activePicker === "greenScreen" && (
+            <div className="absolute top-10 left-0 z-50">
+              <ColorPickerPopup 
+                color={greenScreenColor} 
+                onChange={(c) => handleColorChange("--customizableGreenScreen", c, setGreenScreenColor)}
+                onClose={() => setActivePicker(null)}
+              />
+            </div>
+          )}
+          <div className="flex-1 flex flex-col">
+            <label className="text-xs text-neutral-500 font-mono mb-1">GREEN SCREEN (BROADCAST ONLY)</label>
+            <div className="flex items-center gap-2">
+              <input 
+                type="text" 
+                value={greenScreenColor.toUpperCase()}
+                onChange={(e) => handleColorChange("--customizableGreenScreen", e.target.value, setGreenScreenColor)}
+                className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-1.5 text-sm text-gray-200 font-mono outline-none focus:border-neutral-600"
+              />
+              <button onClick={() => handleResetSingle("--customizableGreenScreen", DEFAULT_THEME.greenScreen, setGreenScreenColor)} className="p-2 text-neutral-600 hover:text-white rounded-lg">
+                <RotateCcw size={14} />
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       {/* --- GAME SETTINGS SECTION --- */}

@@ -1,9 +1,21 @@
 "use client";
 
 import { useLiveMatch } from "../utils/useLiveMatch";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function BroadcastPage() {
+
+    const getParams = () => {
+        if (typeof window === "undefined") { return null; }
+
+        const windowUrl = window.location.search;
+        const params = new URLSearchParams(windowUrl);
+
+        return params
+    }
+
+    const params = getParams();
+    const [isGreenMode, setGreenMode] = useState<boolean>(params?.has('g') || false);
 
     const matchData = useLiveMatch();
 
@@ -21,8 +33,7 @@ export default function BroadcastPage() {
             if (config.secondary) root.style.setProperty("--customizableSecondary", config.secondary);
             if (config.accent) root.style.setProperty("--customizableAccent", config.accent);
             if (config.highlight) root.style.setProperty("--customizableHighlit", config.highlight);
-
-            console.log(config.highlight)
+            if (config.greenScreen) root.style.setProperty("--customizableGreenScreen", config.greenScreen);
         }
         } catch (e) {
         console.error("Failed to apply theme live update", e);
@@ -50,7 +61,7 @@ export default function BroadcastPage() {
     501 - p.throws.reduce((a: number, b: number) => a + b, 0);
 
     return (
-    <div className="min-h-screen w-full flex items-end justify-center pb-10 font-sans">
+    <div className={`min-h-screen w-full ${isGreenMode ? "bg-customizableGreenScreen" : ""} flex items-end justify-center pb-10 font-sans`}>
         <div className="flex bg-customizableHighlit border-t-4 border-customizableAccent shadow-2xl rounded-xl overflow-hidden min-w-200">
         {players
             .filter((p) => p.isEnabled)

@@ -7,6 +7,7 @@
   --customizableSecondary: #6A7282;
   --customizableHighlit: #0F131B;
   --customizableAccent: #72B01D;
+  --customizableGreenScreen: #0F0;
 }
 
 @theme inline {
@@ -16,6 +17,7 @@
   --color-customizableSecondary: var(--customizableSecondary);
   --color-customizableHighlit: var(--customizableHighlit);
   --color-customizableAccent: var(--customizableAccent);
+  --color-customizableGreenScreen: var(--customizableGreenScreen);
 }
 
 /* @media (prefers-color-scheme: dark) {
