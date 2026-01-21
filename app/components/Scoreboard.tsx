@@ -234,8 +234,10 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
     }
 
     let scoreToRecord = inputScore;
-    if (newTotal > gameSettings.startingScore) {
-       scoreToRecord = 0; // Bust
+    
+    // Bust when more than starting score or impossible checkout
+    if (newTotal > gameSettings.startingScore || newTotal == gameSettings.startingScore-1) {
+       scoreToRecord = 0;
     } 
 
     setPlayers((prevPlayers) => {
