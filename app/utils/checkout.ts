@@ -156,7 +156,7 @@ export const checkoutTable: Record<number, string[]> = {
 13: ["3", "D5"],
 12: ["D6"],
 11: ["1", "D5"],
-10: ["D4"],
+10: ["D5"],
 9: ["1", "D4"],
 8: ["D4"],
 7: ["3", "D2"],
