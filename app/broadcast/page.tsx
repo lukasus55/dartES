@@ -89,7 +89,7 @@ export default function BroadcastPage() {
                                 className={`flex items-center`}
                             >
                                 {/* --- CHECKOUT GUIDE SECTION --- */}
-                                <div className={`w-3/10 text-2xl font-bold bg-transparent flex flex-row-reverse justify-start overflow-hidden`}>
+                                <div className={`w-3/10 text-2xl font-bold bg-transparent flex flex-row justify-end overflow-hidden`}>
                                     <AnimatePresence mode="popLayout">
                                         {guide?.map((dart, i) => (
                                             <motion.div
