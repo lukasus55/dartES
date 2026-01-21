@@ -108,7 +108,7 @@ export default function BroadcastPage() {
                                                     delay: i * 0.05 
                                                 }}
                                                 
-                                                className={`w-1/5 text-2xl font-bold bg-customizableHighlit text-customizableSecondary py-1 px-8 flex justify-center items-center ${i===2 ? `rounded-l-sm` : ``}`}
+                                                className={`w-1/5 text-2xl font-bold bg-customizableHighlit text-customizableSecondary py-1 px-8 flex justify-center items-center ${i===0 ? `rounded-l-sm` : ``}`}
                                             >
                                                 {dart}
                                             </motion.div>
