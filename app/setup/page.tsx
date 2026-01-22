@@ -34,7 +34,7 @@ export default function SetupPage() {
                     </div>
                     <Link
                         href="/"
-                        className="text-sm text-neutral-500 hover:text-white transition-colors max-lg:mt-8"
+                        className="text-sm text-neutral-500 hover:text-white transition-colors max-sm:mt-8"
                     >
                         Back to Scoreboard
                     </Link>
@@ -72,7 +72,7 @@ export default function SetupPage() {
                         </span>
                         </p>
 
-                        <div className="w-full aspect-video flex flex-col items-center justify-center text-center">
+                        <div className="flex flex-col items-center justify-center text-center">
                             <img src={"./Setup_Method1_Step1.webp"} className="rounded-md"/>
                         </div>
 
@@ -80,7 +80,7 @@ export default function SetupPage() {
                         <span className="text-neutral-400">Dock Name:</span>
                         <span className="font-mono">Darts Control</span>
                         </div>
-                        <div className="bg-black/30 p-3 rounded border border-neutral-800 flex justify-between items-center text-sm">
+                        <div className="bg-black/30 p-3 rounded border border-neutral-800 flex justify-between items-center text-sm max-[30rem]:text-[0.5rem]">
                         <span className="text-neutral-400">URL:</span>
                         <div className="flex items-center gap-2">
                             <code className="text-primary">https://lukasus55.github.io/dartES/</code>
@@ -105,14 +105,14 @@ export default function SetupPage() {
                         your scene.
                         </p>
 
-                        <div className="w-full aspect-video flex flex-col items-center justify-center text-center">
+                        <div className="w-full flex flex-col items-center justify-center text-center">
                             <img src={"./Setup_Method1_Step2.webp"} className="rounded-md"/>
                         </div>
 
-                        <div className="bg-black/30 p-3 rounded border border-neutral-800 flex justify-between items-center text-sm">
+                        <div className="bg-black/30 p-3 rounded border border-neutral-800 flex justify-between items-center text-sm max-[30rem]:text-[0.5rem]">
                         <span className="text-neutral-400">URL:</span>
                         <div className="flex items-center gap-2">
-                            <code className="text-primary">https://lukasus55.github.io/dartES/broadcast</code>
+                            <code className="text-primay">https://lukasus55.github.io/dartES/broadcast</code>
                             <button
                             onClick={() => copyToClipboard(`https://lukasus55.github.io/dartES/broadcast`)}
                             className="hover:text-white hover:scale-95 active:scale-95 active:text-lime-600"
@@ -121,7 +121,7 @@ export default function SetupPage() {
                             </button>
                         </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs font-mono text-neutral-400">
+                        <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-2 text-xs font-mono text-neutral-400">
                         <div className="bg-neutral-900 p-2 rounded text-center">
                             Width: 1920
                         </div>
@@ -151,14 +151,14 @@ export default function SetupPage() {
                     </div>
 
                     {/* LAUNCHER */}
-                    <div className="bg-neutral-900/50 border border-neutral-800 p-6 rounded-2xl flex items-center justify-between gap-6">
+                    <div className="bg-neutral-900/50 border border-neutral-800 p-6 rounded-2xl flex items-center justify-between gap-6 flex-wrap">
                         <div className="flex gap-4 items-center">
-                            <div className="bg-primary/20 p-3 rounded-full text-primary">
+                            <div className="bg-primary/20 p-3 rounded-full text-primary max-sm:hidden">
                             <Monitor size={32} />
                             </div>
-                            <div>
-                            <h3 className="font-bold text-lg">Quick Launch Overlay</h3>
-                            <p className="text-sm text-neutral-500">
+                            <div className="flex flex-wrap w-full">
+                            <h3 className="flex w-full font-bold text-lg">Quick Launch Overlay</h3>
+                            <p className="flex w-full text-sm text-neutral-500">
                                 Opens the broadcast view in a clean popup window.
                             </p>
                             </div>
