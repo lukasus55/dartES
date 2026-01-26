@@ -112,7 +112,7 @@ export default function SetupPage() {
                         <div className="bg-black/30 p-3 rounded border border-neutral-800 flex justify-between items-center text-sm max-[30rem]:text-[0.5rem]">
                         <span className="text-neutral-400">URL:</span>
                         <div className="flex items-center gap-2">
-                            <code className="text-primay">https://lukasus55.github.io/dartES/broadcast</code>
+                            <code className="text-primary">https://lukasus55.github.io/dartES/broadcast</code>
                             <button
                             onClick={() => copyToClipboard(`https://lukasus55.github.io/dartES/broadcast`)}
                             className="hover:text-white hover:scale-95 active:scale-95 active:text-lime-600"
