@@ -8,8 +8,7 @@ import type {Config} from 'jest';
 const config: Config = {
   preset: 'ts-jest',
   transform: {
-    '^.+\\.(ts|tsx)?$': 'ts-jest',
-    '^.+\\.(js|jsx)$': 'babel-jest',
+    '\\.js$': ['babel-jest', { configFile: './Configuration/babel.config.testing.js' }]
   },
   collectCoverage: true,
   coverageDirectory: "coverage",
