@@ -15,7 +15,7 @@ interface Player {
 export const exportMatchToExcel = () => {
 
     // LOAD DATA FROM STORAGE
-    const MATCH_STORAGE_KEY = "darts_match_snapshot";
+    const MATCH_STORAGE_KEY = "dartES_match_snapshot";
     const matchStr = localStorage.getItem(MATCH_STORAGE_KEY);
 
     if (!matchStr) {

@@ -1,13 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Coffee, Settings } from "lucide-react";
-import { DEFAULT_SETTINGS, getConfig, saveSettings } from "@/app/utils/saveToStorage";
-import type { Config } from "@/app/utils/saveToStorage";
+import { Settings } from "lucide-react";
+import { DEFAULT_SETTINGS, getConfig, saveSettings } from "@/app/utils/configStorage";
 
 export default function GameSettings() {
 
-    const config:Config = getConfig();
+    const config = getConfig();
 
     const [startingScore, setStartingScore] = useState(config.startingScore ?? DEFAULT_SETTINGS.startingScore);
     const [legsToWinSet, setLegsToWinSet] = useState(config.legsToWinSet ?? DEFAULT_SETTINGS.legsToWinSet);

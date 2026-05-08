@@ -19,7 +19,7 @@ export default function BroadcastPage() {
 
     const matchData = useLiveMatch();
 
-    const THEME_STORAGE_KEY = "darts_app_theme_config";
+    const THEME_STORAGE_KEY = "dartES_config";
 
     useEffect(() => {
         const applyTheme = () => {
@@ -32,7 +32,7 @@ export default function BroadcastPage() {
                     if (config.primary) root.style.setProperty("--customizablePrimary", config.primary);
                     if (config.secondary) root.style.setProperty("--customizableSecondary", config.secondary);
                     if (config.accent) root.style.setProperty("--customizableAccent", config.accent);
-                    if (config.highlight) root.style.setProperty("--customizableHighlit", config.highlight);
+                    if (config.highlight) root.style.setProperty("--customizableHighlight", config.highlight);
                     if (config.greenScreen) root.style.setProperty("--customizableGreenScreen", config.greenScreen);
                 }
             } catch (e) {
@@ -108,7 +108,7 @@ export default function BroadcastPage() {
                                                     delay: i * 0.05 
                                                 }}
                                                 
-                                                className={`w-1/5 text-2xl font-bold bg-customizableHighlit text-customizableSecondary py-1 px-8 flex justify-center items-center ${i===0 ? `rounded-l-sm` : ``}`}
+                                                className={`w-1/5 text-2xl font-bold bg-customizableHighlight text-customizableSecondary py-1 px-8 flex justify-center items-center ${i===0 ? `rounded-l-sm` : ``}`}
                                             >
                                                 {dart}
                                             </motion.div>
@@ -117,7 +117,7 @@ export default function BroadcastPage() {
                                 </div>
 
                                 {/* --- PLAYER STATS BAR --- */}
-                                <div className={`w-7/10 flex items-center h-full p-3 bg-customizableHighlit z-10 relative`}>
+                                <div className={`w-7/10 flex items-center h-full p-3 bg-customizableHighlight z-10 relative`}>
                                     <div className={`w-3 h-3 mr-1 rounded-full transition-all duration-300 ${isActive ? "bg-customizableAccent" : "bg-transparent"}`} />
                                     <div className={`w-10/20 text-2xl font-bold tracking-wider ${isActive ? "text-customizablePrimary" : "text-customizableSecondary"}`}>
                                         {player.name}

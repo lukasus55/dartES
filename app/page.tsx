@@ -3,17 +3,12 @@ import { useRef, useEffect } from "react";
 import Scoreboard, { ScoreboardHandle } from "./components/Scoreboard"; // Import the type too
 import Topbar from "./components/Topbar";
 import Footer from "./components/Footer";
+import changeDomTheme from "./utils/changeDomTheme";
 
 export default function Home() {
 
   useEffect(() => {
-    const savedConfig = localStorage.getItem("darts_app_theme_config");
-    if (savedConfig) {
-      const parsed = JSON.parse(savedConfig);
-      if (parsed.primary) document.documentElement.style.setProperty("--customizablePrimary", parsed.primary);
-      if (parsed.secondary) document.documentElement.style.setProperty("--customizableSecondary", parsed.secondary);
-      if (parsed.accent) document.documentElement.style.setProperty("--customizableAccent", parsed.accent);
-    }
+    changeDomTheme();
   }, []);
 
   const scoreboardRef = useRef<ScoreboardHandle>(null);

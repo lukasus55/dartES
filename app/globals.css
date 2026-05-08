@@ -5,7 +5,7 @@
   --primary: #F3EFF5;
   --customizablePrimary: #F3EFF5;
   --customizableSecondary: #6A7282;
-  --customizableHighlit: #0F131B;
+  --customizableHighlight: #0F131B;
   --customizableAccent: #72B01D;
   --customizableGreenScreen: #0F0;
 }
@@ -15,7 +15,7 @@
   --color-primary: var(--primary);
   --color-customizablePrimary: var(--customizablePrimary);
   --color-customizableSecondary: var(--customizableSecondary);
-  --color-customizableHighlit: var(--customizableHighlit);
+  --color-customizableHighlight: var(--customizableHighlight);
   --color-customizableAccent: var(--customizableAccent);
   --color-customizableGreenScreen: var(--customizableGreenScreen);
 }

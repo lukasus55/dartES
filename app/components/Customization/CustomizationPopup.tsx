@@ -1,26 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, RotateCcw, Settings, Users, Power, Palette } from "lucide-react";
-import ColorPickerPopup from "../ColorPickerPopup";
+import { X, Users, Power } from "lucide-react";
 import GameSettings from "./GameSettings";
+import ThemeSettings from "./ThemeSettings";
 
 interface CustomizationPopupProps {
   onClose: () => void;
 }
-
-const DEFAULT_THEME = {
-  primary: "#F3EFF5",
-  secondary: "#6A7282",
-  accent: "#72B01D",
-  highlight: "#0F131B",
-  greenScreen: "#0F0",
-};
-
-const DEFAULT_SETTINGS = {
-  startingScore: 501,
-  legsToWinSet: 3,
-};
 
 const DEFAULT_PLAYERS = [
   { id: 1, name: "PLAYER 1", isEnabled: true },
@@ -30,88 +17,30 @@ const DEFAULT_PLAYERS = [
   { id: 5, name: "PLAYER 5", isEnabled: false },
 ];
 
-const STORAGE_KEY = "darts_app_theme_config";
+const STORAGE_KEY = "dartES_config";
 
 export default function CustomizationPopup({ onClose }: CustomizationPopupProps) {
-  // --- COLORS & SETTINGS STATE ---
-  const [primaryColor, setPrimaryColor] = useState(DEFAULT_THEME.primary);
-  const [secondaryColor, setSecondaryColor] = useState(DEFAULT_THEME.secondary);
-  const [accentColor, setAccentColor] = useState(DEFAULT_THEME.accent);
-  const [highlightColor, setHighlightColor] = useState(DEFAULT_THEME.highlight);
-  const [greenScreenColor, setGreenScreenColor] = useState(DEFAULT_THEME.greenScreen);
-  
-  const [startingScore, setStartingScore] = useState(DEFAULT_SETTINGS.startingScore);
-  const [legsToWinSet, setLegsToWinSet] = useState(DEFAULT_SETTINGS.legsToWinSet);
-  
   // --- PLAYERS STATE ---
   const [playersConfig, setPlayersConfig] = useState(DEFAULT_PLAYERS);
 
-  const [activePicker, setActivePicker] = useState<string | null>(null);
 
   // --- LOAD DATA ---
   useEffect(() => {
     const savedConfig = localStorage.getItem(STORAGE_KEY);
-    const getCssVar = (name: string) => {
-        if (typeof window !== "undefined") {
-          return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-        }
-        return "";
-    };
 
     if (savedConfig) {
       const parsed = JSON.parse(savedConfig);
-      
-      setPrimaryColor(parsed.primary || DEFAULT_THEME.primary);
-      setSecondaryColor(parsed.secondary || DEFAULT_THEME.secondary);
-      setAccentColor(parsed.accent || DEFAULT_THEME.accent);
-      setHighlightColor(parsed.highlight || DEFAULT_THEME.highlight);
-      setGreenScreenColor(parsed.greenScreen || DEFAULT_THEME.greenScreen);
-      
-      setStartingScore(parsed.startingScore || DEFAULT_SETTINGS.startingScore);
-      setLegsToWinSet(parsed.legsToWinSet || DEFAULT_SETTINGS.legsToWinSet);
-      setPlayersConfig(parsed.players || DEFAULT_PLAYERS);
 
-      if (parsed.primary) document.documentElement.style.setProperty("--customizablePrimary", parsed.primary);
-      if (parsed.secondary) document.documentElement.style.setProperty("--customizableSecondary", parsed.secondary);
-      if (parsed.accent) document.documentElement.style.setProperty("--customizableAccent", parsed.accent);
-      if (parsed.highlight) document.documentElement.style.setProperty("--customizableHighlit", parsed.highlight);
-      if (parsed.greenScreen) document.documentElement.style.setProperty("--customizableGreenScreen", parsed.greenScreen);
-    } else {
-      setPrimaryColor(getCssVar("--customizablePrimary") || DEFAULT_THEME.primary);
-      setSecondaryColor(getCssVar("--customizableSecondary") || DEFAULT_THEME.secondary);
-      setAccentColor(getCssVar("--customizableAccent") || DEFAULT_THEME.accent);
-      setHighlightColor(getCssVar("--customizableHighlit") || DEFAULT_THEME.highlight);
-      setGreenScreenColor(getCssVar("--customizableGreenScreen") || DEFAULT_THEME.greenScreen);
+      setPlayersConfig(parsed.players || DEFAULT_PLAYERS);
     }
   }, []);
 
   // --- SAVING LOGIC ---
   const saveToStorage = (updates: any) => {
     const currentConfig = {
-      primary: updates.primary ?? primaryColor,
-      secondary: updates.secondary ?? secondaryColor,
-      accent: updates.accent ?? accentColor,
-      highlight: updates.highlight ?? highlightColor,
-      greenScreen: updates.greenScreen ?? greenScreenColor, // Save Green
-      startingScore: updates.startingScore ?? startingScore,
-      legsToWinSet: updates.legsToWinSet ?? legsToWinSet,
       players: updates.players ?? playersConfig,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(currentConfig));
-  };
-
-  const handleColorChange = (varName: string, value: string, setter: (v: string) => void) => {
-    setter(value);
-    document.documentElement.style.setProperty(varName, value);
-    
-    // Updated Key Logic
-    let key = "primary";
-    if (varName === "--customizableSecondary") key = "secondary";
-    else if (varName === "--customizableAccent") key = "accent";
-    else if (varName === "--customizableHighlit") key = "highlight";
-    else if (varName === "--customizableGreenScreen") key = "greenScreen";
-
-    saveToStorage({ [key]: value });
   };
 
   const handlePlayerChange = (id: number, field: "name" | "isEnabled", value: any) => {
@@ -121,10 +50,6 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
     setPlayersConfig(updatedPlayers);
     saveToStorage({ players: updatedPlayers });
     window.dispatchEvent(new Event("storage"));
-  };
-
-  const handleResetSingle = (varName: string, defaultValue: string, setter: (v: string) => void) => {
-    handleColorChange(varName, defaultValue, setter);
   };
 
   return (
@@ -142,175 +67,9 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
         <X size={18} />
       </button>
 
-      <GameSettings/>
+      <GameSettings />
 
-      {/* --- COLORS SECTION --- */}
-      <div className="flex flex-col gap-4 pt-4 border-t border-neutral-800">
-        <h3 className="text-sm font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-2">
-          <Palette size={14} /> Theme Colors
-        </h3>
-
-        {/* PRIMARY */}
-        <div className="flex items-center gap-3 relative">
-          <button 
-            className="w-8 h-8 rounded-full border border-neutral-700 shadow-inner transition-colors duration-200 cursor-pointer"
-            style={{ backgroundColor: primaryColor }}
-            onClick={() => setActivePicker("primary")}
-          />
-          {activePicker === "primary" && (
-            <div className="absolute top-10 left-0 z-50">
-              <ColorPickerPopup 
-                color={primaryColor} 
-                onChange={(c) => handleColorChange("--customizablePrimary", c, setPrimaryColor)}
-                onClose={() => setActivePicker(null)}
-              />
-            </div>
-          )}
-          <div className="flex-1 flex flex-col">
-            <label className="text-xs text-neutral-500 font-mono mb-1">PRIMARY (TEXT)</label>
-            <div className="flex items-center gap-2">
-              <input 
-                type="text" 
-                value={primaryColor.toUpperCase()}
-                onChange={(e) => handleColorChange("--customizablePrimary", e.target.value, setPrimaryColor)}
-                className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-1.5 text-sm text-gray-200 font-mono outline-none focus:border-neutral-600"
-              />
-              <button onClick={() => handleResetSingle("--customizablePrimary", DEFAULT_THEME.primary, setPrimaryColor)} className="p-2 text-neutral-600 hover:text-white rounded-lg">
-                <RotateCcw size={14} />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* SECONDARY */}
-        <div className="flex items-center gap-3 relative">
-          <button 
-            className="w-8 h-8 rounded-full border border-neutral-700 shadow-inner transition-colors duration-200 cursor-pointer"
-            style={{ backgroundColor: secondaryColor }}
-            onClick={() => setActivePicker("secondary")}
-          />
-          {activePicker === "secondary" && (
-            <div className="absolute top-10 left-0 z-50">
-              <ColorPickerPopup 
-                color={secondaryColor} 
-                onChange={(c) => handleColorChange("--customizableSecondary", c, setSecondaryColor)}
-                onClose={() => setActivePicker(null)}
-              />
-            </div>
-          )}
-          <div className="flex-1 flex flex-col">
-            <label className="text-xs text-neutral-500 font-mono mb-1">SECONDARY</label>
-            <div className="flex items-center gap-2">
-              <input 
-                type="text" 
-                value={secondaryColor.toUpperCase()}
-                onChange={(e) => handleColorChange("--customizableSecondary", e.target.value, setSecondaryColor)}
-                className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-1.5 text-sm text-gray-200 font-mono outline-none focus:border-neutral-600"
-              />
-              <button onClick={() => handleResetSingle("--customizableSecondary", DEFAULT_THEME.secondary, setSecondaryColor)} className="p-2 text-neutral-600 hover:text-white rounded-lg">
-                <RotateCcw size={14} />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* HIGHLIGHT */}
-        <div className="flex items-center gap-3 relative">
-          <button 
-            className="w-8 h-8 rounded-full border border-neutral-700 shadow-inner transition-colors duration-200 cursor-pointer"
-            style={{ backgroundColor: highlightColor }}
-            onClick={() => setActivePicker("highlight")}
-          />
-          {activePicker === "highlight" && (
-            <div className="absolute top-10 left-0 z-50">
-              <ColorPickerPopup 
-                color={highlightColor} 
-                onChange={(c) => handleColorChange("--customizableHighlit", c, setHighlightColor)}
-                onClose={() => setActivePicker(null)}
-              />
-            </div>
-          )}
-          <div className="flex-1 flex flex-col">
-            <label className="text-xs text-neutral-500 font-mono mb-1">HIGHLIGHT (BG)</label>
-            <div className="flex items-center gap-2">
-              <input 
-                type="text" 
-                value={highlightColor.toUpperCase()}
-                onChange={(e) => handleColorChange("--customizableHighlit", e.target.value, setHighlightColor)}
-                className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-1.5 text-sm text-gray-200 font-mono outline-none focus:border-neutral-600"
-              />
-              <button onClick={() => handleResetSingle("--customizableHighlit", DEFAULT_THEME.highlight, setHighlightColor)} className="p-2 text-neutral-600 hover:text-white rounded-lg">
-                <RotateCcw size={14} />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* ACCENT */}
-        <div className="flex items-center gap-3 relative">
-          <button 
-            className="w-8 h-8 rounded-full border border-neutral-700 shadow-inner transition-colors duration-200 cursor-pointer"
-            style={{ backgroundColor: accentColor }}
-            onClick={() => setActivePicker("accent")}
-          />
-          {activePicker === "accent" && (
-            <div className="absolute top-10 left-0 z-50">
-              <ColorPickerPopup 
-                color={accentColor} 
-                onChange={(c) => handleColorChange("--customizableAccent", c, setAccentColor)}
-                onClose={() => setActivePicker(null)}
-              />
-            </div>
-          )}
-          <div className="flex-1 flex flex-col">
-            <label className="text-xs text-neutral-500 font-mono mb-1">ACCENT</label>
-            <div className="flex items-center gap-2">
-              <input 
-                type="text" 
-                value={accentColor.toUpperCase()}
-                onChange={(e) => handleColorChange("--customizableAccent", e.target.value, setAccentColor)}
-                className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-1.5 text-sm text-gray-200 font-mono outline-none focus:border-neutral-600"
-              />
-              <button onClick={() => handleResetSingle("--customizableAccent", DEFAULT_THEME.accent, setAccentColor)} className="p-2 text-neutral-600 hover:text-white rounded-lg">
-                <RotateCcw size={14} />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* BROADCAST GREEN SCREEN */}
-        <div className="flex items-center gap-3 relative">
-          <button 
-            className="w-8 h-8 rounded-full border border-neutral-700 shadow-inner transition-colors duration-200 cursor-pointer"
-            style={{ backgroundColor: greenScreenColor }}
-            onClick={() => setActivePicker("greenScreen")}
-          />
-          {activePicker === "greenScreen" && (
-            <div className="absolute top-10 left-0 z-50">
-              <ColorPickerPopup 
-                color={greenScreenColor} 
-                onChange={(c) => handleColorChange("--customizableGreenScreen", c, setGreenScreenColor)}
-                onClose={() => setActivePicker(null)}
-              />
-            </div>
-          )}
-          <div className="flex-1 flex flex-col">
-            <label className="text-xs text-neutral-500 font-mono mb-1">GREEN SCREEN (BROADCAST ONLY)</label>
-            <div className="flex items-center gap-2">
-              <input 
-                type="text" 
-                value={greenScreenColor.toUpperCase()}
-                onChange={(e) => handleColorChange("--customizableGreenScreen", e.target.value, setGreenScreenColor)}
-                className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-1.5 text-sm text-gray-200 font-mono outline-none focus:border-neutral-600"
-              />
-              <button onClick={() => handleResetSingle("--customizableGreenScreen", DEFAULT_THEME.greenScreen, setGreenScreenColor)} className="p-2 text-neutral-600 hover:text-white rounded-lg">
-                <RotateCcw size={14} />
-              </button>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      <ThemeSettings />
 
       {/* --- PLAYERS SECTION --- */}
       <div className="flex flex-col gap-4 pt-4 border-t border-neutral-800">

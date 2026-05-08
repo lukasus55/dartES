@@ -1,4 +1,4 @@
-export const MATCH_STORAGE_KEY = "darts_match_snapshot";
+export const MATCH_STORAGE_KEY = "dartES_match_snapshot";
 
 export interface StoredMatchData {
     players: any[]; 

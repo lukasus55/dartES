@@ -10,11 +10,13 @@ export const PlayerSchema = z.object({
 });
 
 export const ConfigSchema = z.object({
-  primary: z.string(),
-  secondary: z.string(),
-  accent: z.string(),
-  highlight: z.string(),
-  greenScreen: z.string(),
+  theme: z.object({
+    primary: z.string(),
+    secondary: z.string(),
+    accent: z.string(),
+    highlight: z.string(),
+    greenScreen: z.string(),
+  }),
   startingScore: z.number(),
   legsToWinSet: z.number(),
   players: z.array(PlayerSchema),
@@ -45,17 +47,19 @@ export const DEFAULT_PLAYERS: Player[] = [
 ];
 
 export const DEFAULT_CONFIG: Config = {
-  primary: DEFAULT_THEME.primary,
-  secondary: DEFAULT_THEME.secondary,
-  accent: DEFAULT_THEME.accent,
-  highlight: DEFAULT_THEME.highlight,
-  greenScreen: DEFAULT_THEME.greenScreen,
+  theme: {
+    primary: DEFAULT_THEME.primary,
+    secondary: DEFAULT_THEME.secondary,
+    accent: DEFAULT_THEME.accent,
+    highlight: DEFAULT_THEME.highlight,
+    greenScreen: DEFAULT_THEME.greenScreen,
+  },
   startingScore: DEFAULT_SETTINGS.startingScore,
   legsToWinSet: DEFAULT_SETTINGS.legsToWinSet,
   players: DEFAULT_PLAYERS,
 };
 
-const STORAGE_KEY = "darts_app_theme_config";
+const STORAGE_KEY = "dartES_config";
 
 export function getConfig(): Config {
   const savedData = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
@@ -86,6 +90,32 @@ export function saveSettings({startingScore, legsToWinSet} : {startingScore:numb
     ...savedConfig,
     startingScore: startingScore,
     legsToWinSet: legsToWinSet,
+  };
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(newConfig));
+  window.dispatchEvent(new Event("storage"));
+}
+
+interface SaveColorProps {
+  primary: string,
+  secondary: string,
+  accent: string,
+  highlight: string,
+  greenScreen: string
+}
+
+export function saveTheme({primary, secondary, accent, highlight, greenScreen} : SaveColorProps) {
+  const savedConfig: Config = getConfig();
+
+  const newConfig: Config = {
+    ...savedConfig,
+    theme: {
+      primary: primary,
+      secondary: secondary,
+      accent: accent,
+      highlight: highlight,
+      greenScreen: greenScreen
+    }
   };
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(newConfig));
