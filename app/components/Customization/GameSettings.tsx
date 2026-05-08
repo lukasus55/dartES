@@ -2,11 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { Settings } from "lucide-react";
-import { DEFAULT_SETTINGS, getConfig, saveSettings } from "@/app/utils/configStorage";
+import { DEFAULT_SETTINGS, saveSettings, UserConfig } from "@/app/utils/configStorage";
 
-export default function GameSettings() {
-
-    const config = getConfig();
+export default function GameSettings({config} : {config: UserConfig}) {
 
     const [startingScore, setStartingScore] = useState(config.startingScore ?? DEFAULT_SETTINGS.startingScore);
     const [legsToWinSet, setLegsToWinSet] = useState(config.legsToWinSet ?? DEFAULT_SETTINGS.legsToWinSet);

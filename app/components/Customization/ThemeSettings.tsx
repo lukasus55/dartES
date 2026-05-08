@@ -3,13 +3,11 @@
 import { useState, useEffect } from "react";
 import ColorPickerPopup from "../ColorPickerPopup";
 import { Palette, RotateCcw } from "lucide-react";
-import { DEFAULT_THEME, getConfig, saveSettings, saveTheme } from "@/app/utils/configStorage";
-import type { Config } from "@/app/utils/configStorage";
+import { DEFAULT_THEME, saveTheme } from "@/app/utils/configStorage";
+import type { UserConfig } from "@/app/utils/configStorage";
 import applyTheme from "@/app/utils/applyTheme";
 
-export default function ThemeSettings() {
-
-    const config: Config = getConfig();
+export default function ThemeSettings({config} : {config: UserConfig}) {
 
     const [primaryColor, setPrimaryColor] = useState(config.theme.primary ?? DEFAULT_THEME.primary);
     const [secondaryColor, setSecondaryColor] = useState(config.theme.secondary ?? DEFAULT_THEME.secondary);

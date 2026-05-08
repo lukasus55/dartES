@@ -9,7 +9,7 @@ export const PlayerSchema = z.object({
   isEnabled: z.boolean(),
 });
 
-export const ConfigSchema = z.object({
+export const UserConfigSchema = z.object({
   theme: z.object({
     primary: z.string(),
     secondary: z.string(),
@@ -23,7 +23,7 @@ export const ConfigSchema = z.object({
 });
 
 export type Player = z.infer<typeof PlayerSchema>;
-export type Config = z.infer<typeof ConfigSchema>;
+export type UserConfig = z.infer<typeof UserConfigSchema>;
 
 export const DEFAULT_THEME = {
   primary: "#F3EFF5",
@@ -46,7 +46,7 @@ export const DEFAULT_PLAYERS: Player[] = [
   { id: 5, name: "PLAYER 5", isEnabled: false },
 ];
 
-export const DEFAULT_CONFIG: Config = {
+export const DEFAULT_USER_CONFIG: UserConfig = {
   theme: {
     primary: DEFAULT_THEME.primary,
     secondary: DEFAULT_THEME.secondary,
@@ -61,32 +61,32 @@ export const DEFAULT_CONFIG: Config = {
 
 const STORAGE_KEY = "dartES_config";
 
-export function getConfig(): Config {
+export function getUserConfig(): UserConfig {
   const savedData = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
   
-  if (!savedData) return DEFAULT_CONFIG;
+  if (!savedData) return DEFAULT_USER_CONFIG;
 
   try {
     const parsedData = JSON.parse(savedData);
     
-    const result = ConfigSchema.safeParse(parsedData);
+    const result = UserConfigSchema.safeParse(parsedData);
 
     if (result.success) {
       return result.data;
     } else {
       console.warn("Invalid config found, falling back to defaults:", result.error.format());
-      return DEFAULT_CONFIG;
+      return DEFAULT_USER_CONFIG;
     }
   } catch (error) {
     console.error("Failed to parse config string, falling back to defaults.");
-    return DEFAULT_CONFIG;
+    return DEFAULT_USER_CONFIG;
   }
 }
 
 export function saveSettings({startingScore, legsToWinSet} : {startingScore:number, legsToWinSet:number}) {
-  const savedConfig: Config = getConfig();
+  const savedConfig: UserConfig = getUserConfig();
 
-  const newConfig: Config = {
+  const newConfig: UserConfig = {
     ...savedConfig,
     startingScore: startingScore,
     legsToWinSet: legsToWinSet,
@@ -105,9 +105,9 @@ interface SaveColorProps {
 }
 
 export function saveTheme({primary, secondary, accent, highlight, greenScreen} : SaveColorProps) {
-  const savedConfig: Config = getConfig();
+  const savedConfig: UserConfig = getUserConfig();
 
-  const newConfig: Config = {
+  const newConfig: UserConfig = {
     ...savedConfig,
     theme: {
       primary: primary,
@@ -120,4 +120,16 @@ export function saveTheme({primary, secondary, accent, highlight, greenScreen} :
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(newConfig));
   window.dispatchEvent(new Event("storage"));
+}
+
+export function savePlayers({players} : {players : Player[]}) {
+    const savedConfig: UserConfig = getUserConfig();
+
+    const newConfig: UserConfig = {
+      ...savedConfig,
+      players: players
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newConfig));
+    window.dispatchEvent(new Event("storage"));
 }
