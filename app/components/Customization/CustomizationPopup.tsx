@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { X, RotateCcw, Settings, Users, Power, Palette } from "lucide-react";
-import ColorPickerPopup from "./ColorPickerPopup";
+import ColorPickerPopup from "../ColorPickerPopup";
+import GameSettings from "./GameSettings";
 
 interface CustomizationPopupProps {
   onClose: () => void;
@@ -113,12 +114,6 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
     saveToStorage({ [key]: value });
   };
 
-  const handleSettingChange = (key: string, value: number, setter: (v: number) => void) => {
-    setter(value);
-    saveToStorage({ [key]: value });
-    window.dispatchEvent(new Event("storage")); 
-  };
-
   const handlePlayerChange = (id: number, field: "name" | "isEnabled", value: any) => {
     const updatedPlayers = playersConfig.map(p => 
       p.id === id ? { ...p, [field]: value } : p
@@ -142,41 +137,12 @@ export default function CustomizationPopup({ onClose }: CustomizationPopupProps)
       
       <button 
         onClick={onClose}
-        className="absolute top-3 right-3 text-neutral-600 hover:text-white transition-colors p-1"
+        className="absolute top-3 right-3 text-neutral-600 hover:text-white transition-colors p-1 cursor-pointer"
       >
         <X size={18} />
       </button>
 
-      {/* --- GAME SETTINGS SECTION --- */}
-      <div className="flex flex-col gap-4">
-        <h3 className="text-sm font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-2">
-          <Settings size={14} /> Game Settings
-        </h3>
-        
-        <div className="grid grid-cols-2 gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-xs text-neutral-500 font-mono">START SCORE</label>
-            <input 
-              type="number" 
-              value={startingScore}
-              onChange={(e) => handleSettingChange("startingScore", parseInt(e.target.value) || 0, setStartingScore)}
-              className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-neutral-600 outline-none
-              [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <label className="text-xs text-neutral-500 font-mono">LEGS TO SET</label>
-            <input 
-              type="number" 
-              value={legsToWinSet}
-              onChange={(e) => handleSettingChange("legsToWinSet", parseInt(e.target.value) || 0, setLegsToWinSet)}
-              className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-neutral-600 outline-none
-              [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            />
-          </div>
-        </div>
-      </div>
+      <GameSettings/>
 
       {/* --- COLORS SECTION --- */}
       <div className="flex flex-col gap-4 pt-4 border-t border-neutral-800">
