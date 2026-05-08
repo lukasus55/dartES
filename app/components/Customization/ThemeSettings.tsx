@@ -18,7 +18,7 @@ export default function ThemeSettings({config} : {config: UserConfig}) {
     useEffect (() => {
         saveTheme({primary: primaryColor, secondary: secondaryColor, accent: accentColor, highlight: highlightColor, greenScreen: greenScreenColor});
         applyTheme();
-    })
+    }, [primaryColor, secondaryColor, accentColor, highlightColor, greenScreenColor])
 
     const [activePicker, setActivePicker] = useState<string | null>(null);
 

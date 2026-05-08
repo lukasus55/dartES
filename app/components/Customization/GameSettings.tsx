@@ -11,7 +11,7 @@ export default function GameSettings({config} : {config: UserConfig}) {
     
     useEffect (() => {
         saveSettings({startingScore, legsToWinSet}); 
-    })
+    }, [startingScore, legsToWinSet])
 
     return (
         <div className="flex flex-col gap-4">
