@@ -53,7 +53,7 @@ export default function ThemeSettings({config} : {config: UserConfig}) {
                             onChange={(e) => setPrimaryColor(e.target.value)}
                             className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-1.5 text-sm text-gray-200 font-mono outline-none focus:border-neutral-600"
                         />
-                        <button onClick={() => setPrimaryColor(DEFAULT_THEME.primary)} className="p-2 text-neutral-600 hover:text-white rounded-lg">
+                        <button onClick={() => setPrimaryColor(DEFAULT_THEME.primary)} className="p-2 text-neutral-600 hover:text-white rounded-lg cursor-pointer">
                             <RotateCcw size={14} />
                         </button>
                     </div>
@@ -85,7 +85,7 @@ export default function ThemeSettings({config} : {config: UserConfig}) {
                             onChange={(e) => setSecondaryColor(e.target.value)}
                             className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-1.5 text-sm text-gray-200 font-mono outline-none focus:border-neutral-600"
                         />
-                        <button onClick={() => setSecondaryColor(DEFAULT_THEME.secondary)} className="p-2 text-neutral-600 hover:text-white rounded-lg">
+                        <button onClick={() => setSecondaryColor(DEFAULT_THEME.secondary)} className="p-2 text-neutral-600 hover:text-white rounded-lg cursor-pointer">
                             <RotateCcw size={14} />
                         </button>
                     </div>
@@ -117,7 +117,7 @@ export default function ThemeSettings({config} : {config: UserConfig}) {
                             onChange={(e) => setHighlightColor(e.target.value)}
                             className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-1.5 text-sm text-gray-200 font-mono outline-none focus:border-neutral-600"
                         />
-                        <button onClick={() => setHighlightColor(DEFAULT_THEME.highlight)} className="p-2 text-neutral-600 hover:text-white rounded-lg">
+                        <button onClick={() => setHighlightColor(DEFAULT_THEME.highlight)} className="p-2 text-neutral-600 hover:text-white rounded-lg cursor-pointer">
                             <RotateCcw size={14} />
                         </button>
                     </div>
@@ -149,7 +149,7 @@ export default function ThemeSettings({config} : {config: UserConfig}) {
                             onChange={(e) => setAccentColor(e.target.value)}
                             className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-1.5 text-sm text-gray-200 font-mono outline-none focus:border-neutral-600"
                         />
-                        <button onClick={() => setAccentColor(DEFAULT_THEME.accent)} className="p-2 text-neutral-600 hover:text-white rounded-lg">
+                        <button onClick={() => setAccentColor(DEFAULT_THEME.accent)} className="p-2 text-neutral-600 hover:text-white rounded-lg cursor-pointer">
                             <RotateCcw size={14} />
                         </button>
                     </div>
@@ -181,7 +181,7 @@ export default function ThemeSettings({config} : {config: UserConfig}) {
                             onChange={(e) => setGreenScreenColor(e.target.value)}
                             className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-1.5 text-sm text-gray-200 font-mono outline-none focus:border-neutral-600"
                         />
-                        <button onClick={() => setGreenScreenColor(DEFAULT_THEME.greenScreen)} className="p-2 text-neutral-600 hover:text-white rounded-lg">
+                        <button onClick={() => setGreenScreenColor(DEFAULT_THEME.greenScreen)} className="p-2 text-neutral-600 hover:text-white rounded-lg cursor-pointer">
                             <RotateCcw size={14} />
                         </button>
                     </div>

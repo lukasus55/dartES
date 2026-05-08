@@ -38,7 +38,7 @@ export default function PlayersSettings({config} : {config: UserConfig}) {
                         <button
                             onClick={() => handlePlayerChange(player.id, "isEnabled", !player.isEnabled)}
                             className={`
-                            p-2 rounded-lg transition-all duration-200 border
+                            p-2 rounded-lg transition-all duration-200 border cursor-pointer
                             ${player.isEnabled
                                     ? "text-green-400 bg-green-400/10 border-green-400/20"
                                     : "text-neutral-600 bg-neutral-900 border-neutral-800 hover:bg-neutral-800 hover:text-neutral-400"}
