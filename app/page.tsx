@@ -3,12 +3,12 @@ import { useRef, useEffect } from "react";
 import Scoreboard, { ScoreboardHandle } from "./components/Scoreboard"; // Import the type too
 import Topbar from "./components/Topbar";
 import Footer from "./components/Footer";
-import changeDomTheme from "./utils/changeDomTheme";
+import applyTheme from "./utils/applyTheme";
 
 export default function Home() {
 
   useEffect(() => {
-    changeDomTheme();
+    applyTheme();
   }, []);
 
   const scoreboardRef = useRef<ScoreboardHandle>(null);

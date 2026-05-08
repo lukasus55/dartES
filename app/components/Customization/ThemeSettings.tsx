@@ -5,7 +5,7 @@ import ColorPickerPopup from "../ColorPickerPopup";
 import { Palette, RotateCcw } from "lucide-react";
 import { DEFAULT_THEME, getConfig, saveSettings, saveTheme } from "@/app/utils/configStorage";
 import type { Config } from "@/app/utils/configStorage";
-import changeDomTheme from "@/app/utils/changeDomTheme";
+import applyTheme from "@/app/utils/applyTheme";
 
 export default function ThemeSettings() {
 
@@ -19,7 +19,7 @@ export default function ThemeSettings() {
 
     useEffect (() => {
         saveTheme({primary: primaryColor, secondary: secondaryColor, accent: accentColor, highlight: highlightColor, greenScreen: greenScreenColor});
-        changeDomTheme();
+        applyTheme();
     })
 
     const [activePicker, setActivePicker] = useState<string | null>(null);
