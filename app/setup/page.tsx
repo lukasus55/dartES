@@ -166,7 +166,7 @@ export default function SetupPage() {
 
                         <button
                             onClick={handleLaunch}
-                            className="flex items-center gap-2 bg-primary hover:bg-lime-600 text-black font-bold py-3 px-6 rounded-lg transition-all active:scale-95"
+                            className="flex items-center gap-2 bg-primary hover:bg-lime-600 text-black font-bold py-3 px-6 rounded-lg transition-all active:scale-95 cursor-pointer"
                         >
                             <ExternalLink size={20} />
                             Launch Window

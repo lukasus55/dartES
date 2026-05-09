@@ -2,7 +2,7 @@
 import { useState } from "react";
 import IconButton from "./IconButton";
 import { Pencil, RotateCcw, TvMinimal, FileSpreadsheet } from "lucide-react";
-import CustomizationPopup from "./CustomizationPopup";
+import CustomizationPopup from "./Customization/CustomizationPopup";
 import { exportMatchToExcel } from "../utils/exportMatchToExcel";
 
 interface TopbarProps {

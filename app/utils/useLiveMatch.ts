@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getStoredMatch, StoredMatchData, MATCH_STORAGE_KEY } from "./storage";
+import { getStoredMatch, StoredMatchData, MATCH_STORAGE_KEY } from "./matchStorage";
 
 export function useLiveMatch() {
     const [matchData, setMatchData] = useState<StoredMatchData | null>(null);

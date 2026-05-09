@@ -22,7 +22,7 @@ export default function PlayerScore({
         transition-all duration-300 border-2
         ${
           isActive
-            ? "border-customizableAccent bg-customizableHighlit"
+            ? "border-customizableAccent bg-customizableHighlight"
             : "border-transparent bg-transparent"
         }
       `}

@@ -33,8 +33,8 @@ interface GameStateSnapshot {
 
 const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 
-const MATCH_STORAGE_KEY = "darts_match_snapshot";
-const THEME_STORAGE_KEY = "darts_app_theme_config";
+const MATCH_STORAGE_KEY = "dartES_match_snapshot";
+const THEME_STORAGE_KEY = "dartES_config";
 
 const DEFAULT_PLAYERS_CONFIG = [
   { id: 1, name: "PLAYER 1", isEnabled: true },

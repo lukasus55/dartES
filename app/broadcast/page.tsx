@@ -4,6 +4,7 @@ import { getCheckoutGuide } from "../utils/checkout";
 import { useLiveMatch } from "../utils/useLiveMatch";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion"; // 1. Import Framer Motion
+import applyTheme from "../utils/applyTheme";
 
 export default function BroadcastPage() {
 
@@ -19,38 +20,7 @@ export default function BroadcastPage() {
 
     const matchData = useLiveMatch();
 
-    const THEME_STORAGE_KEY = "darts_app_theme_config";
-
-    useEffect(() => {
-        const applyTheme = () => {
-            try {
-                const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
-                if (storedTheme) {
-                    const config = JSON.parse(storedTheme);
-                    const root = document.documentElement;
-
-                    if (config.primary) root.style.setProperty("--customizablePrimary", config.primary);
-                    if (config.secondary) root.style.setProperty("--customizableSecondary", config.secondary);
-                    if (config.accent) root.style.setProperty("--customizableAccent", config.accent);
-                    if (config.highlight) root.style.setProperty("--customizableHighlit", config.highlight);
-                    if (config.greenScreen) root.style.setProperty("--customizableGreenScreen", config.greenScreen);
-                }
-            } catch (e) {
-                console.error("Failed to apply theme live update", e);
-            }
-        };
-
-        applyTheme();
-
-        const handleStorageChange = (event: StorageEvent) => {
-            if (event.key === THEME_STORAGE_KEY) {
-                applyTheme();
-            }
-        };
-
-        window.addEventListener("storage", handleStorageChange);
-        return () => window.removeEventListener("storage", handleStorageChange);
-    }, []);
+    applyTheme()
 
     if (!matchData) return null;
 
@@ -108,7 +78,7 @@ export default function BroadcastPage() {
                                                     delay: i * 0.05 
                                                 }}
                                                 
-                                                className={`w-1/5 text-2xl font-bold bg-customizableHighlit text-customizableSecondary py-1 px-8 flex justify-center items-center ${i===0 ? `rounded-l-sm` : ``}`}
+                                                className={`w-1/5 text-2xl font-bold bg-customizableHighlight text-customizableSecondary py-1 px-8 flex justify-center items-center ${i===0 ? `rounded-l-sm` : ``}`}
                                             >
                                                 {dart}
                                             </motion.div>
@@ -117,7 +87,7 @@ export default function BroadcastPage() {
                                 </div>
 
                                 {/* --- PLAYER STATS BAR --- */}
-                                <div className={`w-7/10 flex items-center h-full p-3 bg-customizableHighlit z-10 relative`}>
+                                <div className={`w-7/10 flex items-center h-full p-3 bg-customizableHighlight z-10 relative`}>
                                     <div className={`w-3 h-3 mr-1 rounded-full transition-all duration-300 ${isActive ? "bg-customizableAccent" : "bg-transparent"}`} />
                                     <div className={`w-10/20 text-2xl font-bold tracking-wider ${isActive ? "text-customizablePrimary" : "text-customizableSecondary"}`}>
                                         {player.name}
