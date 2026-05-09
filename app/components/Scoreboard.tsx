@@ -58,6 +58,11 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
     const loadData = () => {
       const config = getUserConfig();
 
+      setGameSettings({
+        startingScore: config.startingScore,
+        legsToWinSet: config.legsToWinSet
+      })
+
       // Get saved match
       const matchStr = localStorage.getItem(MATCH_STORAGE_KEY);
 
