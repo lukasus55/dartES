@@ -28,8 +28,6 @@ export default function CustomizationPopup({ onClose }: {onClose: () => void;}) 
       <GameSettings config={config}/>
 
       <ThemeSettings config={config}/>
-
-      <PlayersSettings config={config}/>
       
     </div>
   );

@@ -7,6 +7,8 @@ export const PlayerSchema = z.object({
   id: z.number(),
   name: z.string(),
   isEnabled: z.boolean(),
+  isBot: z.boolean(),
+  botLevel: z.number(),
 });
 
 export const UserConfigSchema = z.object({
@@ -39,11 +41,11 @@ export const DEFAULT_SETTINGS = {
 };
 
 export const DEFAULT_PLAYERS: Player[] = [
-  { id: 1, name: "PLAYER 1", isEnabled: true },
-  { id: 2, name: "PLAYER 2", isEnabled: true },
-  { id: 3, name: "PLAYER 3", isEnabled: false },
-  { id: 4, name: "PLAYER 4", isEnabled: false },
-  { id: 5, name: "PLAYER 5", isEnabled: false },
+  { id: 1, name: "PLAYER 1", isEnabled: true, isBot: false, botLevel: 2 },
+  { id: 2, name: "PLAYER 2", isEnabled: true, isBot: false, botLevel: 2 },
+  { id: 3, name: "PLAYER 3", isEnabled: false, isBot: false, botLevel: 2 },
+  { id: 4, name: "PLAYER 4", isEnabled: false, isBot: false, botLevel: 2 },
+  { id: 5, name: "PLAYER 5", isEnabled: false, isBot: false, botLevel: 2 },
 ];
 
 export const DEFAULT_USER_CONFIG: UserConfig = {
