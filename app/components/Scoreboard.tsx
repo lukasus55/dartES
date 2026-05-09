@@ -293,12 +293,12 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
       >
         <div className="relative flex items-end justify-center">
           {
-          !isMobile && <div className="mr-4"><IconButton icon={Undo2} label="Undo" onClick={handleUndo}/></div>
+          (!isMobile && !players[activePlayerIndex].isBot) && <div className="mr-4"><IconButton icon={Undo2} label="Undo" onClick={handleUndo}/></div>
           }
           <ScoreInput
-            currentPlayerName={players[activePlayerIndex].name}
-            onSubmit={handleScoreSubmit}
-            onUndo={handleUndo}
+            player={players[activePlayerIndex]}
+            handleScoreSubmit={handleScoreSubmit}
+            handleUndo={handleUndo}
           />
         </div>
       </div>

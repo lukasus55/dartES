@@ -3,35 +3,47 @@
 import ScoreInputDesktop from "./ScoreInputDesktop";
 import ScoreInputMobile from "./ScoreInputMobile";
 import { useIsMobile } from "../utils/useIsMobile";
+import { Player } from "../utils/configStorage";
+import ScoreInputBot from "./Customization/ScoreInputBot";
+import { PlayerWithResults } from "./Scoreboard";
 
 interface ScoreInputProps {
-  onSubmit: (score: number) => void;
-  onUndo: () => void;
-  currentPlayerName: string;
+  handleScoreSubmit: (score: number) => void;
+  handleUndo: () => void;
+  player: PlayerWithResults;
 }
 
 export default function ScoreInput({
-  onSubmit,
-  onUndo,
-  currentPlayerName,
+  handleScoreSubmit,
+  handleUndo,
+  player,
 }: ScoreInputProps) {
   
   const isMobile = useIsMobile();
 
   return (
     <>
-      {isMobile ? (
-        <ScoreInputMobile 
-          onSubmit={onSubmit} 
-          onUndo={onUndo} 
-          currentPlayerName={currentPlayerName}
-        />
-      ) : (
-        <ScoreInputDesktop 
-          onSubmit={onSubmit} 
-          currentPlayerName={currentPlayerName}
-        />
-      )}
+      {player.isBot ?
+        (
+          <ScoreInputBot
+            handleScoreSubmit={handleScoreSubmit}
+            player={player}
+          />
+        ) : (
+          isMobile ? (
+            <ScoreInputMobile 
+              onSubmit={handleScoreSubmit} 
+              onUndo={handleUndo} 
+              currentPlayerName={player.name}
+            />
+          ) : (
+            <ScoreInputDesktop 
+              onSubmit={handleScoreSubmit} 
+              currentPlayerName={player.name}
+            />
+          )
+        )
+      }
     </>
   );
 }
