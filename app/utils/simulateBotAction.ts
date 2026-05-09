@@ -1,6 +1,7 @@
 import { PlayerWithResults } from "../components/Scoreboard"; // Adjust path if needed
 import { getUserConfig } from "./configStorage";
 import { sum } from "./helpers";
+import { getDartValue, getTarget } from "./targets";
 
 export type BotAction = 
     | { type: "target", value: string }
@@ -12,29 +13,21 @@ const levelsAverageValues: Record<number, number> = {
     6: 55.5, 7: 65.5, 8: 75.5, 9: 90.5,
 };
 
-function calculateTarget(botLevel: number, currentScore: number): string {
-    if (currentScore < 170) {
-        return "D16";
-    }
-    return "T20";
-}
-
 export default function simulateBotAction(step: number, player: PlayerWithResults, currentTurnShots: number[]): BotAction {
     let botLevel = player.botLevel || 2;
     if (botLevel < 1 || botLevel > 9) botLevel = 2;
 
     const gameSettings = getUserConfig();
     
-    // The score at the start of the bot's turn
     const startOfTurnScore = gameSettings.startingScore - sum(player.throws);
-    
-    // The live score right now (taking into account dart 1 and 2 if we are on dart 3)
     const liveScore = startOfTurnScore - sum(currentTurnShots);
+
+    const target = getTarget(liveScore);
 
     if (step === 1 || step === 3 || step === 5) {
         return { 
             type: "target", 
-            value: calculateTarget(botLevel, liveScore) 
+            value: target,
         };
     }
 
@@ -42,7 +35,7 @@ export default function simulateBotAction(step: number, player: PlayerWithResult
         // Placeholder value for the actual thrown dart
         return { 
             type: "shot", 
-            value: 20 
+            value: getDartValue(target), 
         };
     }
 

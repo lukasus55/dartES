@@ -59,7 +59,7 @@ export default function BotPlayer({ player, handleScoreSubmit }: BotPlayerProps)
 
     return (
         <div className="flex flex-col w-full items-center justify-center p-5 gap-2">
-            <div>I am a bot targeting: <strong>{target}</strong></div>
+            <div>Targeting: <strong>{target}</strong></div>
             <div className="flex gap-4">
                 {shots.map((shot, index) => (
                     <div key={index} className="px-4 py-2 bg-neutral-800 text-white rounded">
