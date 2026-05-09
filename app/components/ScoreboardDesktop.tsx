@@ -2,21 +2,9 @@
 import PlayerScore from "./PlayerScore";
 import CheckoutGuide from "./CheckoutGuide";
 import PlayerStats from "./PlayerStats";
-
-interface Player {
-  id: number;
-  name: string;
-  throws: number[];
-  sets: number;
-  legs: number;
-  isEnabled: boolean;
-  country?: string;
-  matchHistory: number[];
-  checkoutHistory: number[];
-}
-
+import { PlayerWithResults } from "./Scoreboard";
 interface ScoreboardDesktopProps {
-  player: Player;
+  player: PlayerWithResults;
   currentScore: number;
   isActive: boolean;
 }
@@ -30,6 +18,7 @@ export default function ScoreboardDesktop({ player, currentScore, isActive }: Sc
                 sets={player.sets}
                 legs={player.legs}
                 isActive={isActive}
+                isBot={player.isBot}
               />    
 
               <div className="flex h-15 mb-5 w-full justify-center">

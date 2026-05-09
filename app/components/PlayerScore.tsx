@@ -1,4 +1,4 @@
-import { Circle } from "lucide-react";
+import { Bot, Circle } from "lucide-react";
 
 interface PlayerScoreProps {
   name: string;
@@ -6,6 +6,7 @@ interface PlayerScoreProps {
   sets: number;
   legs: number;
   isActive: boolean;
+  isBot: boolean;
 }
 
 export default function PlayerScore({
@@ -14,6 +15,7 @@ export default function PlayerScore({
   sets = 0,
   legs = 0,
   isActive = false,
+  isBot = false,
 }: PlayerScoreProps) {
   return (
     <div
@@ -27,10 +29,10 @@ export default function PlayerScore({
         }
       `}
     >
-      <div className="flex w-full justify-center text-3xl font-bold text-customizableAccent">
-        {name}
+      <div className="flex w-full items-center justify-center text-3xl font-bold text-customizableAccent gap-2">
+        {isBot && <Bot/>} {name}
         {isActive && (
-          <span className="ml-2 text-customizableAccent pt-2.5">
+          <span className="text-customizableAccent">
             {" "}
             <Circle fill="var(--customizableAccent)" size={16} />{" "}
           </span>

@@ -1,33 +1,28 @@
 "use client";
 import { useState, forwardRef, useImperativeHandle, useEffect } from "react";
 import { Undo2 } from "lucide-react";
-import PlayerScore from "./PlayerScore";
 import ScoreInput from "./ScoreInput";
-import PlayerStats from "./PlayerStats";
-import CheckoutGuide from "./CheckoutGuide";
 import IconButton from "./IconButton";
 import ConfirmationPopup from "./ConfirmationPopup";
 import { useIsMobile } from "../utils/useIsMobile";
 import ScoreboardDesktop from "./ScoreboardDesktop";
+import { DEFAULT_PLAYERS, getUserConfig } from "../utils/configStorage";
+import { Player } from "../utils/configStorage";
 
 export interface ScoreboardHandle {
   resetMatch: () => void;
 }
 
-interface Player {
-  id: number;
-  name: string;
+export type PlayerWithResults = Player & {
   throws: number[];
   sets: number;
   legs: number;
-  isEnabled: boolean;
-  country?: string;
   matchHistory: number[];
   checkoutHistory: number[];
 }
 
 interface GameStateSnapshot {
-  players: Player[];
+  players: PlayerWithResults[];
   activePlayerIndex: number;
 }
 
@@ -36,13 +31,7 @@ const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 const MATCH_STORAGE_KEY = "dartES_match_snapshot";
 const THEME_STORAGE_KEY = "dartES_config";
 
-const DEFAULT_PLAYERS_CONFIG = [
-  { id: 1, name: "PLAYER 1", isEnabled: true },
-  { id: 2, name: "PLAYER 2", isEnabled: true },
-  { id: 3, name: "PLAYER 3", isEnabled: false },
-  { id: 4, name: "PLAYER 4", isEnabled: false },
-  { id: 5, name: "PLAYER 5", isEnabled: false },
-];
+const DEFAULT_PLAYERS_CONFIG = DEFAULT_PLAYERS;
 
 const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   const [gameSettings, setGameSettings] = useState({
@@ -50,10 +39,10 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
     legsToWinSet: 3
   });
 
-  const [players, setPlayers] = useState<Player[]>(
+  const [players, setPlayers] = useState<PlayerWithResults[]>(
     DEFAULT_PLAYERS_CONFIG.map(p => ({
         ...p,
-        throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0
+        throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, ...DEFAULT_PLAYERS_CONFIG
     }))
   );
 
@@ -67,43 +56,32 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   // LOAD CONFIG & RESTORE GAME
   useEffect(() => {
     const loadData = () => {
-      const themeStr = localStorage.getItem(THEME_STORAGE_KEY);
-      let themeConfig: any = null;
-      
-      if (themeStr) {
-        themeConfig = JSON.parse(themeStr);
-        setGameSettings({
-          startingScore: themeConfig.startingScore || 501,
-          legsToWinSet: themeConfig.legsToWinSet || 3
-        });
-      }
+      const config = getUserConfig();
 
       // Get saved match
       const matchStr = localStorage.getItem(MATCH_STORAGE_KEY);
 
       if (matchStr) {
         const savedMatch = JSON.parse(matchStr);
-        let restoredPlayers: Player[] = savedMatch.players;
+        let restoredPlayers: PlayerWithResults[] = savedMatch.players;
 
         // live update of Names/Enabled status from Settings
-        if (themeConfig && Array.isArray(themeConfig.players)) {
-          restoredPlayers = restoredPlayers.map(p => {
-              const configP = themeConfig.players.find((cp: any) => cp.id === p.id);
-              return configP ? { ...p, name: configP.name, isEnabled: configP.isEnabled } : p;
-          });
-        }
+        restoredPlayers = restoredPlayers.map(p => {
+            const configP = config.players.find((cp: Player) => cp.id === p.id);
+            const restoredPlayer: PlayerWithResults = configP ? {...p, ...configP} : {...p, ...DEFAULT_PLAYERS_CONFIG};
+            return restoredPlayer;
+        });
 
         setPlayers(restoredPlayers);
         setActivePlayerIndex(savedMatch.activePlayerIndex || 0);
       } 
       else {
         // --- NEW GAME (From Config) ---
-        if (themeConfig && Array.isArray(themeConfig.players)) {
-            setPlayers(prev => prev.map(p => {
-              const configP = themeConfig.players.find((cp: any) => cp.id === p.id);
-              return configP ? { ...p, name: configP.name, isEnabled: configP.isEnabled } : p;
-            }));
-        }
+        setPlayers(prev => prev.map(p => {
+            const configP = config.players.find((cp: Player) => cp.id === p.id);
+            const restoredPlayer: PlayerWithResults = configP ? {...p, ...configP} : {...p, ...DEFAULT_PLAYERS_CONFIG};
+            return restoredPlayer;
+        }));
       }
     };
 
@@ -178,7 +156,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
     setHistoryStack((prev) => prev.slice(0, -1));
   };
 
-  const handleLegWin = (winner: Player, winningThrowScore: number) => {
+  const handleLegWin = (winner: PlayerWithResults, winningThrowScore: number) => {
     const enabledPlayers = players.filter(p => p.isEnabled);
     const activeCount = enabledPlayers.length;
     const totalSets = enabledPlayers.reduce((sum, p) => sum + p.sets, 0);
@@ -237,7 +215,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
     
     // Bust when more than starting score or impossible checkout
     if (newTotal > gameSettings.startingScore || newTotal == gameSettings.startingScore-1) {
-       scoreToRecord = 0;
+      scoreToRecord = 0;
     } 
 
     setPlayers((prevPlayers) => {
