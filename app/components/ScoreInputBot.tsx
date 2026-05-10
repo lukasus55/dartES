@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import simulateBotAction, { BotAction } from "@/app/utils/simulateBotAction";
-import { PlayerWithResults } from "../Scoreboard";
+import { PlayerWithResults } from "./Scoreboard";
 
 interface BotPlayerProps {
     player: PlayerWithResults;
@@ -18,7 +18,6 @@ export default function BotPlayer({ player, handleScoreSubmit }: BotPlayerProps)
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
         const playBotTurn = async () => {
-            await delay(1000);
 
             // This local array tracks the shots instantly for the loop logic
             let currentTurnShots: number[] = [];

@@ -42,7 +42,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   const [players, setPlayers] = useState<PlayerWithResults[]>(
     DEFAULT_PLAYERS_CONFIG.map(p => ({
         ...p,
-        throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, ...DEFAULT_PLAYERS_CONFIG
+        throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0
     }))
   );
 
@@ -154,8 +154,18 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   };
 
   const handleUndo = () => {
-    if (historyStack.length === 0) return;
-    const lastState = historyStack[historyStack.length - 1];
+    if (historyStack.length < 1) return;
+
+    let lastState = historyStack[historyStack.length - 1];
+    console.log(lastState.activePlayerIndex)
+    let i: number = 1
+
+    while (players[lastState.activePlayerIndex].isBot === true) {
+      i++;
+      lastState = historyStack[historyStack.length - i];
+      if (lastState === undefined) return; 
+    }
+
     setPlayers(lastState.players);
     setActivePlayerIndex(lastState.activePlayerIndex);
     setHistoryStack((prev) => prev.slice(0, -1));
