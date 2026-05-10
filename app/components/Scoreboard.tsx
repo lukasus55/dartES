@@ -53,6 +53,8 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   
   const isMobile = useIsMobile();
 
+  const [isLoaded, setIsLoaded] = useState(false);
+
   // LOAD CONFIG & RESTORE GAME
   useEffect(() => {
     const loadData = () => {
@@ -88,6 +90,8 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
             return restoredPlayer;
         }));
       }
+
+      setIsLoaded(true);
     };
 
     loadData();
@@ -97,7 +101,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
 
   // Saves game state
   useEffect(() => {
-    if (players.length > 0) {
+    if (players.length > 0 && isLoaded === true) {
       const snapshot = {
         players,
         activePlayerIndex,
