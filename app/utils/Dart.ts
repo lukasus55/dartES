@@ -71,11 +71,45 @@ function getIdealCoordinates(target: string): { x: number, y: number } {
     return { x, y };
 }
 
+/**
+ * Converts a physical X,Y coordinate back into a dartboard score string.
+ */
+function calcHitResult(x: number, y: number): string {
+    const distance = Math.sqrt(x * x + y * y);
+
+    if (distance > RINGS.DOUBLE_MAX) return "0"; // missed dartboard
+    if (distance <= RINGS.DBULL) return "BULL";
+    if (distance <= RINGS.BULL) return "25";
+
+    // calculate the angle to find the number slice
+    // Math.atan2(x, y) treats UP as 0 degrees, returning between -PI and PI
+    let angleRad = Math.atan2(x, y);
+    if (angleRad < 0) angleRad += 2 * Math.PI; // Normalize to 0 -> 2PI
+
+    const angleDeg = angleRad * (180 / Math.PI);
+
+    // Shift by 9 degrees because the '20' slice is centered on 0, meaning it goes from 351 to 9.
+    const sliceIndex = Math.floor((angleDeg + 9) / 18) % 20;
+    const hitNumber = SLICES[sliceIndex];
+
+    // Check which ring the dart landed in
+    if (distance > RINGS.OUTER_SINGLE_MAX && distance <= RINGS.DOUBLE_MAX) {
+        return `D${hitNumber}`;
+    }
+    if (distance > RINGS.INNER_SINGLE_MAX && distance <= RINGS.TREBLE_MAX) {
+        return `T${hitNumber}`;
+    }
+    
+    // single
+    return `${hitNumber}`;
+}
+
 export default class Dart {
     ideal: { x: number, y: number };
     spread: number;
     actualX: number;
     actualY: number;
+    hitResult: string;
 
     constructor(target: string, botLevel: number) {
         this.ideal = getIdealCoordinates(target);
@@ -84,42 +118,7 @@ export default class Dart {
         // Apply Gaussian scatter (simulate the physical throw)
         this.actualX = randomGaussian(this.ideal.x, this.spread);
         this.actualY = randomGaussian(this.ideal.y, this.spread);
-    }
 
-    get hitResult() {
-        return this.calcHitResult(this.actualX, this.actualY);
-    }
-
-    /**
-     * Converts a physical X,Y coordinate back into a dartboard score string.
-     */
-    calcHitResult(x: number, y: number): string {
-        const distance = Math.sqrt(x * x + y * y);
-
-        if (distance > RINGS.DOUBLE_MAX) return "0"; // missed dartboard
-        if (distance <= RINGS.DBULL) return "BULL";
-        if (distance <= RINGS.BULL) return "25";
-
-        // calculate the angle to find the number slice
-        // Math.atan2(x, y) treats UP as 0 degrees, returning between -PI and PI
-        let angleRad = Math.atan2(x, y);
-        if (angleRad < 0) angleRad += 2 * Math.PI; // Normalize to 0 -> 2PI
-
-        const angleDeg = angleRad * (180 / Math.PI);
-
-        // Shift by 9 degrees because the '20' slice is centered on 0, meaning it goes from 351 to 9.
-        const sliceIndex = Math.floor((angleDeg + 9) / 18) % 20;
-        const hitNumber = SLICES[sliceIndex];
-
-        // Check which ring the dart landed in
-        if (distance > RINGS.OUTER_SINGLE_MAX && distance <= RINGS.DOUBLE_MAX) {
-            return `D${hitNumber}`;
-        }
-        if (distance > RINGS.INNER_SINGLE_MAX && distance <= RINGS.TREBLE_MAX) {
-            return `T${hitNumber}`;
-        }
-        
-        // single
-        return `${hitNumber}`;
+        this.hitResult = calcHitResult(this.actualX, this.actualY);
     }
 }

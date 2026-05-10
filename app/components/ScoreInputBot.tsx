@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react";
 import simulateBotAction, { BotAction } from "@/app/utils/simulateBotAction";
 import { PlayerWithResults } from "./Scoreboard";
+import { getDartValue } from "../utils/targets";
+import DartboardVisualiser from "./DartboardVisualiser";
+import Dart from "../utils/Dart";
 
 interface BotPlayerProps {
     player: PlayerWithResults;
@@ -11,7 +14,7 @@ interface BotPlayerProps {
 
 export default function BotPlayer({ player, handleScoreSubmit }: BotPlayerProps) {
     const [target, setTarget] = useState<string>("...");
-    const [shots, setShots] = useState<number[]>([]);
+    const [darts, setShots] = useState<Dart[]>([]);
 
     useEffect(() => {
         let isActive = true;
@@ -20,7 +23,7 @@ export default function BotPlayer({ player, handleScoreSubmit }: BotPlayerProps)
         const playBotTurn = async () => {
 
             // This local array tracks the shots instantly for the loop logic
-            let currentTurnShots: number[] = [];
+            let currentTurnShots: Dart[] = [];
 
             // 7 Steps: Tgt1 -> Shot1 -> Tgt2 -> Shot2 -> Tgt3 -> Shot3 -> Result
             for (let step = 1; step <= 7; step++) {
@@ -38,7 +41,8 @@ export default function BotPlayer({ player, handleScoreSubmit }: BotPlayerProps)
                     setTarget(action.value);
                 }
                 else if (action.type === "shot") {
-                    currentTurnShots.push(action.value);
+                    const dart: Dart = action.value
+                    currentTurnShots.push(dart);
                     // Update React state so the user can see the shots hit
                     setShots([...currentTurnShots]);
                 }
@@ -60,11 +64,7 @@ export default function BotPlayer({ player, handleScoreSubmit }: BotPlayerProps)
         <div className="fixed bottom-0 left-0 bg-neutral-950 border-t border-neutral-900 max-w-screen flex flex-col w-full justify-center p-5 gap-4">
             <div className="flex justify-center w-full">Targeting:&nbsp;<strong>{target}</strong></div>
             <div className="flex justify-center w-full gap-4 min-h-60">
-                {shots.map((shot, index) => (
-                    <div key={index} className="px-4 py-2 bg-neutral-800 text-white rounded h-min">
-                        Dart {index + 1}: {shot}
-                    </div>
-                ))}
+                <DartboardVisualiser darts={darts}/>
             </div>
         </div>
     );

@@ -6,22 +6,23 @@ import { getDartValue, getTarget } from "./targets";
 
 export type BotAction = 
     | { type: "target", value: string }
-    | { type: "shot", value: number }
+    | { type: "shot", value: Dart }
     | { type: "result", value: number };
 
-export default function simulateBotAction(step: number, player: PlayerWithResults, currentTurnShots: number[]): BotAction {
+export default function simulateBotAction(step: number, player: PlayerWithResults, currentTurnShots: Dart[]): BotAction {
     let botLevel = player.botLevel || 2;
     if (botLevel < 1 || botLevel > 9) botLevel = 2;
 
     const gameSettings = getUserConfig();
     
     const startOfTurnScore = gameSettings.startingScore - sum(player.throws);
-    const liveScore = startOfTurnScore - sum(currentTurnShots);
+    const shotValues = currentTurnShots.map(d => getDartValue(d.hitResult))
+    const liveScore = startOfTurnScore - sum(shotValues);
 
     if (liveScore <= 1) {
         return { 
             type: "result", 
-            value: sum(currentTurnShots) 
+            value: sum(shotValues) 
         }; 
     }
 
@@ -40,12 +41,12 @@ export default function simulateBotAction(step: number, player: PlayerWithResult
         // Placeholder value for the actual thrown dart
         return { 
             type: "shot", 
-            value: getDartValue(shootedDart.hitResult), 
+            value: shootedDart, 
         };
     }
 
     return { 
         type: "result", 
-        value: sum(currentTurnShots) 
+        value: sum(shotValues) 
     }; 
 }
