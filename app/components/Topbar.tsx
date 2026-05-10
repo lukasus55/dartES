@@ -23,7 +23,7 @@ export default function Topbar({ onReset }: TopbarProps) {
 
   return (
     <div className="max-lg:absolute flex fixed top-0 left-0 w-screen p-5 min-h-30 items-center z-100">
-      <div className="flex w-full justify-center gap-10">
+      <div className="flex w-full justify-center gap-10 max-sm:gap-4">
         <IconButton
           icon={RotateCcw}
           label="Reset"

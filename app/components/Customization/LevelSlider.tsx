@@ -52,7 +52,7 @@ export default function LevelSlider({player, handlePlayerChange} : LevelSliderPr
     };
 
     return (
-        <div className="w-40 h-full flex items-center ml-2">
+        <div className="w-40 h-full flex items-center">
             <Slider
                 aria-label="Small steps"
                 defaultValue={2}

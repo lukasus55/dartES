@@ -23,7 +23,7 @@ export default function PlayersSettings({config} : {config: UserConfig}) {
 
             <div className="flex flex-col gap-2">
                 {playersConfig.map((player) => (
-                    <div key={player.id} className="flex items-center gap-3">
+                    <div key={player.id} className="flex min-h-12 items-center gap-2 w-full flex-wrap border-b-2 border-neutral-800 py-2">
                         <input
                             type="text"
                             value={player.name}
