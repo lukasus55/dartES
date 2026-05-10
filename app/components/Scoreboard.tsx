@@ -114,18 +114,22 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   // hide input on scroll
   useEffect(() => {
     const handleScroll = () => {
+      if (players[activePlayerIndex].isBot) return;
+
       const scrolledTo = window.scrollY + window.innerHeight;
       const totalHeight = document.documentElement.scrollHeight;
       const distanceToBottom = totalHeight - scrolledTo;
+
       if (distanceToBottom < 100) {
         setHideInput(true);
       } else {
         setHideInput(false);
       }
+
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [gameSettings, isLoaded]);
 
   const handleResetRequest = () => {
     setShowResetConfirm(true);
@@ -306,7 +310,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
       <div 
         className={`
           fixed bottom-0 left-0 w-full flex flex-col items-center justify-center pb-8 pt-14
-          transition-all duration-500 ease-in-out
+          transition-all duration-500 ease-in-out z-50
           ${hideInput ? 'translate-y-[120%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}
         `}
       >

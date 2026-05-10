@@ -57,11 +57,11 @@ export default function BotPlayer({ player, handleScoreSubmit }: BotPlayerProps)
     }, [player, handleScoreSubmit]);
 
     return (
-        <div className="flex flex-col w-full items-center justify-center p-5 gap-2">
-            <div>Targeting: <strong>{target}</strong></div>
-            <div className="flex gap-4">
+        <div className="fixed bottom-0 left-0 bg-neutral-950 border-t border-neutral-900 max-w-screen flex flex-col w-full justify-center p-5 gap-4">
+            <div className="flex justify-center w-full">Targeting:&nbsp;<strong>{target}</strong></div>
+            <div className="flex justify-center w-full gap-4 min-h-60">
                 {shots.map((shot, index) => (
-                    <div key={index} className="px-4 py-2 bg-neutral-800 text-white rounded">
+                    <div key={index} className="px-4 py-2 bg-neutral-800 text-white rounded h-min">
                         Dart {index + 1}: {shot}
                     </div>
                 ))}
