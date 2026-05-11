@@ -90,7 +90,7 @@ export function saveSettings({startingScore, legsToWinSet} : {startingScore:numb
 
   const newConfig: UserConfig = {
     ...savedConfig,
-    startingScore: startingScore,
+    startingScore: Math.max(2, startingScore),
     legsToWinSet: legsToWinSet,
   };
 
