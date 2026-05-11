@@ -11,7 +11,7 @@ export type BotAction =
 
 export default function simulateBotAction(step: number, player: PlayerWithResults, currentTurnShots: Dart[]): BotAction {
     let botLevel = player.botLevel || 2;
-    if (botLevel < 1 || botLevel > 9) botLevel = 2;
+    if (botLevel < 1 || botLevel > 10) botLevel = 2;
 
     const gameSettings = getUserConfig();
     

@@ -22,11 +22,12 @@ export default function LevelSlider({player, handlePlayerChange} : LevelSliderPr
         6: "51 - 61",
         7: "61 - 70",
         8: "71 - 80",
-        9: "81 - 100",
+        9: "81 - 90",
+        10: "91 - 100",
     }
 
     function formatLabel(value: number) {
-        return `${levelAverages[value as 1 | 2 | 3 | 4 | 5 | 6 | 7] ?? '???'} Avg.`;
+        return `${levelAverages[value as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10] ?? '???'} Avg.`;
     }
 
     const [botLevel, setBotLevel] = useState(player.botLevel);
@@ -62,7 +63,7 @@ export default function LevelSlider({player, handlePlayerChange} : LevelSliderPr
                 getAriaValueText={valuetext}
                 step={1}
                 min={1}
-                max={9}
+                max={10}
                 valueLabelDisplay="auto"
                 valueLabelFormat={formatLabel}
                 sx={{

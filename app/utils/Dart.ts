@@ -23,12 +23,24 @@ function randomGaussian(mean: number = 0, stdev: number = 1): number {
 }
 
 
-// Translates a bot level (1-9) into a physical accuracy spread (standard deviation in mm).
+// Translates a bot level (1-10) into a physical accuracy spread (standard deviation in mm).
 function getAccuracySpread(botLevel: number): number {
-    const minSpread = 6;  // mm
-    const maxSpread = 80; // mm
     // Invert the scale so higher level = lower spread
-    return maxSpread - ((botLevel - 1) / 8) * (maxSpread - minSpread);
+
+    const spreadByLevel: Record<number, number> = {
+        1: 32, //21 - 25 avg
+        2: 29, //26 - 30 avg
+        3: 25, //31 - 35 avg
+        4: 21.37, //36 - 40 avg
+        5: 17.2, //41 - 50 avg
+        6: 13.6, //51 - 61 avg
+        7: 11.5, //61 - 70 avg
+        8: 9.7, //71 - 80 avg
+        9: 8, //81 - 90 avg
+        10: 6, //91 - 100 avg
+    }
+
+    return spreadByLevel[botLevel] || 29;
 }
 
 /**
