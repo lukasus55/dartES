@@ -63,7 +63,7 @@ export default function BotPlayer({ player, handleScoreSubmit }: BotPlayerProps)
     return (
         <div className="fixed bottom-0 left-0 bg-neutral-950 border-t border-neutral-900 max-w-screen flex flex-col w-full justify-center p-5 gap-4">
             <div className="flex justify-center w-full">Targeting:&nbsp;<strong>{target}</strong></div>
-            <div className="flex justify-center w-full gap-4 min-h-60">
+            <div className="flex justify-center w-full gap-4">
                 <DartboardVisualiser darts={darts}/>
             </div>
         </div>

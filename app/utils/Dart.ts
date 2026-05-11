@@ -107,8 +107,8 @@ function calcHitResult(x: number, y: number): string {
 export default class Dart {
     ideal: { x: number, y: number };
     spread: number;
-    actualX: number;
-    actualY: number;
+    x: number;
+    y: number;
     hitResult: string;
 
     constructor(target: string, botLevel: number) {
@@ -116,9 +116,9 @@ export default class Dart {
         this.spread = getAccuracySpread(botLevel);
 
         // Apply Gaussian scatter (simulate the physical throw)
-        this.actualX = randomGaussian(this.ideal.x, this.spread);
-        this.actualY = randomGaussian(this.ideal.y, this.spread);
+        this.x = randomGaussian(this.ideal.x, this.spread);
+        this.y = randomGaussian(this.ideal.y, this.spread);
 
-        this.hitResult = calcHitResult(this.actualX, this.actualY);
+        this.hitResult = calcHitResult(this.x, this.y);
     }
 }
