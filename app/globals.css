@@ -8,6 +8,12 @@
   --customizableHighlight: #0F131B;
   --customizableAccent: #72B01D;
   --customizableGreenScreen: #0F0;
+  --boardSingleEven: #1E1715;
+  --boardSingleOdd: #C2C2C2;
+  --boardDoubleTrebleEven: #73706F;
+  --boardDoubleTrebleOdd: #494A47;
+  --boardStroke: #000000;
+  --boardHit: #72B01D;
 }
 
 @theme inline {
@@ -18,6 +24,12 @@
   --color-customizableHighlight: var(--customizableHighlight);
   --color-customizableAccent: var(--customizableAccent);
   --color-customizableGreenScreen: var(--customizableGreenScreen);
+  --color-boardSingleEven: var(--boardSingleEven);
+  --color-boardSingleOdd: var(--boardSingleOdd);
+  --color-boardDoubleTrebleEven: var(--boardDoubleTrebleEven);
+  --color-boardDoubleTrebleOdd: var(--boardDoubleTrebleOdd);
+  --color-boardStroke: var(--boardStroke);
+  --color-boardHit: var(--boardHit);
 }
 
 /* @media (prefers-color-scheme: dark) {
