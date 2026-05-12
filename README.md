@@ -2,7 +2,7 @@
 
 A Darts Scoreboard application built with **Next.js** and **Tailwind CSS**. Designed for local matches, detailed stat tracking, and professional broadcasting integration.
 
-![Project Preview](https://i.imgur.com/XvfFsJZ.png)
+![Project Preview](https://i.imgur.com/AdRyfr6.png)
 
 ---
 
