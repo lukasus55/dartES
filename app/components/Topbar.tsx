@@ -1,16 +1,17 @@
 "use client";
 import { useState } from "react";
 import IconButton from "./IconButton";
-import { Users, Pencil, RotateCcw, TvMinimal, FileSpreadsheet } from "lucide-react";
+import { Users, Pencil, RotateCcw, TvMinimal, FileSpreadsheet, Ellipsis } from "lucide-react";
 import CustomizationPopup from "./Customization/CustomizationPopup";
 import { exportMatchToExcel } from "../utils/exportMatchToExcel";
 import PlayersPopup from "./Customization/PlayersPopup";
+import MorePopup from "./MorePopup";
 
 interface TopbarProps {
   onReset: () => void;
 }
 
-type PopupType = 'customization' | 'players' | null;
+type PopupType = 'customization' | 'players' | 'more' | null;
 
 export default function Topbar({ onReset }: TopbarProps) {
   const [activePopup, setActivePopup] = useState<PopupType>(null);
@@ -51,6 +52,11 @@ export default function Topbar({ onReset }: TopbarProps) {
             onClick={() => {}}
           />
         </a>
+        <IconButton 
+          icon={Ellipsis} 
+          label="More" 
+          onClick={() => togglePopup('more')}
+        />
       </div>
 
       {activePopup === 'customization' && (
@@ -59,6 +65,10 @@ export default function Topbar({ onReset }: TopbarProps) {
 
       {activePopup === 'players' && (
         <PlayersPopup onClose={() => setActivePopup(null)} />
+      )}
+
+      {activePopup === 'more' && (
+        <MorePopup onClose={() => setActivePopup(null)} />
       )}
     </div>
   );
