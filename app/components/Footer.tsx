@@ -6,7 +6,7 @@ import IconButton from "./IconButton";
 
 export default function Footer() {
 return (
-<footer className="w-full bg-neutral-950 border-t border-neutral-900 py-8 mt-auto">
+<footer className="w-full bg-neutral-950 border-t border-neutral-900 py-8 mt-auto z-10">
     <div className="max-w-4xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
     {/* LEFT: Logo & Author */}
     <div className="flex items-center gap-4">

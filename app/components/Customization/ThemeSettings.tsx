@@ -100,7 +100,7 @@ export default function ThemeSettings({config} : {config: UserConfig}) {
                     onClick={() => setActivePicker("highlight")}
                 />
                 {activePicker === "highlight" && (
-                    <div className="absolute top-10 left-0 z-50">
+                    <div className="absolute bottom-10 left-0 z-50">
                         <ColorPickerPopup
                             color={highlightColor}
                             onChange={(c) => setHighlightColor(c)}
@@ -132,7 +132,7 @@ export default function ThemeSettings({config} : {config: UserConfig}) {
                     onClick={() => setActivePicker("accent")}
                 />
                 {activePicker === "accent" && (
-                    <div className="absolute top-10 left-0 z-50">
+                    <div className="absolute bottom-10 left-0 z-50">
                         <ColorPickerPopup
                             color={accentColor}
                             onChange={(c) => setAccentColor(c)}
@@ -164,7 +164,7 @@ export default function ThemeSettings({config} : {config: UserConfig}) {
                     onClick={() => setActivePicker("greenScreen")}
                 />
                 {activePicker === "greenScreen" && (
-                    <div className="absolute top-10 left-0 z-50">
+                    <div className="absolute bottom-10 left-0 z-50">
                         <ColorPickerPopup
                             color={greenScreenColor}
                             onChange={(c) => setGreenScreenColor(c)}
