@@ -9,7 +9,7 @@ export default function New() {
     return (
         <div className="flex min-h-screen py-15 text-primary justify-center font-sans bg-background flex-wrap px-8">
 
-        <div className="max-w-1/2">
+        <div className="w-1/2 max-lg:w-full">
             <header>
                 <Link
                     href="/"
