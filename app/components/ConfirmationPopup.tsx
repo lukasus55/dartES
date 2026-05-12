@@ -47,7 +47,7 @@ return (
         <button
             onClick={onCancel}
             className="
-            px-4 py-2.5 rounded-xl font-medium text-sm
+            px-4 py-2.5 rounded-xl font-medium text-sm cursor-pointer
             bg-neutral-900 text-neutral-300 border border-neutral-800
             hover:bg-neutral-800 hover:text-white transition-colors
         "
@@ -57,7 +57,7 @@ return (
         <button
             onClick={onConfirm}
             className="
-            px-4 py-2.5 rounded-xl font-bold text-sm
+            px-4 py-2.5 rounded-xl font-bold text-sm cursor-pointer
             bg-red-500/10 text-red-500 border border-red-500/20
             hover:bg-red-500 hover:text-white transition-all
         "
