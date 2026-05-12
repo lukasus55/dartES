@@ -32,7 +32,7 @@ const handleSubmit = () => {
 };
 
 return (
-    <div className="fixed bottom-0 left-0 w-full bg-neutral-950 border-t border-neutral-900 z-50 max-w-screen">
+    <div className="fixed bottom-0 left-0 w-full bg-neutral-950 border-t border-neutral-900 max-w-screen">
         <div className="flex flex-col items-center justify-center py-4 gap-1 bg-neutral-950/50">
         <span className="text-xs font-bold text-neutral-500 uppercase tracking-wider mb-2">
             Score for <span className="text-primary">{currentPlayerName}</span>

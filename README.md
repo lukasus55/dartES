@@ -8,6 +8,12 @@ A Darts Scoreboard application built with **Next.js** and **Tailwind CSS**. Desi
 
 ## Features
 
+### AI Opponents (NEW!)
+- **Physics-Based Simulation:** Play against highly realistic bots that don't just rely on random numbers. Throws are simulated using 2D geometric physics and Gaussian scatter - meaning when a bot misses, it physically misses into adjacent beds.
+- **Dynamic Difficulty Levels:** Configure bot skill from Level 1 (21 - 25 Avg) all the way up to Level 10 (91 - 100 Avg).
+- **Pro-Level Targeting Logic:** Bots play like real humans. They actively avoid "Bogey" numbers, utilize smart 4-dart setup strategies when above 170, and follow prioritized checkout paths.
+- **Interactive Visualizer:** Watch the bot's turn unfold in real-time on a dartboard that plots the exact physical landing coordinates of every dart.
+
 ### **Core Gameplay**
 - **Complete Scoreboard:** Tracks scores for up to 5 players with standard 501/301 rules.
 - **Sets & Legs:** Fully configurable match length (e.g., First to 3 Legs wins a Set).

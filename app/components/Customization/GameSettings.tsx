@@ -3,11 +3,22 @@
 import { useState, useEffect } from "react";
 import { Settings } from "lucide-react";
 import { DEFAULT_SETTINGS, saveSettings, UserConfig } from "@/app/utils/configStorage";
+import { number } from "zod";
 
 export default function GameSettings({config} : {config: UserConfig}) {
 
     const [startingScore, setStartingScore] = useState(config.startingScore ?? DEFAULT_SETTINGS.startingScore);
     const [legsToWinSet, setLegsToWinSet] = useState(config.legsToWinSet ?? DEFAULT_SETTINGS.legsToWinSet);
+
+    const handleStartingScore = (value: number) => {
+        if (isNaN(value)) return;
+        setStartingScore(value);
+    }
+
+    const handleLegsToWinSet = (value: number) => {
+        if (isNaN(value)) return;
+        setLegsToWinSet(value);
+    }
     
     useEffect (() => {
         saveSettings({startingScore, legsToWinSet}); 
@@ -24,8 +35,8 @@ export default function GameSettings({config} : {config: UserConfig}) {
                     <label className="text-xs text-neutral-500 font-mono">START SCORE</label>
                     <input
                         type="number"
-                        value={startingScore}
-                        onChange={(e) => (setStartingScore(parseInt(e.target.value)))}
+                        defaultValue={startingScore}
+                        onBlur={(e) => handleStartingScore(parseInt(e.target.value))}
                         className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-neutral-600 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                 </div>
@@ -34,8 +45,8 @@ export default function GameSettings({config} : {config: UserConfig}) {
                     <label className="text-xs text-neutral-500 font-mono">LEGS TO SET</label>
                     <input
                         type="number"
-                        value={legsToWinSet}
-                        onChange={(e) => setLegsToWinSet(parseInt(e.target.value))}
+                        defaultValue={legsToWinSet}
+                        onBlur={(e) => handleLegsToWinSet(parseInt(e.target.value))}
                         className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-neutral-600 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                 </div>
