@@ -2,10 +2,15 @@
 
 import { useEffect, type RefObject } from "react";
 
-export function useClosePopup<T extends HTMLElement>(popupRef: RefObject<T | null>, onClose: () => void) {
+export function useClosePopup<T extends HTMLElement>(
+    popupRef: RefObject<T | null>, 
+    onClose: () => void
+) {
     useEffect(() => {
         const handleOutsideClick = (event: MouseEvent) => {
-            if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+            const target = event.target as HTMLElement;
+
+            if (popupRef.current && !popupRef.current.contains(target) &&!target.closest(".ignore_popup_close")) {
                 onClose();
             }
         };

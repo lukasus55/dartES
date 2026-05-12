@@ -16,7 +16,7 @@ export default function IconButton({ icon: Icon, label, onClick }: IconButtonPro
         bg-neutral-950 rounded-full cursor-pointer border-2 border-neutral-800 text-primary/70 
         transition-all duration-200
         hover:shadow-xl shadow-neutral-700/50 hover:bg-neutral-800 hover:border-neutral-800 hover:text-primary hover:scale-110
-        active:scale-95
+        active:scale-95 ignore_popup_close
       "
     >
       <Icon className="h-5 w-5" strokeWidth={2.5} />
