@@ -1,7 +1,7 @@
 import BackButton from "@/app/components/BackButton";
 import UpdateHeader from "../components/UpdateHeader";
 
-export default function V010101() {
+export default function V010100() {
     return (
         <div className="flex w-full justify-center bg-background px-8">
             <div className="w-1/2 max-lg:w-full py-15">
