@@ -1,26 +1,15 @@
 "use client"
 
-import Link from "next/link";
-import IconButton from "../components/IconButton";
-import { ArrowLeft } from "lucide-react";
+import BackButton from "../components/BackButton";
 import UpdatesContainer from "./components/UpdatesContainer";
 
-export default function New() {
-    
+export default function NewsPreviews() {
     return (
         <div className="flex min-h-screen py-15 text-primary justify-center font-sans bg-background flex-wrap px-8">
 
         <div className="w-1/2 max-lg:w-full">
             <header>
-                <Link
-                    href="/"
-                    className="text-sm text-neutral-500 hover:text-white transition-colors"
-                >
-                    <IconButton
-                        icon={ArrowLeft}
-                        label="Back"
-                    />
-                </Link>
+                <BackButton/>
                 <div className="flex justify-between items-center mt-6 flex-wrap">
                     <div>
                         <h1 className="text-4xl font-bold text-primary mb-2 ">

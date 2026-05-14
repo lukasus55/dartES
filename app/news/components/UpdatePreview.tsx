@@ -1,5 +1,7 @@
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import ReadMoreButton from "./ReadMoreButton";
 
 interface UpdatePreviewProp {
     id: string,
@@ -12,7 +14,7 @@ export default function UpdatePreview({ id, title, date, isMajor = false}: Updat
     const url = `news/${id}`
 
     return (
-        <div className="flex w-6/10 justify-center flex-wrap bg-neutral-950 py-4 px-10 rounded-md">
+        <div className="flex w-full justify-center flex-wrap bg-neutral-950 py-4 px-10 rounded-md">
             <div className="flex-1 flex-wrap">
                 <div className="flex w-full justify-start text-neutral-400">
                     {date}
@@ -26,8 +28,8 @@ export default function UpdatePreview({ id, title, date, isMajor = false}: Updat
                     </div>
                 }
             </div>
-            <div className="flex flex-0 flex-wrap items-center whitespace-nowrap">
-                <Link href={url}> <div>Read more</div> </Link>
+            <div className="flex flex-0 flex-wrap items-center">
+                <Link href={url}> <ReadMoreButton /> </Link>
             </div>
         </div>
     )
