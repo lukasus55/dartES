@@ -20,13 +20,12 @@ export default function ConfirmationPopup({
   if (!isOpen) return null;
 
 return (
-<div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+<div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-sm">
     <div
     className="
     w-[90%] max-w-sm p-6 
     bg-neutral-950 border border-neutral-800 rounded-2xl 
     shadow-2xl shadow-neutral-900/50
-    scale-100 animate-in zoom-in-95 duration-200
     "
     >
     <div className="flex flex-col gap-4 text-center">

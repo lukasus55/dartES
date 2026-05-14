@@ -15,9 +15,8 @@ export default function MorePopup({ onClose }: { onClose: () => void; }) {
     return (
         <div
         ref={popupRef}
-        className="absolute left-3/4 flex flex-col gap-1 p-3 min-w-55
+        className="absolute z-60 left-3/4 flex flex-col gap-1 p-3 min-w-55 mt-2
         bg-neutral-950 border-2 border-neutral-800 rounded-2xl shadow-2xl shadow-neutral-900/50
-        backdrop-blur-sm animate-in fade-in zoom-in-95 duration-200 z-60
         max-h-[80vh] overflow-y-auto no-scrollbar"
         >
 
