@@ -9,7 +9,7 @@ export default function DartboardVisualiser({ darts }: DartboardVisualiserProps)
 
     return (
         <div className="flex w-full flex-wrap justify-center gap-4 relative">
-            <div className="aspect-square flex justify-center items-center h-full max-h-84 max-md:mt-20 max-md:mb-10">
+            <div className="aspect-square flex justify-center items-center h-64 max-md:h-48 max-md:mt-10">
                 <svg
                     viewBox="-200 -200 400 400"
                     xmlns="http://www.w3.org/2000/svg"
@@ -22,9 +22,9 @@ export default function DartboardVisualiser({ darts }: DartboardVisualiserProps)
                     ))}
                 </svg>
             </div>
-            <div className="flex h-full justify-center gap-2 flex-col items-center absolute inset-y-0 ml-125 w-16 max-md:inset-x-0 max-md:ml-0 max-md:h-16 max-md:flex-row max-md:w-full">
+            <div className="flex h-full justify-center gap-2 flex-col items-center absolute inset-y-0 ml-125 w-16 max-md:inset-x-0 max-md:ml-0 max-md:h-min max-md:flex-row max-md:w-full">
             {darts.map((dart: Dart, index: number) => (
-                <div key={index} className="px-4 py-2 bg-neutral-800 text-white rounded h-min w-14 flex justify-center items-center ">
+                <div key={index} className="px-4 py-2 bg-neutral-800 text-white rounded h-min w-14 flex justify-center items-center max-md:py-0.5 ">
                     {dart.hitResult}
                 </div>
             ))}
