@@ -13,6 +13,7 @@ export default function PlayersSettings({config} : {config: UserConfig}) {
         );
         console.log('test')
         savePlayers({ players: updatedPlayers });
+        setPlayersConfig(updatedPlayers);
     };
 
     return (
