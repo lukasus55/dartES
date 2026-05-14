@@ -6,6 +6,8 @@ import { PlayerWithResults } from "./Scoreboard";
 import { getDartValue } from "../utils/targets";
 import DartboardVisualiser from "./DartboardVisualiser";
 import Dart from "../utils/Dart";
+import { useWhatChanged } from '@simbathesailor/use-what-changed';
+
 
 interface BotPlayerProps {
     player: PlayerWithResults;
@@ -16,6 +18,7 @@ export default function BotPlayer({ player, handleScoreSubmit }: BotPlayerProps)
     const [target, setTarget] = useState<string>("...");
     const [darts, setShots] = useState<Dart[]>([]);
 
+    useWhatChanged([player, handleScoreSubmit], 'p, h')
     useEffect(() => {
         let isActive = true;
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -58,7 +61,7 @@ export default function BotPlayer({ player, handleScoreSubmit }: BotPlayerProps)
         return () => {
             isActive = false;
         };
-    }, [player, handleScoreSubmit]);
+    }, []);
 
     return (
         <div className="fixed bottom-0 left-0 bg-neutral-950 border-t border-neutral-900 max-w-screen flex flex-col w-full justify-center p-5 gap-4">
