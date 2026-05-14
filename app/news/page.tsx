@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import UpdatesContainer from "./components/UpdatesContainer";
 
 export default function New() {
+    
     return (
         <div className="flex min-h-screen py-15 text-primary justify-center font-sans bg-background flex-wrap px-8">
 

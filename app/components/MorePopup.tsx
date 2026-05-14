@@ -27,7 +27,7 @@ export default function MorePopup({ onClose }: { onClose: () => void; }) {
 
             <div className="mt-1 mb-0.75 pb-px bg-neutral-700"></div>
 
-            <Link href={"/new"}>
+            <Link href={"/news"}>
                 <button className="flex items-center gap-2 hover:bg-neutral-800 rounded-sm px-2 py-1 cursor-pointer w-full">
                     <Megaphone size={14} strokeWidth={2.5} /> What's New
                 </button>

@@ -1,15 +1,10 @@
-import UpdateHeader from "../UpdateHeader";
+import UpdateHeader from "./components/UpdateHeader";
 
-export default function U_1_0_0() {
+export default function V010101() {
     return (
         <div className="flex w-full flex-wrap bg-neutral-950 py-4 px-10 gap-10 rounded-md">
 
-            <UpdateHeader title={"Update 1.0.0"} isMajor={true}/>
-
-            <div className="flex gap-2 flex-wrap text-justify">
-                <p>I am incredibly proud to finally announce the official 1.0.0 release of DartES!</p>
-                <p>Reaching the full-release milestone has been a fantastic journey, and I am thrilled to deliver what is undoubtedly the most polished, feature-complete version of the scoreboard to date.</p>
-            </div>
+            <UpdateHeader title={"Update 1.0.0"} date={"12.05.2026"} isMajor={true}/>
 
             <div className="w-full">
                 <div className="font-semibold underline text-xl leading-12">New</div>
