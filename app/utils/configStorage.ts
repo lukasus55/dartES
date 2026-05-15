@@ -1,7 +1,6 @@
-"use client"
-
 import { z } from "zod";
 import applyTheme from "./applyTheme";
+import { timeStamp } from "console";
 
 // Using zod to update on runtime
 export const PlayerSchema = z.object({
@@ -24,6 +23,7 @@ export const UserConfigSchema = z.object({
   legsToWinSet: z.number(),
   players: z.array(PlayerSchema),
 });
+
 
 export type Player = z.infer<typeof PlayerSchema>;
 export type UserConfig = z.infer<typeof UserConfigSchema>;

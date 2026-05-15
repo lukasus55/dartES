@@ -11,7 +11,6 @@ export default function PlayersSettings({config} : {config: UserConfig}) {
         const updatedPlayers = playersConfig.map(p => 
         p.id === id ? { ...p, [field]: value } : p
         );
-        console.log('test')
         savePlayers({ players: updatedPlayers });
         setPlayersConfig(updatedPlayers);
     };

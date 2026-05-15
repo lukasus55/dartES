@@ -21,6 +21,14 @@ export type PlayerWithResults = Player & {
   checkoutHistory: number[];
 }
 
+type PlayerIndex = 0 | 1 | 2 | 3 | 4;
+
+export type MatchType = {
+  activePlayerIndex: PlayerIndex;
+  timeStamp: number;
+  players: PlayerWithResults[];
+}
+
 interface GameStateSnapshot {
   players: PlayerWithResults[];
   activePlayerIndex: number;
@@ -55,6 +63,21 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
 
   const [isLoaded, setIsLoaded] = useState(false);
 
+  function updateActivePlayerIndex(newIndex: PlayerIndex, players: PlayerWithResults[]) { 
+        let i = 0;
+        
+        while (i < 5){
+          if (players[newIndex].isEnabled === true) {
+            setActivePlayerIndex(newIndex);
+            return;
+          }
+          i++;
+          newIndex = (newIndex+1)%5;
+        }
+
+        console.warn("Can't change active player index because there is no enabled player.");
+  }
+
   // LOAD CONFIG & RESTORE GAME
   useEffect(() => {
     const loadData = () => {
@@ -69,18 +92,18 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
       const matchStr = localStorage.getItem(MATCH_STORAGE_KEY);
 
       if (matchStr) {
-        const savedMatch = JSON.parse(matchStr);
+        const savedMatch: MatchType = JSON.parse(matchStr);
         let restoredPlayers: PlayerWithResults[] = savedMatch.players;
 
         // live update of Names/Enabled status from Settings
         restoredPlayers = restoredPlayers.map(p => {
             const configP = config.players.find((cp: Player) => cp.id === p.id);
-            const restoredPlayer: PlayerWithResults = configP ? {...p, ...configP} : {...p, ...DEFAULT_PLAYERS_CONFIG};
+            const restoredPlayer: PlayerWithResults = {...p, ...configP};
             return restoredPlayer;
         });
 
         setPlayers(restoredPlayers);
-        setActivePlayerIndex(savedMatch.activePlayerIndex || 0);
+        updateActivePlayerIndex(savedMatch.activePlayerIndex, restoredPlayers);
       } 
       else {
         // --- NEW GAME (From Config) ---
