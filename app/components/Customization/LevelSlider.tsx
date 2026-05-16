@@ -30,15 +30,8 @@ export default function LevelSlider({player, handlePlayerChange} : LevelSliderPr
         return `${levelAverages[value as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10] ?? '???'} Avg.`;
     }
 
-    const [botLevel, setBotLevel] = useState(player.botLevel);
     const [sliderValue, setSliderValue] = useState(player.botLevel);
-
-    useEffect(() => {
-        handlePlayerChange(player.id, "botLevel", botLevel)
-    }, [botLevel])
     
-    
-
     /* Both onChange and onChangeCommitted have an event in their arguemnts. 
     The difference is that the onChange only catches mosedown and mousemove events, but the onChangeCommitted only runs when mouseup event is triggered. 
     In short: onChangeCommitted for better performance but it won't visualy update the slider till mouseDown so thats why using both at the same time.
@@ -49,7 +42,7 @@ export default function LevelSlider({player, handlePlayerChange} : LevelSliderPr
     };
 
     const handleChangeCommited = (event: React.SyntheticEvent | Event, newValue: number) => {
-        setBotLevel(newValue)
+        handlePlayerChange(player.id, "botLevel", newValue)
     };
 
     return (

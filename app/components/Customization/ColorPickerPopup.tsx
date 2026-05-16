@@ -2,6 +2,7 @@
 
 import { HexColorPicker } from "react-colorful";
 import { X } from "lucide-react";
+import { useEffect } from "react";
 
 interface ColorPickerPopupProps {
   color: string, 
@@ -10,6 +11,7 @@ interface ColorPickerPopupProps {
 }
 
 export default function ColorPickerPopup({ color, onChange, onClose }: ColorPickerPopupProps) {
+
   return (
     <div className="p-3 bg-neutral-900 border border-neutral-800 rounded-xl shadow-xl flex flex-col gap-2 animate-in fade-in zoom-in-95 duration-150">
       <div className="flex justify-between items-center mb-1">

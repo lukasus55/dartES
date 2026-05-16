@@ -1,6 +1,6 @@
-"use client"
-
 import { z } from "zod";
+import applyTheme from "./applyTheme";
+import { timeStamp } from "console";
 
 // Using zod to update on runtime
 export const PlayerSchema = z.object({
@@ -23,6 +23,7 @@ export const UserConfigSchema = z.object({
   legsToWinSet: z.number(),
   players: z.array(PlayerSchema),
 });
+
 
 export type Player = z.infer<typeof PlayerSchema>;
 export type UserConfig = z.infer<typeof UserConfigSchema>;
@@ -122,6 +123,20 @@ export function saveTheme({primary, secondary, accent, highlight, greenScreen} :
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(newConfig));
   window.dispatchEvent(new Event("storage"));
+}
+
+export type ColorKeyType = "primary" | "secondary" | "accent" | "highlight" | "greenScreen"
+
+export function saveThemeColor(key: ColorKeyType, value: string) {
+  const savedConfig: UserConfig = getUserConfig();
+
+  let newConfig: UserConfig = savedConfig;
+  newConfig.theme[key] = value;
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(newConfig));
+  window.dispatchEvent(new Event("storage"));
+
+  applyTheme();
 }
 
 export function savePlayers({players} : {players : Player[]}) {

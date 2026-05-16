@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',  // REQUIRED for GitHub Pages
   images: {
     unoptimized: true, // Needed if you use the <Image> component on static sites
   },

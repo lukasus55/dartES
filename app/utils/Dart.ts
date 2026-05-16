@@ -28,16 +28,16 @@ function getAccuracySpread(botLevel: number): number {
     // Invert the scale so higher level = lower spread
 
     const spreadByLevel: Record<number, number> = {
-        1: 32, //21 - 25 avg
-        2: 29, //26 - 30 avg
-        3: 25, //31 - 35 avg
-        4: 21.37, //36 - 40 avg
-        5: 17.2, //41 - 50 avg
-        6: 13.6, //51 - 61 avg
-        7: 11.5, //61 - 70 avg
-        8: 9.7, //71 - 80 avg
-        9: 8, //81 - 90 avg
-        10: 6, //91 - 100 avg
+        1: 43, //21 - 25 avg
+        2: 39, //26 - 30 avg
+        3: 30, //31 - 35 avg
+        4: 24.8, //36 - 40 avg
+        5: 19.2, //41 - 50 avg
+        6: 14.6, //51 - 61 avg
+        7: 13, //61 - 70 avg
+        8: 10.2, //71 - 80 avg
+        9: 8.7, //81 - 90 avg
+        10: 7.1, //91 - 100 avg
     }
 
     return spreadByLevel[botLevel] || 29;

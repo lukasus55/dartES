@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import simulateBotAction, { BotAction } from "@/app/utils/simulateBotAction";
 import { PlayerWithResults } from "./Scoreboard";
-import { getDartValue } from "../utils/targets";
 import DartboardVisualiser from "./DartboardVisualiser";
 import Dart from "../utils/Dart";
+
 
 interface BotPlayerProps {
     player: PlayerWithResults;
