@@ -1,3 +1,4 @@
+import NotFound from "@/app/not-found";
 import V010100 from "./v010100";
 import V010101 from "./v010101";
 
@@ -20,6 +21,6 @@ export default async function News(props: PropsType) {
     }
 
     
-    return (<div className="flex w-full justify-center mt-16 font-bold text-4xl"> News Not found </div>)
+    return (<NotFound />)
     
 };
