@@ -3,7 +3,6 @@
 import ScoreInputDesktop from "./ScoreInputDesktop";
 import ScoreInputMobile from "./ScoreInputMobile";
 import { useIsMobile } from "../utils/useIsMobile";
-import { Player } from "../utils/configStorage";
 import ScoreInputBot from "./ScoreInputBot";
 import { PlayerWithResults } from "./Scoreboard";
 
@@ -20,6 +19,8 @@ export default function ScoreInput({
 }: ScoreInputProps) {
   
   const isMobile = useIsMobile();
+
+  if(!player.isEnabled) return;
 
   return (
     <>
