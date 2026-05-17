@@ -252,7 +252,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
     const currentTotal = sum(currentPlayer.throws);
     const newTotal = currentTotal + inputScore;
 
-    if (newTotal === gameSettings.startingScore) {
+    if (newTotal >= gameSettings.startingScore) {
       handleLegWin(currentPlayer, inputScore);
       return;
     }
