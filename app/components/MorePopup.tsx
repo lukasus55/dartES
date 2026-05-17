@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { TvMinimal, FileSpreadsheet, Megaphone } from "lucide-react";
+import { TvMinimal, FileSpreadsheet, Megaphone, Bug } from "lucide-react";
 import Link from "next/link";
 import { useClosePopup } from "@/app/utils/useClosePopup";
 import { exportMatchToExcel } from "../utils/exportMatchToExcel";
@@ -35,6 +35,12 @@ export default function MorePopup({ onClose }: { onClose: () => void; }) {
             <Link href={"/setup"}>
                 <button className="flex items-center gap-2 hover:bg-neutral-800 rounded-sm px-2 py-1 cursor-pointer w-full">
                     <TvMinimal size={14} strokeWidth={2.5} /> Broadcast
+                </button>
+            </Link>
+
+            <Link href={"https://github.com/lukasus55/dartES/issues"} target="_blank">
+                <button className="flex items-center gap-2 hover:bg-neutral-800 rounded-sm px-2 py-1 cursor-pointer w-full">
+                    <Bug size={14} strokeWidth={2.5} /> Report a bug
                 </button>
             </Link>
             
