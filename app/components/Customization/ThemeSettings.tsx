@@ -19,11 +19,11 @@ export default function ThemeSettings({config} : {config: UserConfig}) {
                 <Palette size={14} /> Theme Colors
             </h3>
 
-            <ThemeColor config={config} updateActivePicker={updateActivePicker} activePicker={activePicker} colorKey="primary"/>
-            <ThemeColor config={config} updateActivePicker={updateActivePicker} activePicker={activePicker} colorKey="secondary"/>
-            <ThemeColor config={config} updateActivePicker={updateActivePicker} activePicker={activePicker} colorKey="highlight"/>
-            <ThemeColor config={config} updateActivePicker={updateActivePicker} activePicker={activePicker} colorKey="accent"/>
-            <ThemeColor config={config} updateActivePicker={updateActivePicker} activePicker={activePicker} colorKey="greenScreen"/>
+            <ThemeColor config={config} updateActivePicker={updateActivePicker} activePicker={activePicker} colorKey="primary" title="PRIMARY (Text)"/>
+            <ThemeColor config={config} updateActivePicker={updateActivePicker} activePicker={activePicker} colorKey="secondary" title="SECONDARY"/>
+            <ThemeColor config={config} updateActivePicker={updateActivePicker} activePicker={activePicker} colorKey="highlight" title="HIGHLIT (Bg)"/>
+            <ThemeColor config={config} updateActivePicker={updateActivePicker} activePicker={activePicker} colorKey="accent" title="ACCENT"/>
+            <ThemeColor config={config} updateActivePicker={updateActivePicker} activePicker={activePicker} colorKey="greenScreen" title="GREENSCREEN (Broadcast only)"/>
 
         </div>
     )

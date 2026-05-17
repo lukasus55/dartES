@@ -7,10 +7,11 @@ interface ThemeColorProp {
     config: UserConfig,
     colorKey: ColorKeyType,
     updateActivePicker: (colorKey: ColorKeyType | null) => void,
-    activePicker: string | null
+    activePicker: string | null,
+    title: string,
 }
 
-export default function ThemeColor({config, colorKey, updateActivePicker, activePicker}: ThemeColorProp) {
+export default function ThemeColor({config, colorKey, updateActivePicker, activePicker, title}: ThemeColorProp) {
 
     const [colorValue, setColorValue] = useState(config.theme[colorKey] ?? DEFAULT_THEME[colorKey]);
 
@@ -36,7 +37,7 @@ export default function ThemeColor({config, colorKey, updateActivePicker, active
                 </div>
             )}
             <div className="flex-1 flex flex-col">
-                <label className="text-xs text-neutral-500 font-mono mb-1">PRIMARY (TEXT)</label>
+                <label className="text-xs text-neutral-500 font-mono mb-1">{title}</label>
                 <div className="flex items-center gap-2">
                     <input
                         type="text"
