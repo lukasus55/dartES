@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggest an idea for this project
 title: ''
-labels: enhancement, Prio ?
+labels: Enhancement, Prio ?
 assignees: ''
 
 ---
