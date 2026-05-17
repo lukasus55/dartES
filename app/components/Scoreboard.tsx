@@ -346,6 +346,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
             handleScoreSubmit={handleScoreSubmit}
             handleUndo={handleUndo}
           />
+          <div className="ml-4"><IconButton url="/tripleDarts.svg" label="Mode" onClick={() => console.log("Mode changed")}/></div>
         </div>
       </div>
     </div>

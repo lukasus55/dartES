@@ -1,12 +1,14 @@
 import { LucideIcon } from 'lucide-react';
-
+import Image from 'next/image';
 interface IconButtonProps {
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  url?: string;
   label: string;
   onClick?: () => void;
 }
 
-export default function IconButton({ icon: Icon, label, onClick }: IconButtonProps) {
+
+export default function IconButton({ icon: Icon, label, url, onClick }: IconButtonProps) {
   return (
     <button
       type="button"
@@ -19,7 +21,8 @@ export default function IconButton({ icon: Icon, label, onClick }: IconButtonPro
         active:scale-95 ignore_popup_close
       "
     >
-      <Icon className="h-5 w-5" strokeWidth={2.5} />
+
+      {Icon ? <Icon className="h-5 w-5" strokeWidth={2.5} /> : <Image src={url || '/'} alt="Icon" width={18} height={18}/>}
 
       {/* tooltip */}
       <span 
