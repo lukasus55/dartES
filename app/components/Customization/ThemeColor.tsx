@@ -28,13 +28,11 @@ export default function ThemeColor({config, colorKey, updateActivePicker, active
                 onClick={() => updateActivePicker(colorKey)}
             />
             {activePicker === colorKey && (
-                <div className="absolute top-10 left-0 z-50">
-                    <ColorPickerPopup
-                        color={colorValue}
-                        onChange={(c) => updateThemeColor(c)}
-                        onClose={() => updateActivePicker(null)}
-                    />
-                </div>
+                <ColorPickerPopup
+                    color={colorValue}
+                    onChange={(c) => updateThemeColor(c)}
+                    onClose={() => updateActivePicker(null)}
+                />
             )}
             <div className="flex-1 flex flex-col">
                 <label className="text-xs text-neutral-500 font-mono mb-1">{title}</label>
