@@ -37,7 +37,6 @@ interface GameStateSnapshot {
 const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 
 const MATCH_STORAGE_KEY = "dartES_match_snapshot";
-const THEME_STORAGE_KEY = "dartES_config";
 
 const DEFAULT_PLAYERS_CONFIG = DEFAULT_PLAYERS;
 
@@ -58,6 +57,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   const [historyStack, setHistoryStack] = useState<GameStateSnapshot[]>([]);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [hideInput, setHideInput] = useState(false);
+  const [inputSingleMode, setInputSingleMode] = useState(false);
   
   const isMobile = useIsMobile();
 
@@ -157,6 +157,10 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   const handleResetRequest = () => {
     setShowResetConfirm(true);
   };
+
+  const toggleInputMode = () => {
+    setInputSingleMode(!inputSingleMode);
+  }
 
   const executeReset = () => {
     localStorage.removeItem(MATCH_STORAGE_KEY);
@@ -329,7 +333,6 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
         })}
       </div>
 
-      {/* INPUT CONTAINER */}
       <div 
         className={`
           fixed bottom-0 left-0 w-full flex flex-col items-center justify-center pb-8 pt-14
@@ -337,18 +340,15 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
           ${hideInput ? 'translate-y-[120%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}
         `}
       >
-        <div className="relative flex items-end justify-center">
-          {
-          (!isMobile && !players[activePlayerIndex].isBot) && <div className="mr-4"><IconButton icon={Undo2} label="Undo" onClick={handleUndo}/></div>
-          }
-          <ScoreInput
-            player={players[activePlayerIndex]}
-            handleScoreSubmit={handleScoreSubmit}
-            handleUndo={handleUndo}
-          />
-          <div className="ml-4"><IconButton url="/tripleDarts.svg" label="Mode" onClick={() => console.log("Mode changed")}/></div>
-        </div>
+        <ScoreInput
+          player={players[activePlayerIndex]}
+          handleScoreSubmit={handleScoreSubmit}
+          handleUndo={handleUndo}
+          toggleInputMode={toggleInputMode}
+          inputSingleMode={inputSingleMode}
+        />
       </div>
+
     </div>
   );
 });
