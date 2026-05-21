@@ -2,15 +2,17 @@
 import { JSX, useState } from "react";
 import { CornerDownLeft, Undo2 } from "lucide-react";
 import IconButton from "./IconButton";
+import { PlayerWithResults } from "./Scoreboard";
+import ScorePreview from "./ScorePreview";
 
 interface ScoreInputDesktop {
     onSubmit: (score: number) => void;
     onUndo: () => void;
-    currentPlayerName: string;
+    currentPlayer: PlayerWithResults;
     ModeButton: () => JSX.Element;
 }
 
-export default function ScoreInputDesktop( {onSubmit, onUndo, currentPlayerName, ModeButton} : ScoreInputDesktop) {
+export default function ScoreInputDesktop( {onSubmit, onUndo, currentPlayer, ModeButton} : ScoreInputDesktop) {
     const [inputValue, setInputValue] = useState("");
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -35,7 +37,7 @@ return (
         >
             <div className="flex flex-col gap-1.5">
             <div className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider pl-1 max-lg:hidden">
-                Score for <span className="text-primary">{currentPlayerName}</span>
+                Score for <span className="text-primary">{currentPlayer.name}</span>
             </div>
 
             <div className="relative group">

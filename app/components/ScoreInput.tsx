@@ -36,14 +36,14 @@ export default function ScoreInput({handleScoreSubmit, handleUndo, toggleInputMo
             <ScoreInputMobile 
               onSubmit={handleScoreSubmit} 
               onUndo={handleUndo} 
-              currentPlayerName={player.name}
+              currentPlayer={player}
               ModeButton={ModeButton}
             />
           ) : (
             <ScoreInputDesktop 
               onSubmit={handleScoreSubmit}
               onUndo={handleUndo}
-              currentPlayerName={player.name}
+              currentPlayer={player}
               ModeButton={ModeButton}
             />
           )

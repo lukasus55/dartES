@@ -15,6 +15,7 @@ export interface ScoreboardHandle {
 
 export type PlayerWithResults = Player & {
   throws: number[];
+  previewThrows: number[];
   sets: number;
   legs: number;
   matchHistory: number[];
@@ -49,7 +50,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   const [players, setPlayers] = useState<PlayerWithResults[]>(
     DEFAULT_PLAYERS_CONFIG.map(p => ({
         ...p,
-        throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0
+        throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, previewThrows: [],
     }))
   );
 
@@ -99,6 +100,7 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
         restoredPlayers = restoredPlayers.map(p => {
             const configP = config.players.find((cp: Player) => cp.id === p.id);
             const restoredPlayer: PlayerWithResults = {...p, ...configP};
+            
             return restoredPlayer;
         });
 
@@ -106,10 +108,12 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
         updateActivePlayerIndex(savedMatch.activePlayerIndex, restoredPlayers);
       } 
       else {
+        console.log('new game?')
         // --- NEW GAME (From Config) ---
         setPlayers(prev => prev.map(p => {
             const configP = config.players.find((cp: Player) => cp.id === p.id);
             const restoredPlayer: PlayerWithResults = configP ? {...p, ...configP} : {...p, ...DEFAULT_PLAYERS_CONFIG};
+            
             return restoredPlayer;
         }));
       }
@@ -163,16 +167,14 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   }
 
   const executeReset = () => {
-    localStorage.removeItem(MATCH_STORAGE_KEY);
-
-    setPlayers((prev) =>
-      prev.map((p) => ({
-        ...p,
-        throws: [],
-        matchHistory: [],
-        checkoutHistory: [],
-        sets: 0,
-        legs: 0,
+    if(localStorage.getItem(MATCH_STORAGE_KEY)) {
+      localStorage.removeItem(MATCH_STORAGE_KEY);
+    }
+    
+    setPlayers(
+      DEFAULT_PLAYERS_CONFIG.map(p => ({
+          ...p,
+          throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, previewThrows: [],
       }))
     );
     setActivePlayerIndex(0);
@@ -254,7 +256,10 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
 
     const currentPlayer = players[activePlayerIndex];
     const currentTotal = sum(currentPlayer.throws);
+    const currentDartsLeft = 3 - currentPlayer.previewThrows.length;
     const newTotal = currentTotal + inputScore;
+
+    console.log(currentPlayer)
 
     if (newTotal >= gameSettings.startingScore) {
       handleLegWin(currentPlayer, inputScore);
@@ -262,9 +267,17 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
     }
 
     let scoreToRecord = inputScore;
-    
+
+    const busted = newTotal > gameSettings.startingScore || newTotal == gameSettings.startingScore-1;
+    let previewMode = inputSingleMode && !busted;
+
+    if (previewMode && currentDartsLeft === 0) {
+      scoreToRecord = sum(currentPlayer.previewThrows) + inputScore;
+      previewMode = false;
+    }
+
     // Bust when more than starting score or impossible checkout
-    if (newTotal > gameSettings.startingScore || newTotal == gameSettings.startingScore-1) {
+    if (busted) {
       scoreToRecord = 0;
     } 
 
@@ -273,7 +286,8 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
             if (index === activePlayerIndex) {
                 return {
                     ...player,
-                    throws: [...player.throws, scoreToRecord],
+                    throws: previewMode ? [...player.throws] : [...player.throws, scoreToRecord],
+                    previewThrows: previewMode ? [...player.previewThrows, scoreToRecord] : [...player.previewThrows],
                     matchHistory: [...player.matchHistory, scoreToRecord]
                 };
             }

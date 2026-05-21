@@ -2,15 +2,16 @@
 
 import { JSX, useState } from "react";
 import { CornerDownLeft, Delete, Undo2 } from "lucide-react";
+import { PlayerWithResults } from "./Scoreboard";
 
 interface ScoreInputMobileProps {
     onSubmit: (score: number) => void;
     onUndo: () => void;
-    currentPlayerName: string;
+    currentPlayer: PlayerWithResults;
     ModeButton: () => JSX.Element;
 }
 
-export default function ScoreInputMobile({onSubmit, onUndo, currentPlayerName, ModeButton}: ScoreInputMobileProps) {
+export default function ScoreInputMobile({onSubmit, onUndo, currentPlayer, ModeButton}: ScoreInputMobileProps) {
 
 const [inputValue, setInputValue] = useState("");
 
@@ -37,7 +38,7 @@ return (
         <div className="max-w-120">
             <div className="flex flex-wrap items-center justify-center py-4 gap-1 w-full bg-neutral-950/50">
                 <span className="flex justify-center text-xs font-bold text-neutral-500 uppercase tracking-wider mb-2 w-full">
-                    Score for&nbsp;<span className="text-primary">{currentPlayerName}</span>
+                    Score for&nbsp;<span className="text-primary">{currentPlayer.name}</span>
                 </span>
 
                 <div className="flex w-full *:flex *:justify-center">
