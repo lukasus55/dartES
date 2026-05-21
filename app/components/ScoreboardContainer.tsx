@@ -5,7 +5,7 @@ import ScoreInput from "./ScoreInput";
 import IconButton from "./IconButton";
 import ConfirmationPopup from "./ConfirmationPopup";
 import { useIsMobile } from "../utils/useIsMobile";
-import ScoreboardDesktop from "./ScoreboardDesktop";
+import ScoreboardPlayer from "./ScoreboardPlayer";
 import { DEFAULT_PLAYERS, getUserConfig } from "../utils/configStorage";
 import { Player } from "../utils/configStorage";
 
@@ -41,7 +41,7 @@ const MATCH_STORAGE_KEY = "dartES_match_snapshot";
 
 const DEFAULT_PLAYERS_CONFIG = DEFAULT_PLAYERS;
 
-const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
+const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
   const [gameSettings, setGameSettings] = useState({
     startingScore: 501,
     legsToWinSet: 3
@@ -336,8 +336,8 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
           const currentScore = gameSettings.startingScore - sum(player.throws);
 
           return (
-            <div key={'ScoreboardDesktop ' + player.id}>
-              <ScoreboardDesktop 
+            <div key={'ScoreboardPlayer ' + player.id}>
+              <ScoreboardPlayer 
                 player={player}
                 currentScore={currentScore}
                 isActive={isActive} 
@@ -367,6 +367,6 @@ const Scoreboard = forwardRef<ScoreboardHandle>((props, ref) => {
   );
 });
 
-Scoreboard.displayName = "Scoreboard";
+ScoreboardContainer.displayName = "ScoreboardContainer";
 
-export default Scoreboard;
+export default ScoreboardContainer;

@@ -2,7 +2,7 @@
 import { JSX, useState } from "react";
 import { CornerDownLeft, Undo2 } from "lucide-react";
 import IconButton from "./IconButton";
-import { PlayerWithResults } from "./Scoreboard";
+import { PlayerWithResults } from "./ScoreboardContainer";
 import ScorePreview from "./ScorePreview";
 
 interface ScoreInputDesktop {

@@ -2,7 +2,7 @@
 
 import { JSX, useState } from "react";
 import { CornerDownLeft, Delete, Undo2 } from "lucide-react";
-import { PlayerWithResults } from "./Scoreboard";
+import { PlayerWithResults } from "./ScoreboardContainer";
 
 interface ScoreInputMobileProps {
     onSubmit: (score: number) => void;

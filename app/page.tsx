@@ -1,9 +1,9 @@
 "use client";
 import { useRef, useEffect } from "react";
-import Scoreboard, { ScoreboardHandle } from "./components/Scoreboard"; // Import the type too
 import Topbar from "./components/Topbar";
 import Footer from "./components/Footer";
 import applyTheme from "./utils/applyTheme";
+import ScoreboardContainer, { ScoreboardHandle } from "./components/ScoreboardContainer";
 
 export default function Home() {
 
@@ -20,7 +20,7 @@ export default function Home() {
 
       <main className="flex min-h-screen w-full flex-col items-center justify-between py-30 px-4 bg-background sm:items-start">
 
-      <Scoreboard ref={scoreboardRef} />
+      <ScoreboardContainer ref={scoreboardRef} />
 
       </main>
 

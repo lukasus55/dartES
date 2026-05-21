@@ -1,4 +1,4 @@
-import { PlayerWithResults } from "./Scoreboard";
+import { PlayerWithResults } from "./ScoreboardContainer";
 
 export default function ScorePreview({player} : {player: PlayerWithResults}) {
     return (

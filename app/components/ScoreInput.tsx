@@ -4,7 +4,7 @@ import ScoreInputDesktop from "./ScoreInputDesktop";
 import ScoreInputMobile from "./ScoreInputMobile";
 import { useIsMobile } from "../utils/useIsMobile";
 import ScoreInputBot from "./ScoreInputBot";
-import { PlayerWithResults } from "./Scoreboard";
+import { PlayerWithResults } from "./ScoreboardContainer";
 import InputModeButton from "./InputModeButton";
 
 interface ScoreInputProps {

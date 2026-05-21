@@ -2,13 +2,13 @@
 import PlayerScore from "./PlayerScore";
 import CheckoutGuide from "./CheckoutGuide";
 import PlayerStats from "./PlayerStats";
-import { PlayerWithResults } from "./Scoreboard";
-interface ScoreboardDesktopProps {
+import { PlayerWithResults } from "./ScoreboardContainer";
+interface ScoreboardPlayerProps {
   player: PlayerWithResults;
   currentScore: number;
   isActive: boolean;
 }
-export default function ScoreboardDesktop({ player, currentScore, isActive }: ScoreboardDesktopProps) {
+export default function ScoreboardPlayer({ player, currentScore, isActive }: ScoreboardPlayerProps) {
 
     return (
             <div key={player.id} className="flex flex-col items-center w-80">
