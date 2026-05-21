@@ -9,9 +9,10 @@ interface ScoreInputMobileProps {
     onUndo: () => void;
     currentPlayer: PlayerWithResults;
     ModeButton: () => JSX.Element;
+    isSingleMode: boolean;
 }
 
-export default function ScoreInputMobile({onSubmit, onUndo, currentPlayer, ModeButton}: ScoreInputMobileProps) {
+export default function ScoreInputMobile({onSubmit, onUndo, currentPlayer, ModeButton, isSingleMode}: ScoreInputMobileProps) {
 
 const [inputValue, setInputValue] = useState("");
 
@@ -27,7 +28,9 @@ const handleDelete = () => {
 
 const handleSubmit = () => {
     const score = parseInt(inputValue);
-    if (!isNaN(score) && score >= 0 && score <= 180) {
+    const maxScore = isSingleMode ? 60 : 180;
+    
+    if (!isNaN(score) && score >= 0 && score <= maxScore) {
     onSubmit(score);
     setInputValue("");
     }

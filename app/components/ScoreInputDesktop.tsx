@@ -10,16 +10,18 @@ interface ScoreInputDesktop {
     onUndo: () => void;
     currentPlayer: PlayerWithResults;
     ModeButton: () => JSX.Element;
+    isSingleMode: boolean;
 }
 
-export default function ScoreInputDesktop( {onSubmit, onUndo, currentPlayer, ModeButton} : ScoreInputDesktop) {
+export default function ScoreInputDesktop( {onSubmit, onUndo, currentPlayer, ModeButton, isSingleMode} : ScoreInputDesktop) {
     const [inputValue, setInputValue] = useState("");
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const score = parseInt(inputValue);
-
-        if (!isNaN(score) && score >= 0 && score <= 180) {
+        const maxScore = isSingleMode ? 60 : 180;
+        
+        if (!isNaN(score) && score >= 0 && score <= maxScore) {
             onSubmit(score);
             setInputValue("");
         }

@@ -67,6 +67,7 @@ export default function ScoreInput({handleScoreSubmit, handleUndo, toggleInputMo
                 onUndo={handleUndo} 
                 currentPlayer={player}
                 ModeButton={ModeButton}
+                isSingleMode={inputSingleMode}
               />
             ) : (
               <ScoreInputDesktop 
@@ -74,6 +75,7 @@ export default function ScoreInput({handleScoreSubmit, handleUndo, toggleInputMo
                 onUndo={handleUndo}
                 currentPlayer={player}
                 ModeButton={ModeButton}
+                isSingleMode={inputSingleMode}
               />
             )
           )

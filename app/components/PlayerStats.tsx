@@ -1,14 +1,17 @@
 import { useMemo } from 'react';
+import { PlayerWithResults } from './ScoreboardContainer';
 
 interface PlayerStatsProps {
-  history: number[];
-  checkouts: number[];
+  player: PlayerWithResults;
 }
 
-export default function PlayerStats({ history = [], checkouts = [] }: PlayerStatsProps) {
+export default function PlayerStats({ player }: PlayerStatsProps) {
+
+  const throws = player.throws;
+  const checkouts = player.checkoutHistory;
   
   // Get the last throw to determine which stat just updated
-  const lastThrow = history.length > 0 ? history[history.length - 1] : 0;
+  const lastThrow = throws.length > 0 ? throws[throws.length - 1] : 0;
 
   // Helper function to conditionally apply the highlight class
   const getStyle = (condition: boolean) => {
@@ -17,24 +20,24 @@ export default function PlayerStats({ history = [], checkouts = [] }: PlayerStat
       : "text-customizablePrimary"; // Default Style
   };
 
-  const sum = history.reduce((a, b) => a + b, 0);
-  const avg = history.length ? (sum / history.length).toFixed(1) : "0.0";
-  const dartsThrown = history.length * 3;
+  const sum = throws.reduce((a, b) => a + b, 0);
+  const avg = throws.length ? (sum / throws.length).toFixed(1) : "0.0";
+  const dartsThrown = throws.length * 3;
 
   const highestFinish = checkouts.length > 0 ? Math.max(...checkouts) : 0;
   
   // Highlight if the LAST throw set a new High Finish record
   const isNewHighFinish = lastThrow === highestFinish && checkouts.includes(lastThrow);
 
-  const s180 = history.filter(s => s === 180).length;
-  const s170Plus = history.filter(s => s >= 170 && s < 180).length;
-  const s160Plus = history.filter(s => s >= 160 && s < 170).length;
-  const s140Plus = history.filter(s => s >= 140 && s < 160).length;
-  const s120Plus = history.filter(s => s >= 120 && s < 140).length;
-  const s100Plus = history.filter(s => s >= 100 && s < 120).length;
-  const s80Plus = history.filter(s => s >= 80 && s < 100).length;
-  const s60Plus = history.filter(s => s >= 60 && s < 80).length;
-  const s40Plus = history.filter(s => s >= 40 && s < 60).length;
+  const s180 = throws.filter(s => s === 180).length;
+  const s170Plus = throws.filter(s => s >= 170 && s < 180).length;
+  const s160Plus = throws.filter(s => s >= 160 && s < 170).length;
+  const s140Plus = throws.filter(s => s >= 140 && s < 160).length;
+  const s120Plus = throws.filter(s => s >= 120 && s < 140).length;
+  const s100Plus = throws.filter(s => s >= 100 && s < 120).length;
+  const s80Plus = throws.filter(s => s >= 80 && s < 100).length;
+  const s60Plus = throws.filter(s => s >= 60 && s < 80).length;
+  const s40Plus = throws.filter(s => s >= 40 && s < 60).length;
 
   return (
     <div className="flex flex-col gap-2 min-w-80 mx-5 p-4 text-xs font-mono text-customizableSecondary">

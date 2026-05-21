@@ -14,11 +14,11 @@ export interface ScoreboardHandle {
 }
 
 export type PlayerWithResults = Player & {
-  throws: number[];
+  throws: number[]; // 'throws' is every turn (3 throws). When user type [20, 60, 19] in single mode, and [120, 140] in triple mode the 'throws' is gonna look like this: [99, 120, 140]
   previewThrows: number[];
   sets: number;
   legs: number;
-  matchHistory: number[];
+  matchHistory: number[]; // 'matchHistory' is every single action. When user type [20, 60, 19] in single mode, and [120, 140] in triple mode the 'matchHistory' is gonna look like this: [20, 60, 19, 120, 140]
   checkoutHistory: number[];
 }
 
@@ -110,7 +110,6 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
         updateActivePlayerIndex(savedMatch.activePlayerIndex, restoredPlayers);
       } 
       else {
-        console.log('new game?')
         // --- NEW GAME (From Config) ---
         setPlayers(prev => prev.map(p => {
             const configP = config.players.find((cp: Player) => cp.id === p.id);
@@ -176,7 +175,7 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
     if (historyStack.length < 1) return;
 
     let lastState = historyStack[historyStack.length - 1];
-    console.log(lastState.activePlayerIndex)
+
     let i: number = 1
 
     while (players[lastState.activePlayerIndex].isBot === true) {
@@ -251,7 +250,7 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
     const busted = newTotal > gameSettings.startingScore || newTotal == gameSettings.startingScore-1;
     let previewMode = inputSingleMode && !busted;
 
-    if (previewMode && currentDartsLeft === 0) {
+    if (previewMode && currentDartsLeft <= 1) {
       scoreToRecord = sum(currentPlayer.previewThrows) + inputScore;
       previewMode = false;
     }
@@ -259,6 +258,7 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
     // Bust when more than starting score or impossible checkout
     if (busted) {
       scoreToRecord = 0;
+      previewMode = false;
     } 
 
     setPlayers((prevPlayers) => {
@@ -267,7 +267,7 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
                 return {
                     ...player,
                     throws: previewMode ? [...player.throws] : [...player.throws, scoreToRecord],
-                    previewThrows: previewMode ? [...player.previewThrows, scoreToRecord] : [...player.previewThrows],
+                    previewThrows: previewMode ? [...player.previewThrows, scoreToRecord] : [], // Empty preview throws to prevent from counting them twice.
                     matchHistory: [...player.matchHistory, scoreToRecord]
                 };
             }
@@ -275,11 +275,14 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
         });
     });
 
-    let nextIndex = (activePlayerIndex + 1) % players.length;
-    while (!players[nextIndex].isEnabled) {
-      nextIndex = (nextIndex + 1) % players.length;
+    if (!previewMode) {
+      let nextIndex = (activePlayerIndex + 1) % players.length;
+      while (!players[nextIndex].isEnabled) {
+        nextIndex = (nextIndex + 1) % players.length;
+      }
+      setActivePlayerIndex(nextIndex);
     }
-    setActivePlayerIndex(nextIndex);
+
   };
 
   useImperativeHandle(ref, () => ({
