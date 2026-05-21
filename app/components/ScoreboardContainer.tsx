@@ -4,10 +4,10 @@ import { Undo2 } from "lucide-react";
 import ScoreInput from "./ScoreInput";
 import IconButton from "./IconButton";
 import ConfirmationPopup from "./ConfirmationPopup";
-import { useIsMobile } from "../utils/useIsMobile";
 import ScoreboardPlayer from "./ScoreboardPlayer";
 import { DEFAULT_PLAYERS, getUserConfig } from "../utils/configStorage";
 import { Player } from "../utils/configStorage";
+import { Scoreboard } from "./Scoreboard";
 
 export interface ScoreboardHandle {
   resetMatch: () => void;
@@ -20,6 +20,11 @@ export type PlayerWithResults = Player & {
   legs: number;
   matchHistory: number[];
   checkoutHistory: number[];
+}
+
+export type GameSettingsType = {
+  startingScore: number;
+  legsToWinSet: number;
 }
 
 type PlayerIndex = 0 | 1 | 2 | 3 | 4;
@@ -42,7 +47,7 @@ const MATCH_STORAGE_KEY = "dartES_match_snapshot";
 const DEFAULT_PLAYERS_CONFIG = DEFAULT_PLAYERS;
 
 const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
-  const [gameSettings, setGameSettings] = useState({
+  const [gameSettings, setGameSettings] = useState<GameSettingsType>({
     startingScore: 501,
     legsToWinSet: 3
   });
@@ -57,10 +62,7 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
   const [activePlayerIndex, setActivePlayerIndex] = useState(0);
   const [historyStack, setHistoryStack] = useState<GameStateSnapshot[]>([]);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
-  const [hideInput, setHideInput] = useState(false);
   const [inputSingleMode, setInputSingleMode] = useState(false);
-  
-  const isMobile = useIsMobile();
 
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -137,26 +139,6 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
       localStorage.setItem(MATCH_STORAGE_KEY, JSON.stringify(snapshot));
     }
   }, [players, activePlayerIndex]);
-
-  // hide input on scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      if (players[activePlayerIndex].isBot) return;
-
-      const scrolledTo = window.scrollY + window.innerHeight;
-      const totalHeight = document.documentElement.scrollHeight;
-      const distanceToBottom = totalHeight - scrolledTo;
-
-      if (distanceToBottom < 100) {
-        setHideInput(true);
-      } else {
-        setHideInput(false);
-      }
-
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [gameSettings, isLoaded]);
 
   const handleResetRequest = () => {
     setShowResetConfirm(true);
@@ -259,8 +241,6 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
     const currentDartsLeft = 3 - currentPlayer.previewThrows.length;
     const newTotal = currentTotal + inputScore;
 
-    console.log(currentPlayer)
-
     if (newTotal >= gameSettings.startingScore) {
       handleLegWin(currentPlayer, inputScore);
       return;
@@ -306,15 +286,6 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
     resetMatch: handleResetRequest 
   }));
 
-  // DISPLAY ORDER
-  let displayPlayers = players;
-
-  if (isMobile) {
-    const activePlayer = players[activePlayerIndex];
-    const otherPlayers = players.filter((_, index) => index !== activePlayerIndex);
-    displayPlayers = [activePlayer, ...otherPlayers];
-  }
-
   return (
     <div className="flex items-center w-full">
       
@@ -326,42 +297,15 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
         onCancel={() => setShowResetConfirm(false)}
       />
 
-      <div className="flex flex-wrap justify-center gap-4 mb-32 w-full">
-        {displayPlayers.map((player) => {
-          if (!player.isEnabled) return null;
-          
-          const originalIndex = players.findIndex(p => p.id === player.id);
-          const isActive = originalIndex === activePlayerIndex;
-          
-          const currentScore = gameSettings.startingScore - sum(player.throws);
+      <Scoreboard activePlayerIndex={activePlayerIndex} players={players} gameSettings={gameSettings} />
 
-          return (
-            <div key={'ScoreboardPlayer ' + player.id}>
-              <ScoreboardPlayer 
-                player={player}
-                currentScore={currentScore}
-                isActive={isActive} 
-              />
-            </div>
-          );
-        })}
-      </div>
-
-      <div 
-        className={`
-          fixed bottom-0 left-0 w-full flex flex-col items-center justify-center pb-8 pt-14
-          transition-all duration-500 ease-in-out z-50
-          ${hideInput ? 'translate-y-[120%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}
-        `}
-      >
-        <ScoreInput
-          player={players[activePlayerIndex]}
-          handleScoreSubmit={handleScoreSubmit}
-          handleUndo={handleUndo}
-          toggleInputMode={toggleInputMode}
-          inputSingleMode={inputSingleMode}
-        />
-      </div>
+      <ScoreInput
+        player={players[activePlayerIndex]}
+        handleScoreSubmit={handleScoreSubmit}
+        handleUndo={handleUndo}
+        toggleInputMode={toggleInputMode}
+        inputSingleMode={inputSingleMode}
+      />
 
     </div>
   );
