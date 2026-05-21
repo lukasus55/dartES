@@ -214,17 +214,17 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
         if (p.id === winner.id) {
           if (isSetWin)
             return { 
-              ...p, legs: 0, sets: p.sets + 1, throws: [],
+              ...p, legs: 0, sets: p.sets + 1, throws: [], previewThrows: [],
               matchHistory: [...p.matchHistory, winningThrowScore],
               checkoutHistory: [...p.checkoutHistory, winningThrowScore] 
             }; 
           return { 
-            ...p, legs: p.legs + 1, throws: [],
+            ...p, legs: p.legs + 1, throws: [], previewThrows: [],
             matchHistory: [...p.matchHistory, winningThrowScore],
             checkoutHistory: [...p.checkoutHistory, winningThrowScore] 
           };
         }
-        if (isSetWin) return { ...p, legs: 0, throws: [] };
+        if (isSetWin) return { ...p, legs: 0, throws: [], previewThrows: [] };
         return { ...p, throws: [] };
       })
     );
@@ -237,17 +237,20 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
 
     const currentPlayer = players[activePlayerIndex];
     const currentTotal = sum(currentPlayer.throws);
+    const currentTotalPreview = sum(currentPlayer.previewThrows);
     const currentDartsLeft = 3 - currentPlayer.previewThrows.length;
-    const newTotal = currentTotal + inputScore;
-
-    if (newTotal >= gameSettings.startingScore) {
-      handleLegWin(currentPlayer, inputScore);
-      return;
-    }
+    const newTotal = currentTotal + currentTotalPreview + inputScore;
 
     let scoreToRecord = inputScore;
 
     const busted = newTotal > gameSettings.startingScore || newTotal == gameSettings.startingScore-1;
+    const legWin = newTotal >= gameSettings.startingScore && !busted;
+
+    if (legWin) {
+      handleLegWin(currentPlayer, inputScore);
+      return;
+    }
+
     let previewMode = inputSingleMode && !busted;
 
     if (previewMode && currentDartsLeft <= 1) {
