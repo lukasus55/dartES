@@ -251,7 +251,7 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
       return;
     }
 
-    let previewMode = inputSingleMode && !busted;
+    let previewMode = inputSingleMode && !busted && !currentPlayer.isBot;
 
     if (previewMode && currentDartsLeft <= 1) {
       scoreToRecord = sum(currentPlayer.previewThrows) + inputScore;
