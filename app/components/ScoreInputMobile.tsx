@@ -3,6 +3,7 @@
 import { JSX, useState } from "react";
 import { CornerDownLeft, Delete, Undo2 } from "lucide-react";
 import { PlayerWithResults } from "./ScoreboardContainer";
+import ScoreInputDarts from "./ScoreInputDarts";
 
 interface ScoreInputMobileProps {
     onSubmit: (score: number) => void;
@@ -38,11 +39,17 @@ const handleSubmit = () => {
 
 return (
     <div className="fixed bottom-0 left-0 w-full bg-neutral-950 border-t border-neutral-900 max-w-screen flex justify-center">
-        <div className="max-w-120">
+        <div className="w-80">
             <div className="flex flex-wrap items-center justify-center py-4 gap-1 w-full bg-neutral-950/50">
-                <span className="flex justify-center text-xs font-bold text-neutral-500 uppercase tracking-wider mb-2 w-full">
-                    Score for&nbsp;<span className="text-primary">{currentPlayer.name}</span>
-                </span>
+                <div className="flex w-full flex-wrap gap-1.5 p-2">
+                    <span className="flex justify-center text-xs font-bold text-neutral-500 uppercase w-full">
+                        Score for&nbsp;<span className="text-primary">{currentPlayer.name}</span>
+                    </span>
+
+                    {isSingleMode && 
+                        <div className="flex w-full justify-center"> <ScoreInputDarts previewThrows={currentPlayer.previewThrows}/> </div>
+                    }
+                </div>
 
                 <div className="flex w-full *:flex *:justify-center">
                     <div className="w-1/5"></div>
