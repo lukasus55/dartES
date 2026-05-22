@@ -28,7 +28,7 @@ export default function ScoreInputDesktop( {onSubmit, onUndo, currentPlayer, Mod
     };
 
 return (
-    <>
+    <div className="bg-[#000000cc] flex items-end justify-center p-4 rounded-xl">
         <div className="mr-4">
             <IconButton icon={Undo2} label="Undo" onClick={onUndo}/>
         </div>
@@ -38,7 +38,7 @@ return (
             className="flex items-end gap-3"
         >
             <div className="flex flex-col gap-1.5">
-                <div className="flex flex-col gap-1.5 bg-[#000000cc] p-2 rounded-xl">
+                <div className="flex flex-col gap-1.5 p-2 rounded-xl">
                     <div className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">
                         Score for <span className="text-primary">{currentPlayer.name}</span>
                     </div>
@@ -98,6 +98,6 @@ return (
             <ModeButton/>
         </div>
 
-    </>
+    </div>
 );
 }
