@@ -44,7 +44,10 @@ const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 
 const MATCH_STORAGE_KEY = "dartES_match_snapshot";
 
-const DEFAULT_PLAYERS_CONFIG = DEFAULT_PLAYERS;
+const DEFAULT_PLAYERS_WITH_RESULTS: PlayerWithResults[] = DEFAULT_PLAYERS.map(p => ({
+  ...p,
+  throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, previewThrows: [],
+}))
 
 const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
   const [gameSettings, setGameSettings] = useState<GameSettingsType>({
@@ -52,12 +55,7 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
     legsToWinSet: 3
   });
 
-  const [players, setPlayers] = useState<PlayerWithResults[]>(
-    DEFAULT_PLAYERS_CONFIG.map(p => ({
-        ...p,
-        throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, previewThrows: [],
-    }))
-  );
+  const [players, setPlayers] = useState<PlayerWithResults[]>(DEFAULT_PLAYERS_WITH_RESULTS);
 
   const [activePlayerIndex, setActivePlayerIndex] = useState(0);
   const [historyStack, setHistoryStack] = useState<GameStateSnapshot[]>([]);
@@ -66,62 +64,8 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
 
   const [isLoaded, setIsLoaded] = useState(false);
 
-  function updateActivePlayerIndex(newIndex: PlayerIndex, players: PlayerWithResults[]) { 
-        let i = 0;
-        
-        while (i < 5){
-          if (players[newIndex].isEnabled === true) {
-            setActivePlayerIndex(newIndex);
-            return;
-          }
-          i++;
-          newIndex = (newIndex+1)%5;
-        }
-
-        console.warn("Can't change active player index because there is no enabled player.");
-  }
-
-  // LOAD CONFIG & RESTORE GAME
+  // Load game
   useEffect(() => {
-    const loadData = () => {
-      const config = getUserConfig();
-
-      setGameSettings({
-        startingScore: config.startingScore,
-        legsToWinSet: config.legsToWinSet
-      })
-
-      // Get saved match
-      const matchStr = localStorage.getItem(MATCH_STORAGE_KEY);
-
-      if (matchStr) {
-        const savedMatch: MatchType = JSON.parse(matchStr);
-        let restoredPlayers: PlayerWithResults[] = savedMatch.players;
-
-        // live update of Names/Enabled status from Settings
-        restoredPlayers = restoredPlayers.map(p => {
-            const configP = config.players.find((cp: Player) => cp.id === p.id);
-            const restoredPlayer: PlayerWithResults = {...p, ...configP};
-            
-            return restoredPlayer;
-        });
-
-        setPlayers(restoredPlayers);
-        updateActivePlayerIndex(savedMatch.activePlayerIndex, restoredPlayers);
-      } 
-      else {
-        // --- NEW GAME (From Config) ---
-        setPlayers(prev => prev.map(p => {
-            const configP = config.players.find((cp: Player) => cp.id === p.id);
-            const restoredPlayer: PlayerWithResults = configP ? {...p, ...configP} : {...p, ...DEFAULT_PLAYERS_CONFIG};
-            
-            return restoredPlayer;
-        }));
-      }
-
-      setIsLoaded(true);
-    };
-
     loadData();
     window.addEventListener("storage", loadData); 
     return () => window.removeEventListener("storage", loadData);
@@ -147,13 +91,88 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
     setInputSingleMode(!inputSingleMode);
   }
 
+  const loadData = () => {
+    const config = getUserConfig();
+
+    setGameSettings({
+      startingScore: config.startingScore,
+      legsToWinSet: config.legsToWinSet
+    })
+
+    // Get saved match
+    const matchStr = localStorage.getItem(MATCH_STORAGE_KEY);
+    if (!matchStr) { 
+      newGame(config.players);
+      return; 
+    }
+
+    const savedMatch: MatchType = JSON.parse(matchStr);
+    if (!isMatchFormatCorrect(savedMatch)) {
+      newGame(config.players)
+      return;
+    }
+
+    let restoredPlayers: PlayerWithResults[] = savedMatch.players;
+
+    // live update of Names/Enabled status from Settings
+    restoredPlayers = restoredPlayers.map(p => {
+        const configP = config.players.find((cp: Player) => cp.id === p.id);
+        const restoredPlayer: PlayerWithResults = {...p, ...configP};
+        return restoredPlayer;
+    });
+
+    setPlayers(restoredPlayers);
+    updateActivePlayerIndex(savedMatch.activePlayerIndex, restoredPlayers);
+
+    setIsLoaded(true);
+  };
+
+  const newGame = (players: Player[]) => {
+    setPlayers(prev => prev.map(p => {
+      const configP = players.find((cp: Player) => cp.id === p.id);
+      const restoredPlayer: PlayerWithResults = configP ? {...p, ...configP} : {...p, ...DEFAULT_PLAYERS};
+      
+      return restoredPlayer;
+    }));
+    setIsLoaded(true);
+  }
+
+  const isMatchFormatCorrect = (savedMatch: MatchType) => {
+    if(DEFAULT_PLAYERS.length !== DEFAULT_PLAYERS_WITH_RESULTS.length) {
+      return false;
+    }
+
+    for (let i=0; i<=DEFAULT_PLAYERS_WITH_RESULTS.length; i++){
+      const aKeys = Object.keys(savedMatch.players[i]).sort();
+      const bKeys = Object.keys(DEFAULT_PLAYERS_WITH_RESULTS[i]).sort();
+      return JSON.stringify(aKeys) === JSON.stringify(bKeys);
+    }
+
+    return true;
+  }
+
+  const updateActivePlayerIndex = (newIndex: PlayerIndex, players: PlayerWithResults[]) => { 
+    let i = 0;
+    
+    while (i < 5){
+      if (players[newIndex].isEnabled === true) {
+        setActivePlayerIndex(newIndex);
+        return;
+      }
+      i++;
+      newIndex = (newIndex+1)%5;
+    }
+
+    console.warn("Can't change active player index because there is no enabled player.");
+  }
+
   const executeReset = () => {
     if(localStorage.getItem(MATCH_STORAGE_KEY)) {
       localStorage.removeItem(MATCH_STORAGE_KEY);
     }
     
     setPlayers(
-      DEFAULT_PLAYERS_CONFIG.map(p => ({
+      DEFAULT_PLAYERS.map(p => ({
           ...p,
           throws: [], matchHistory: [], checkoutHistory: [], sets: 0, legs: 0, previewThrows: [],
       }))

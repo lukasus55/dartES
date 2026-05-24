@@ -11,7 +11,7 @@ interface ScoreboardPlayerProps {
 }
 export default function ScoreboardPlayer({ player, currentScore, isActive }: ScoreboardPlayerProps) {
   
-  const displayedScore = currentScore - sum(player.previewThrows);
+  const displayedScore = player.previewThrows ? currentScore - sum(player.previewThrows) : currentScore - 0;
 
   return (
           <div key={player.id} className="flex flex-col items-center w-80">
