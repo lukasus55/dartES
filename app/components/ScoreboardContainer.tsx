@@ -25,6 +25,7 @@ export type PlayerWithResults = Player & {
 export type GameSettingsType = {
   startingScore: number;
   legsToWinSet: number;
+  modeChangePoint: number;
 }
 
 type PlayerIndex = 0 | 1 | 2 | 3 | 4;
@@ -52,7 +53,8 @@ const DEFAULT_PLAYERS_WITH_RESULTS: PlayerWithResults[] = DEFAULT_PLAYERS.map(p 
 const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
   const [gameSettings, setGameSettings] = useState<GameSettingsType>({
     startingScore: 501,
-    legsToWinSet: 3
+    legsToWinSet: 3,
+    modeChangePoint: 0,
   });
 
   const [players, setPlayers] = useState<PlayerWithResults[]>(DEFAULT_PLAYERS_WITH_RESULTS);
@@ -96,7 +98,8 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
 
     setGameSettings({
       startingScore: config.startingScore,
-      legsToWinSet: config.legsToWinSet
+      legsToWinSet: config.legsToWinSet,
+      modeChangePoint: config.modeChangePoint,
     })
 
     // Get saved match
@@ -272,6 +275,10 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
 
     let previewMode = inputSingleMode && !busted && !currentPlayer.isBot;
 
+    if (gameSettings.startingScore - currentTotal <= gameSettings.modeChangePoint) {
+      previewMode = true;
+    } 
+
     if (previewMode && currentDartsLeft <= 1) {
       scoreToRecord = sum(currentPlayer.previewThrows) + inputScore;
       previewMode = false;
@@ -330,6 +337,7 @@ const ScoreboardContainer = forwardRef<ScoreboardHandle>((props, ref) => {
         handleUndo={handleUndo}
         toggleInputMode={toggleInputMode}
         inputSingleMode={inputSingleMode}
+        gameSettings={gameSettings}
       />
 
     </div>

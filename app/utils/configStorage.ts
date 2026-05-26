@@ -21,6 +21,7 @@ export const UserConfigSchema = z.object({
   }),
   startingScore: z.number(),
   legsToWinSet: z.number(),
+  modeChangePoint: z.number(),
   players: z.array(PlayerSchema),
 });
 
@@ -41,6 +42,10 @@ export const DEFAULT_SETTINGS = {
   legsToWinSet: 3,
 };
 
+export const DEFAULT_INPUT_SETTINGS = {
+  modeChangePoint: 0,
+}
+
 export const DEFAULT_PLAYERS: Player[] = [
   { id: 1, name: "PLAYER 1", isEnabled: true, isBot: false, botLevel: 2 },
   { id: 2, name: "PLAYER 2", isEnabled: true, isBot: false, botLevel: 2 },
@@ -59,6 +64,7 @@ export const DEFAULT_USER_CONFIG: UserConfig = {
   },
   startingScore: DEFAULT_SETTINGS.startingScore,
   legsToWinSet: DEFAULT_SETTINGS.legsToWinSet,
+  modeChangePoint: DEFAULT_INPUT_SETTINGS.modeChangePoint,
   players: DEFAULT_PLAYERS,
 };
 
@@ -149,4 +155,16 @@ export function savePlayers({players} : {players : Player[]}) {
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newConfig));
     window.dispatchEvent(new Event("storage"));
+}
+
+export function saveInputSettings({modeChangePoint} : {modeChangePoint:number}) {
+  const savedConfig: UserConfig = getUserConfig();
+
+  const newConfig: UserConfig = {
+    ...savedConfig,
+    modeChangePoint: Math.min(modeChangePoint, savedConfig.startingScore),
+  };
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(newConfig));
+  window.dispatchEvent(new Event("storage"));
 }

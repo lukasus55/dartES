@@ -6,6 +6,7 @@ import GameSettings from "./GameSettings";
 import ThemeSettings from "./ThemeSettings";
 import { getUserConfig } from "@/app/utils/configStorage";
 import { useClosePopup } from "@/app/utils/useClosePopup";
+import InputSettings from "./InputSettings";
 
 export default function CustomizationPopup({ onClose }: { onClose: () => void; }) {
   const popupRef = useRef<HTMLDivElement>(null);
@@ -28,6 +29,8 @@ export default function CustomizationPopup({ onClose }: { onClose: () => void; }
       </button>
 
       <GameSettings config={config} />
+
+      <InputSettings config={config} />
 
       <ThemeSettings config={config} />
 

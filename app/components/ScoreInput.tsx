@@ -4,9 +4,10 @@ import ScoreInputDesktop from "./ScoreInputDesktop";
 import ScoreInputMobile from "./ScoreInputMobile";
 import { useIsMobile } from "../utils/useIsMobile";
 import ScoreInputBot from "./ScoreInputBot";
-import { PlayerWithResults } from "./ScoreboardContainer";
+import { GameSettingsType, PlayerWithResults } from "./ScoreboardContainer";
 import InputModeButton from "./InputModeButton";
 import { useEffect, useState } from "react";
+import { sum } from "../utils/helpers";
 
 interface ScoreInputProps {
   handleScoreSubmit: (score: number) => void;
@@ -14,15 +15,21 @@ interface ScoreInputProps {
   toggleInputMode: () => void;
   inputSingleMode: boolean;
   player: PlayerWithResults;
+  gameSettings: GameSettingsType;
 }
 
-export default function ScoreInput({handleScoreSubmit, handleUndo, toggleInputMode, inputSingleMode, player}: ScoreInputProps) {
+export default function ScoreInput({handleScoreSubmit, handleUndo, toggleInputMode, inputSingleMode, player, gameSettings}: ScoreInputProps) {
   
   const isMobile = useIsMobile();
 
   if(!player.isEnabled) return;
 
-  const ModeButton = () => <InputModeButton toggleInputMode={toggleInputMode} inputSingleMode={inputSingleMode} />
+  const pScore = gameSettings.startingScore - sum(player.throws);
+  
+  const isPreviewMode = pScore <= gameSettings.modeChangePoint ? true : inputSingleMode;
+  const isBtnDisabled = isPreviewMode !== inputSingleMode;
+
+  const ModeButton = () => <InputModeButton toggleInputMode={toggleInputMode} inputSingleMode={isPreviewMode} disabled={isBtnDisabled}/>
   const [hideInput, setHideInput] = useState<boolean>(false);
 
   // hide input on scroll
@@ -67,7 +74,7 @@ export default function ScoreInput({handleScoreSubmit, handleUndo, toggleInputMo
                 onUndo={handleUndo} 
                 currentPlayer={player}
                 ModeButton={ModeButton}
-                isSingleMode={inputSingleMode}
+                isSingleMode={isPreviewMode}
               />
             ) : (
               <ScoreInputDesktop 
@@ -75,7 +82,7 @@ export default function ScoreInput({handleScoreSubmit, handleUndo, toggleInputMo
                 onUndo={handleUndo}
                 currentPlayer={player}
                 ModeButton={ModeButton}
-                isSingleMode={inputSingleMode}
+                isSingleMode={isPreviewMode}
               />
             )
           )
