@@ -1,4 +1,4 @@
-import { PlayerWithResults } from "../components/Scoreboard"; // Adjust path if needed
+import { PlayerWithResults } from "../components/ScoreboardContainer"; // Adjust path if needed
 import { getUserConfig } from "./configStorage";
 import { sum } from "./helpers";
 import Dart from "./Dart";

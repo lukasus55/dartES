@@ -1,15 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { JSX, useState } from "react";
 import { CornerDownLeft, Delete, Undo2 } from "lucide-react";
+import { PlayerWithResults } from "./ScoreboardContainer";
+import ScoreInputDarts from "./ScoreInputDarts";
 
 interface ScoreInputMobileProps {
     onSubmit: (score: number) => void;
     onUndo: () => void;
-    currentPlayerName: string;
+    currentPlayer: PlayerWithResults;
+    ModeButton: () => JSX.Element;
+    isSingleMode: boolean;
 }
 
-export default function ScoreInputMobile({onSubmit,onUndo,currentPlayerName,}: ScoreInputMobileProps) {
+export default function ScoreInputMobile({onSubmit, onUndo, currentPlayer, ModeButton, isSingleMode}: ScoreInputMobileProps) {
 
 const [inputValue, setInputValue] = useState("");
 
@@ -25,85 +29,102 @@ const handleDelete = () => {
 
 const handleSubmit = () => {
     const score = parseInt(inputValue);
-    if (!isNaN(score) && score >= 0 && score <= 180) {
+    const maxScore = isSingleMode ? 60 : 180;
+    
+    if (!isNaN(score) && score >= 0 && score <= maxScore) {
     onSubmit(score);
     setInputValue("");
     }
 };
 
 return (
-    <div className="fixed bottom-0 left-0 w-full bg-neutral-950 border-t border-neutral-900 max-w-screen">
-        <div className="flex flex-col items-center justify-center py-4 gap-1 bg-neutral-950/50">
-        <span className="text-xs font-bold text-neutral-500 uppercase tracking-wider mb-2">
-            Score for <span className="text-primary">{currentPlayerName}</span>
-        </span>
+    <div className="fixed bottom-0 left-0 w-full bg-neutral-950 border-t border-neutral-900 max-w-screen flex justify-center">
+        <div className="w-80">
+            <div className="flex flex-wrap items-center justify-center py-4 gap-1 w-full bg-neutral-950/50">
+                <div className="flex w-full flex-wrap gap-1.5 p-2">
+                    <span className="flex justify-center text-xs font-bold text-neutral-500 uppercase w-full">
+                        Score for&nbsp;<span className="text-primary">{currentPlayer.name}</span>
+                    </span>
 
-        <div
-            className="
-            h-12 min-w-30 px-6
-            flex items-center justify-center
-            bg-neutral-900 rounded-full border border-neutral-800
-            text-3xl font-bold text-primary tracking-widest
+                    {isSingleMode && 
+                        <div className="flex w-full justify-center"> <ScoreInputDarts previewThrows={currentPlayer.previewThrows}/> </div>
+                    }
+                </div>
+
+                <div className="flex w-full *:flex *:justify-center">
+                    <div className="w-1/5"></div>
+                    <div className="w-3/5">
+                        <div
+                            className="
+                            h-12 min-w-30 px-6
+                            flex items-center justify-center
+                            bg-neutral-900 rounded-full border border-neutral-800
+                            text-3xl font-bold text-primary tracking-widest
+                            "
+                        >
+                            {inputValue || <span className="text-neutral-700 opacity-50">0</span>}
+                        </div>
+                    </div>
+                    <div className="w-1/5"> <ModeButton/> </div>
+                </div>
+                
+            </div>
+
+            <div className="grid grid-cols-3 gap-1 p-2 max-w-md mx-auto">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                <button
+                key={num}
+                onClick={() => handleNumClick(num.toString())}
+                className="
+                h-14 rounded-xl
+                bg-neutral-900 text-white text-2xl font-bold
+                active:bg-neutral-800 active:scale-95 transition-all
+                border border-neutral-800
             "
-        >
-            {inputValue || <span className="text-neutral-700 opacity-50">0</span>}
-        </div>
-        </div>
+                >
+                {num}
+                </button>
+            ))}
 
-        <div className="grid grid-cols-3 gap-1 p-2 max-w-md mx-auto">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
             <button
-            key={num}
-            onClick={() => handleNumClick(num.toString())}
-            className="
-            h-14 rounded-xl
-            bg-neutral-900 text-white text-2xl font-bold
-            active:bg-neutral-800 active:scale-95 transition-all
-            border border-neutral-800
-        "
+                onClick={inputValue ? handleDelete : onUndo}
+                className={`
+                h-14 rounded-xl
+                flex items-center justify-center
+                active:bg-neutral-800 active:scale-95 transition-all
+                border border-neutral-800
+                ${inputValue ? "bg-neutral-900/50 text-red-400" : "bg-neutral-900 text-neutral-400"}
+                `}
             >
-            {num}
+                {inputValue ? <Delete size={24} /> : <Undo2 size={24} />}
             </button>
-        ))}
 
-        <button
-            onClick={inputValue ? handleDelete : onUndo}
-            className={`
-            h-14 rounded-xl
-            flex items-center justify-center
-            active:bg-neutral-800 active:scale-95 transition-all
-            border border-neutral-800
-            ${inputValue ? "bg-neutral-900/50 text-red-400" : "bg-neutral-900 text-neutral-400"}
-            `}
-        >
-            {inputValue ? <Delete size={24} /> : <Undo2 size={24} />}
-        </button>
+            <button
+                onClick={() => handleNumClick("0")}
+                className="
+                h-14 rounded-xl
+                bg-neutral-900 text-white text-2xl font-bold
+                active:bg-neutral-800 active:scale-95 transition-all
+                border border-neutral-800
+                "
+            >
+                0
+            </button>
 
-        <button
-            onClick={() => handleNumClick("0")}
-            className="
-            h-14 rounded-xl
-            bg-neutral-900 text-white text-2xl font-bold
-            active:bg-neutral-800 active:scale-95 transition-all
-            border border-neutral-800
-            "
-        >
-            0
-        </button>
-
-        <button
-            onClick={handleSubmit}
-            disabled={!inputValue}
-            className="
-            h-14 rounded-xl
-            bg-primary/10 text-primary border border-primary/20
-            flex items-center justify-center
-            active:scale-95 transition-all
-            disabled:opacity-30 disabled:active:scale-100
-            "
-        >
-            <CornerDownLeft size={28} strokeWidth={3} />
-        </button>
+            <button
+                onClick={handleSubmit}
+                disabled={!inputValue}
+                className="
+                h-14 rounded-xl
+                bg-primary/10 text-primary border border-primary/20
+                flex items-center justify-center
+                active:scale-95 transition-all
+                disabled:opacity-30 disabled:active:scale-100
+                "
+            >
+                <CornerDownLeft size={28} strokeWidth={3} />
+            </button>
+            </div>
         </div>
     </div>
 );

@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Users, Power, Bot } from "lucide-react";
+import { Users, Power, Bot, Settings } from "lucide-react";
 import { DEFAULT_PLAYERS, savePlayers, UserConfig } from "@/app/utils/configStorage";
 import LevelSlider from "./LevelSlider";
+import SimpleToggleButton from "../SimpleToggleButton";
 
 export default function PlayersSettings({config} : {config: UserConfig}) {
 
@@ -36,32 +37,9 @@ export default function PlayersSettings({config} : {config: UserConfig}) {
                             disabled={!player.isEnabled}
                         />
 
-                        <button
-                            onClick={() => handlePlayerChange(player.id, "isEnabled", !player.isEnabled)}
-                            className={`
-                            p-2 rounded-lg transition-all duration-200 border cursor-pointer
-                            ${player.isEnabled
-                                    ? "text-green-400 bg-green-400/10 border-green-400/20"
-                                    : "text-neutral-600 bg-neutral-900 border-neutral-800 hover:bg-neutral-800 hover:text-neutral-400"}
-                            `}
-                            title={player.isEnabled ? "Disable Player" : "Enable Player"}
-                        >
-                            <Power size={14} strokeWidth={3} />
-                        </button>
+                        <SimpleToggleButton onClick={() => handlePlayerChange(player.id, "isEnabled", !player.isEnabled)} isActive={player.isEnabled} Icon={Power} activateText="Enable Player" deactivateText="Disable Players"/>
+                        <SimpleToggleButton onClick={() => handlePlayerChange(player.id, "isBot", !player.isBot)} isActive={player.isBot} Icon={Bot} activateText="Enable Bot" deactivateText="Disable Bot"/>
 
-                        <button
-                            onClick={() => handlePlayerChange(player.id, "isBot", !player.isBot)}
-                            className={`
-                            p-2 rounded-lg transition-all duration-200 border cursor-pointer
-                            ${player.isBot
-                                    ? "text-green-400 bg-green-400/10 border-green-400/20"
-                                    : "text-neutral-600 bg-neutral-900 border-neutral-800 hover:bg-neutral-800 hover:text-neutral-400"}
-                            `}
-                            title={player.isBot ? "Disable Bot" : "Enable Bot"}
-                        >
-                            <Bot size={14} strokeWidth={3} />
-                        </button>
-                        
                         {player.isBot && <LevelSlider player={player} handlePlayerChange={handlePlayerChange}/>}
                         
 

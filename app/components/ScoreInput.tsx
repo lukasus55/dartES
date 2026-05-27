@@ -4,47 +4,90 @@ import ScoreInputDesktop from "./ScoreInputDesktop";
 import ScoreInputMobile from "./ScoreInputMobile";
 import { useIsMobile } from "../utils/useIsMobile";
 import ScoreInputBot from "./ScoreInputBot";
-import { PlayerWithResults } from "./Scoreboard";
+import { GameSettingsType, PlayerWithResults } from "./ScoreboardContainer";
+import InputModeButton from "./InputModeButton";
+import { useEffect, useState } from "react";
+import { sum } from "../utils/helpers";
 
 interface ScoreInputProps {
   handleScoreSubmit: (score: number) => void;
   handleUndo: () => void;
+  toggleInputMode: () => void;
+  inputSingleMode: boolean;
   player: PlayerWithResults;
+  gameSettings: GameSettingsType;
 }
 
-export default function ScoreInput({
-  handleScoreSubmit,
-  handleUndo,
-  player,
-}: ScoreInputProps) {
+export default function ScoreInput({handleScoreSubmit, handleUndo, toggleInputMode, inputSingleMode, player, gameSettings}: ScoreInputProps) {
   
   const isMobile = useIsMobile();
 
   if(!player.isEnabled) return;
 
+  const pScore = gameSettings.startingScore - sum(player.throws);
+  
+  const isPreviewMode = pScore <= gameSettings.modeChangePoint ? true : inputSingleMode;
+  const isBtnDisabled = isPreviewMode !== inputSingleMode;
+
+  const ModeButton = () => <InputModeButton toggleInputMode={toggleInputMode} inputSingleMode={isPreviewMode} disabled={isBtnDisabled}/>
+  const [hideInput, setHideInput] = useState<boolean>(false);
+
+  // hide input on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (player.isBot) return;
+
+      const scrolledTo = window.scrollY + window.innerHeight;
+      const totalHeight = document.documentElement.scrollHeight;
+      const distanceToBottom = totalHeight - scrolledTo;
+
+      if (distanceToBottom < 100) {
+        setHideInput(true);
+      } else {
+        setHideInput(false);
+      }
+
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [player]);
+
   return (
-    <>
-      {player.isBot ?
-        (
-          <ScoreInputBot
-            handleScoreSubmit={handleScoreSubmit}
-            player={player}
-          />
-        ) : (
-          isMobile ? (
-            <ScoreInputMobile 
-              onSubmit={handleScoreSubmit} 
-              onUndo={handleUndo} 
-              currentPlayerName={player.name}
+    <div 
+      className={`
+        fixed bottom-0 left-0 w-full flex flex-col items-center justify-center pb-8 pt-14
+        transition-all duration-500 ease-in-out z-50
+        ${hideInput ? 'translate-y-[120%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}
+      `}
+    >
+      <div className="relative flex items-end justify-center">
+        {player.isBot ?
+          (
+            <ScoreInputBot
+              handleScoreSubmit={handleScoreSubmit}
+              player={player}
             />
           ) : (
-            <ScoreInputDesktop 
-              onSubmit={handleScoreSubmit} 
-              currentPlayerName={player.name}
-            />
+            isMobile ? (
+              <ScoreInputMobile 
+                onSubmit={handleScoreSubmit} 
+                onUndo={handleUndo} 
+                currentPlayer={player}
+                ModeButton={ModeButton}
+                isSingleMode={isPreviewMode}
+              />
+            ) : (
+              <ScoreInputDesktop 
+                onSubmit={handleScoreSubmit}
+                onUndo={handleUndo}
+                currentPlayer={player}
+                ModeButton={ModeButton}
+                isSingleMode={isPreviewMode}
+              />
+            )
           )
-        )
-      }
-    </>
+        }
+      </div>
+    </div>
   );
 }
